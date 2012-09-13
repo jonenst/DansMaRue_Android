@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.fabernovel.alertevoirie.Custom;
 import com.fabernovel.alertevoirie.entities.Constants;
 import com.fabernovel.alertevoirie.entities.JsonData;
 import com.fabernovel.alertevoirie.utils.JSONCursor;
@@ -39,10 +38,12 @@ public class CategoryProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        categories = new JSONObject(  );
+        categories = new JSONObject();
         // load json data
         DataInputStream in = new DataInputStream(getContext().getResources().openRawResource(fr.paris.android.signalement.R.raw.categories));
         try {
+            // open categorie file located in the internal memory
+            // FileInputStream in = getContext().openFileInput("categories.json");
             byte[] buffer = new byte[in.available()];
             in.read(buffer);
             categories = (JSONObject) new JSONTokener(new String(buffer)).nextValue();
@@ -120,8 +121,8 @@ public class CategoryProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "categories", CATEGORIES);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "categories/*", CATEGORIES_ID);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "category/*", CATEGORY_ID);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "categories", CATEGORIES);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "categories/*", CATEGORIES_ID);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "category/*", CATEGORY_ID);
     }
 }

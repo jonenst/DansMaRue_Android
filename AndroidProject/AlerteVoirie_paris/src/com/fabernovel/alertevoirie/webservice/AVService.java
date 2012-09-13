@@ -44,7 +44,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.fabernovel.alertevoirie.Custom;
 import com.fabernovel.alertevoirie.entities.Constants;
 import com.fabernovel.alertevoirie.entities.JsonData;
 
@@ -53,7 +52,7 @@ public class AVService {
     public static final int     REQUEST_JSON  = 1;
     public static final int     REQUEST_IMAGE = 2;
 
-    private static final String AV_URL        = Custom.AV_URL;
+    private static final String AV_URL        = Constants.AV_URL;
 
     private static final String AV_IMG_FAR    = "far";
     private static final String AV_IMG_CLOSE  = "close";

@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.fabernovel.alertevoirie.Custom;
 import com.fabernovel.alertevoirie.entities.Constants;
 import com.fabernovel.alertevoirie.entities.JsonData;
 import com.fabernovel.alertevoirie.utils.JSONCursor;
@@ -132,8 +131,8 @@ public class CategoryProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "categories", CATEGORIES);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "categories/*", CATEGORIES_ID);
-        uriMatcher.addURI(Custom.CATEGORY_PROVIDER_AUTHORITY, "category/*", CATEGORY_ID);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "categories", CATEGORIES);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "categories/*", CATEGORIES_ID);
+        uriMatcher.addURI(Constants.CATEGORY_PROVIDER_AUTHORITY, "category/*", CATEGORY_ID);
     }
 }

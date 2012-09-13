@@ -221,6 +221,10 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         // init buttons
         findViewById(R.id.LinearLayout_category).setOnClickListener(this);
         findViewById(R.id.LinearLayout_where).setOnClickListener(this);
+        findViewById(R.id.LinearLayout_priority).setOnClickListener(this);
+
+        TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);
+        tv.setText(getResources().getStringArray(R.array.priorities)[currentIncident.priority - 1]);
 
         validate.setOnClickListener(this);
 
@@ -375,6 +379,26 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 Intent editIntent = new Intent(this, SelectPositionActivity.class);
                 editIntent.putExtra(IntentData.EXTRA_ADDRESS, currentIncident.address);
                 startActivityForResult(editIntent, REQUEST_POSITION);
+                break;
+            case R.id.LinearLayout_priority:
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getResources().getString(R.string.report_details_priority));
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.priorities), currentIncident.priority - 1,
+                                             new DialogInterface.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(DialogInterface dialog, int item) {
+                                                     currentIncident.priority = item + 1;
+
+                                                     TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);
+                                                     tv.setText(getResources().getStringArray(R.array.priorities)[item]);
+
+                                                     dialog.dismiss();
+                                                 }
+                                             });
+                AlertDialog alert = builder.create();
+                alert.show();
+
                 break;
             case R.id.LinearLayout_comment:
                 loadComment(REQUEST_COMMENT);

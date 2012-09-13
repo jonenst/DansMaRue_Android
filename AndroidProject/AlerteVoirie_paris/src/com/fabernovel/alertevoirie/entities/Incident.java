@@ -57,6 +57,7 @@ public class Incident extends OverlayItem {
     public JSONArray         pictures_close;
     public int               invalidations;
     public JSONObject        json;
+    public int               priority        = 3;
 
     public JSONObject getNewIncidentRequest(Context c) {
         try {
@@ -65,7 +66,8 @@ public class Incident extends OverlayItem {
                                    .put(JsonData.PARAM_INCIDENT,
                                         new JSONObject().put(JsonData.PARAM_INCIDENT_CATEGORY, categoryId)
                                                         .put(JsonData.PARAM_INCIDENT_ADDRESS, address)
-                                                        .put(JsonData.PARAM_INCIDENT_DESCRIPTION, description))
+                                                        .put(JsonData.PARAM_INCIDENT_DESCRIPTION, description)
+                                                        .put(JsonData.PARAM_INCIDENT_PRIORITY, priority))
                                    .put(JsonData.PARAM_POSITION,
                                         new JSONObject().put(JsonData.PARAM_POSITION_LATITUDE, latitude).put(JsonData.PARAM_POSITION_LONGITUDE, longitude));
         } catch (JSONException e) {

@@ -137,6 +137,36 @@
                 android:src="@drawable/btn_edit" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/LinearLayout_priority"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing_vertical"
+            android:background="@drawable/cell"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/TextView_main_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_details_priority"
+                android:textAppearance="@style/TextBlueTitle" />
+
+            <TextView
+                android:id="@+id/TextView_sub_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/TextView_main_priority" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:duplicateParentState="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_edit" />
+        </RelativeLayout>
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >

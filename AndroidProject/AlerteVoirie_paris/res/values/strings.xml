@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">Alerte Voirie</string>
+
+    <string name="app_name">Co-Cité Paris</string>
     <string name="app_version">v1.0</string>
     <string name="server_error">"Erreur de connexion, veuillez essayer à nouveau"</string>
     <string name="gps_error">"Erreur de géolocalisation, temps de recherche dépassé"</string>
-     <string name="gps_map">"Afficher la carte"</string>
-     <string name="error_popup_title">Erreur</string>
-    
+    <string name="gps_map">"Afficher la carte"</string>
+    <string name="error_popup_title">Erreur</string>
+
 </resources>
