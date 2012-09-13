@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:context="com.fabernovel.alertevoirie.SelectPositionActivity" >
+
+        <TextView
+            android:id="@+id/TextViewpos01"
+            style="@style/CategoryHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_position_header1" />
+
+        <TextView
+            android:id="@+id/TextViewpos02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/ui_margin_side"
+            android:text="@string/select_position_where"
+            android:textAppearance="@style/TextBlueTitle" />
+
+        <RelativeLayout
+            android:id="@+id/Layoutpos01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/ui_margin_side"
+            android:paddingRight="@dimen/ui_margin_side" >
+
+            <EditText
+                android:id="@+id/EditText_address_number"
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_number_hint"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/EditText_address_postcode"
+                android:nextFocusLeft="@+id/EditText_address_town"
+                android:nextFocusRight="@+id/EditText_address_street"
+                android:nextFocusUp="@+id/EditText_address_town"
+                android:singleLine="true"
+                android:text="@string/address_number"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/EditText_address_street"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/EditText_address_number"
+                android:hint="@string/address_street_hint"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/EditText_address_town"
+                android:nextFocusLeft="@+id/EditText_address_number"
+                android:nextFocusRight="@+id/EditText_address_postcode"
+                android:nextFocusUp="@+id/EditText_address_town"
+                android:singleLine="true"
+                android:text="@string/address_street"
+                android:textStyle="bold" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/EditText_address_postcode"
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/EditText_address_number"
+                android:hint="@string/address_postcode_hint"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/EditText_address_number"
+                android:nextFocusLeft="@+id/EditText_address_street"
+                android:nextFocusRight="@+id/EditText_address_town"
+                android:nextFocusUp="@+id/EditText_address_number"
+                android:singleLine="true"
+                android:text="@string/address_postcode"
+                android:textStyle="bold" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/EditText_address_town"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/EditText_address_number"
+                android:layout_toRightOf="@+id/EditText_address_postcode"
+                android:hint="@string/address_town_hint"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/EditText_address_number"
+                android:nextFocusLeft="@+id/EditText_address_postcode"
+                android:nextFocusRight="@+id/EditText_address_number"
+                android:nextFocusUp="@+id/EditText_address_town"
+                android:singleLine="true"
+                android:text="@string/address_town"
+                android:textStyle="bold" >
+            </EditText>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/Button_validate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dip"
+            android:text="@string/select_position_btn_validate" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/map"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/TextViewpos03"
+            style="@style/CategoryHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_position_header2" />
+
+        <FrameLayout
+            android:id="@+id/FrameLayout01"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <com.google.android.maps.MapView
+                android:id="@+id/MapView_map"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:apiKey="@string/map_api_key"
+                android:clickable="true" >
+            </com.google.android.maps.MapView>
+
+            <Button
+                android:id="@+id/ButtonMapPosition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:background="@drawable/btn_bg_agrandir"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/ui_spacing_vertical" >
+
+        <RelativeLayout
+            android:id="@+id/LinearLayout_comment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing_vertical"
+            android:background="@drawable/cell"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/TextView_your_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_details_your_comment"
+                android:textAppearance="@style/TextBlueTitle" />
+
+            <TextView
+                android:id="@+id/TextView_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TextView_your_comment"
+                android:ellipsize="end"
+                android:maxLines="2" />
+
+            <TextView
+                android:id="@+id/TextView_nocomment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TextView_your_comment"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/add_comment_nocomment"
+                android:textColor="#F00" />
+
+            <ImageView
+                android:id="@+id/Button_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:duplicateParentState="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_edit" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/ui_padding_left"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/TextView_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextBlueTitle" />
+
+            <TextView
+                android:id="@+id/TextView_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_spacing_vertical"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/LinearLayout_where"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing_vertical"
+            android:background="@drawable/cell"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/TextView_where"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/report_details_where"
+                android:textAppearance="@style/TextBlueTitle" />
+
+            <TextView
+                android:id="@+id/TextView_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/TextView_where" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:duplicateParentState="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_edit" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/LinearLayout_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_spacing_vertical"
+            android:background="@drawable/cell"
+            android:clickable="true" >
+
+            <TextView
+                android:id="@+id/TextView_main_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextBlueTitle" />
+
+            <TextView
+                android:id="@+id/TextView_sub_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/TextView_main_category" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:duplicateParentState="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_edit" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_spacing_vertical" >
+
+                <LinearLayout
+                    android:layout_width="1dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/TextView_title_far"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/ui_padding_left"
+                        android:text="@string/report_details_far"
+                        android:textAppearance="@style/TextBlueTitle" />
+
+                    <ImageView
+                        android:id="@+id/ImageView_far"
+                        android:layout_width="wrap_content"
+                        android:layout_height="114dip"
+                        android:layout_below="@id/TextView_title_far"
+                        android:layout_marginLeft="6dip"
+                        android:layout_marginRight="6dip"
+                        android:background="@drawable/btn_empty_photo"
+                        android:clickable="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="1dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/TextView_title_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/ImageView_far"
+                        android:text="@string/report_details_close"
+                        android:textAppearance="@style/TextBlueTitle" />
+
+                    <ImageView
+                        android:id="@+id/ImageView_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="114dip"
+                        android:layout_below="@id/TextView_title_close"
+                        android:layout_toRightOf="@id/ImageView_far"
+                        android:background="@drawable/btn_empty_photo"
+                        android:clickable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/AnchorZoom"
+                android:layout_width="1dip"
+                android:layout_height="1dip"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="20dip"
+                android:layout_marginLeft="-20dip"
+                android:text="@+id/Button01"
+                android:visibility="invisible" >
+            </Button>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/TextView_additional_photos_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/hd"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:text="@string/report_details_additional_photo"
+            android:textAppearance="@style/TextWhiteTitle"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/extra_images_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/Button_validate"
+            style="@style/Button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:text="@string/report_details_btn_validate" />
+
+        <TextView
+            android:id="@+id/TextView_confirmed"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/ui_padding_left"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/existing_incidents_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="10dip"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/existing_incident_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:text="@string/existing_incidents_status"
+                android:textStyle="bold" >
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/existing_incident_solved"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="1dip"
+                    android:layout_marginTop="3dip"
+                    android:layout_weight="1"
+                    android:text="@string/existing_incidents_solved" >
+                </Button>
+
+                <Button
+                    android:id="@+id/existing_incidents_confirmed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dip"
+                    android:layout_marginTop="3dip"
+                    android:layout_weight="1"
+                    android:text="@string/existing_incidents_confirmed" >
+                </Button>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dip" >
+
+                <Button
+                    android:id="@+id/existing_incidents_add_picture"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="20dip"
+                    android:text="@string/existing_incidents_add_picture" >
+                </Button>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dip"
+                    android:src="@drawable/icn_creer" >
+                </ImageView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dip" >
+
+                <Button
+                    android:id="@+id/existing_incidents_invalid"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="20dip"
+                    android:text="@string/existing_incidents_invalid" >
+                </Button>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dip"
+                    android:src="@drawable/icn_incident_nonvalide" >
+                </ImageView>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

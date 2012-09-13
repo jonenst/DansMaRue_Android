@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ToggleButton
+        android:id="@+id/ToggleButton01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:text="@string/gps_map"
+        android:textOff="@string/gps_map"
+        android:textOn="@string/gps_map" />
+
+    <RadioGroup
+        android:id="@+id/RadioGroup_tabs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/Tab_ongoing"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:checked="true"
+            android:text="0" />
+
+        <RadioButton
+            android:id="@+id/Tab_updated"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:text="0" />
+
+        <RadioButton
+            android:id="@+id/Tab_resolved"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:text="0" />
+    </RadioGroup>
+
+    <ListView
+        style="@style/ListCustom"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible" />
+
+</LinearLayout>

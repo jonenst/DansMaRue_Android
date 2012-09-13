@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/Button_new_incident"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/home_button_vertical_spacing"
+            android:layout_marginLeft="@dimen/home_button_margin_side"
+            android:layout_marginTop="@dimen/home_button_vertical_spacing"
+            android:background="@drawable/btn_new_incident"
+            android:text="NEW INCIDENT" />
+
+        <Button
+            android:id="@+id/Button_incidents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/home_button_vertical_spacing"
+            android:layout_marginRight="@dimen/home_button_margin_side"
+            android:layout_marginTop="@dimen/home_button_vertical_spacing"
+            android:background="@drawable/btn_incidents"
+            android:text="@string/home_btn_incidents" />
+
+        <Button
+            android:id="@+id/Button_reports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/Button_incidents"
+            android:layout_marginRight="@dimen/home_button_margin_side"
+            android:background="@drawable/btn_reports"
+            android:text="@string/home_btn_reports" />
+
+        <Button
+            android:id="@+id/Button_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Button_new_incident"
+            android:layout_marginLeft="@dimen/home_button_margin_side"
+            android:background="@drawable/btn_news"
+            android:text="@string/home_btn_news" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/Home_TextView_Events"
+        style="@style/TextWhiteTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:text="@string/home_label_reports" >
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip"
+        android:layout_weight="0"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            style="@style/Button"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginRight="10dip"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/Home_TextView_Current"
+                style="@style/TextBlueTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center"
+                android:textSize="13dip" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Button"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/Home_TextView_Update"
+                style="@style/TextBlueTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="13dip" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Button"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/Home_TextView_Solved"
+                style="@style/TextBlueTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="13dip" >
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

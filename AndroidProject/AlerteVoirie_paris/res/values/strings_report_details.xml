@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="report_details_additional_photo">"Mises à jour"</string>
+<string name="report_details_where">"Où ?"</string>
+<string name="report_details_far">"Vue d'ensemble"</string>
+<string name="report_details_close">"Vue de près"</string>
+<string name="report_details_confirmed">"%1$d personnes ont confirmé cet incident"</string>
+<string name="report_details_btn_validate">"Valider ce rapport"</string>
+<string name="report_details_your_comment">Votre commentaire</string>
+<string name="report_detail_new_report_title">Nouveau rapport</string>
+<string name="report_detail_new_report_ok">Votre rapport a été envoyé</string>
+<string name="report_detail_update_ok">Ce rapport a été mis à jour</string>
+<string name="report_detail_confirm_question">Cet incident a-t-il été résolu ?</string>
+<string name="invalidate_popup_title">Invalider cet incident</string>
+<string name="invalidate_popup_message">"L'incident sera supprimé"</string>
+<string name="timeout_popup_title">Erreur</string>
+<string name="timeout_popup_message">Une erreur de connection est survenue. Veuillez réessayer plus tard.</string>
+<string name="error_already_invalidated">Cet incident à déjà été invalidé.</string>
+</resources>

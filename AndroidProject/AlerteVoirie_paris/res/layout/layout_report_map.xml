@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ToggleButton
+        android:id="@+id/ToggleButton_Map"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:text="@string/gps_map"
+        android:textOff="@string/gps_map"
+        android:textOn="@string/gps_map" />
+
+    <RadioGroup
+        android:id="@+id/RadioGroup_tabs_map"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/Tab_Map_ongoing"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:checked="true"
+            android:text="0" />
+
+        <RadioButton
+            android:id="@+id/Tab_Map_updated"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:text="0" />
+
+        <RadioButton
+            android:id="@+id/Tab_Map_resolved"
+            style="@style/Tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:bufferType="spannable"
+            android:text="0" />
+    </RadioGroup>
+
+    <com.google.android.maps.MapView
+        android:id="@+id/MapView_mymap"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="@string/map_api_key"
+        android:clickable="true"
+        android:visibility="visible" />
+
+</LinearLayout>
