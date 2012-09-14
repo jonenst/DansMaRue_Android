@@ -37,7 +37,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fabernovel.alertevoirie.entities.Constants;
 import com.fabernovel.alertevoirie.entities.JsonData;
@@ -59,23 +58,23 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     @Override
     protected void onStart() {
         super.onStart();
-        new Thread() {
-            @Override
-            public void run() {
-                long startTime = System.currentTimeMillis();
-                init();
-
-                long elapsedTime = System.currentTimeMillis() - startTime;
-                if (elapsedTime < SPLASH_DURATION) {
-                    try {
-                        sleep(SPLASH_DURATION - elapsedTime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                next();
-            }
-        }.start();
+        // new Thread() {
+        // @Override
+        // public void run() {
+        // long startTime = System.currentTimeMillis();
+        init();
+        //
+        // long elapsedTime = System.currentTimeMillis() - startTime;
+        // if (elapsedTime < SPLASH_DURATION) {
+        // try {
+        // sleep(SPLASH_DURATION - elapsedTime);
+        // } catch (InterruptedException e) {
+        // e.printStackTrace();
+        // }
+        // }
+        // next();
+        // }
+        // }.start();
     }
 
     private void init() {
@@ -83,7 +82,7 @@ public class SplashScreenActivity extends Activity implements RequestListener {
         try {
             SharedPreferences sp = getSharedPreferences(JsonData.PARAM_CATEGORIES, Context.MODE_PRIVATE);
             JSONObject categoriesRequest = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_CATEGORIES)
-                                                           .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0.0"));
+                                                           .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0.9"));
 
             AVService.getInstance(this).postJSON(new JSONArray().put(categoriesRequest), this);
         } catch (JSONException e) {
@@ -131,6 +130,8 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                     }
                 }
 
+                next();
+
             } catch (JSONException e) {
                 Log.e(Constants.PROJECT_TAG, "Erreur dde recuperation des categories", e);
             }/*
@@ -142,22 +143,27 @@ public class SplashScreenActivity extends Activity implements RequestListener {
 
         } else if (requestCode == AVService.REQUEST_ERROR) {
             AVServiceErrorException error = null;
+            String errorString = null;
+
             if (result instanceof JSONException) {
-                error = new AVServiceErrorException(7);
-                Toast.makeText(getApplicationContext(), "Erreur serveur : mauvais flux JSON", Toast.LENGTH_LONG).show();
+                // error = new AVServiceErrorException(7);
+                errorString = "Erreur serveur : mauvais flux JSON";
             } else {
                 error = (AVServiceErrorException) result;
-            }
-            String errorString = null;
-            switch (error.errorCode) {
-                case 19:
-                    // already invalidated
-                    errorString = getString(R.string.error_already_invalidated);
-                    break;
+                if (error != null) {
+                    switch (error.errorCode) {
+                        case 19:
+                            // already invalidated
+                            errorString = getString(R.string.error_already_invalidated);
+                            break;
 
-                default:
+                        default:
+                            errorString = getString(R.string.server_error);
+                            break;
+                    }
+                } else {
                     errorString = getString(R.string.server_error);
-                    break;
+                }
             }
 
             new AlertDialog.Builder(this).setTitle(R.string.error_popup_title)

@@ -132,6 +132,10 @@ public class Incident extends OverlayItem {
             result.pictures_far = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_FAR);
             result.pictures_close = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_CLOSE);
 
+            if (obj.has(JsonData.PARAM_INCIDENT_PRIORITY)) {
+                result.priority = obj.getInt(JsonData.PARAM_INCIDENT_PRIORITY);
+            }
+
             result.setMarker(c.getResources().getDrawable(fr.paris.android.signalement.R.drawable.map_cursor));
             return result;
         } catch (JSONException e) {

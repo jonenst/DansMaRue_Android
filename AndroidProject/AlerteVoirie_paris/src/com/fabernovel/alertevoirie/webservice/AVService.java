@@ -109,10 +109,14 @@ public class AVService {
             if (exception == null) {
                 try {
                     JSONArray jo = new JSONArray(result);
-                    int resultnum = jo.getJSONObject(0).getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
-                    Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
-                    if (resultnum != 0 && resultnum != 18) throw new AVServiceErrorException(resultnum);
-                    listener.onRequestcompleted(REQUEST_JSON, result);
+                    if (jo.getJSONObject(0).has(JsonData.PARAM_ANSWER)) {
+                        int resultnum = jo.getJSONObject(0).getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
+                        Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
+                        if (resultnum != 0 && resultnum != 18) throw new AVServiceErrorException(resultnum);
+                        listener.onRequestcompleted(REQUEST_JSON, result);
+                    } else {
+                        listener.onRequestcompleted(REQUEST_ERROR, new JSONException("Answer is missing"));
+                    }
 
                 } catch (JSONException e) {
                     Log.e(Constants.PROJECT_TAG, "JSONException in onPostExecute", e);

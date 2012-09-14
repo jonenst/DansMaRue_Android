@@ -172,6 +172,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             validate.setVisibility(View.GONE);
             validate.setEnabled(true);
             findViewById(R.id.existing_incidents_layout).setVisibility(View.VISIBLE);
+            findViewById(R.id.LinearLayout_email).setVisibility(View.GONE);
             try {
                 imgd = new ImageDownloader(this);
                 String jsonEvent = getIntent().getStringExtra("event");
