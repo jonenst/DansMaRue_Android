@@ -93,6 +93,9 @@
             android:name="com.fabernovel.alertevoirie.CreditsActivity" 
             android:screenOrientation="portrait" android:theme="@style/Main">
         </activity>
+        <activity 
+            android:name="com.fabernovel.alertevoirie.NewVersionDialogActivity" >
+        </activity>
         
         <provider
             android:name="fr.paris.android.signalement.data.CategoryProvider"

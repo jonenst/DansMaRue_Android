@@ -10,12 +10,12 @@
  * 
  * Alerte Voirie is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Alerte Voirie.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Alerte Voirie. If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 
 package com.fabernovel.alertevoirie.webservice;
@@ -45,30 +45,34 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
 import com.fabernovel.alertevoirie.entities.Constants;
 import com.fabernovel.alertevoirie.entities.JsonData;
+import com.fabernovel.alertevoirie.utils.Utils;
 
 public class HttpPostRequest {
-    private static final String   HEADER_APP_REQUEST_SIGNATURE = "x-app-request-signature";
-    private static final String   HEADER_APP_DEVICE_MODEL      = "x-app-device-model";
-    private static final String   HEADER_APP_PLATFORM          = "x-app-platform";
-    private static final String   HEADER_APP_VERSION           = "x-app-version";
+    private static final String       HEADER_APP_REQUEST_SIGNATURE = "x-app-request-signature";
+    private static final String       HEADER_APP_DEVICE_MODEL      = "x-app-device-model";
+    private static final String       HEADER_APP_PLATFORM          = "x-app-platform";
+    private static final String       HEADER_APP_VERSION           = "x-app-version";
 
-    private static final String   MAGIC_KEY                    = "TBD";
+    private static final String       MAGIC_KEY                    = "TBD";
 
-    protected static final String PARAM_JSON                   = "jsonStream";
+    protected static final String     PARAM_JSON                   = "jsonStream";
 
-    private String                url;
-    private HttpPost              httpPost;
-    private InputStream           content;
-    private String                contentString;
+    private final String              url;
+    private HttpPost                  httpPost;
+    private InputStream               content;
+    private String                    contentString;
+    private final Context             context;
 
-    private List<NameValuePair>   params                       = new ArrayList<NameValuePair>();
+    private final List<NameValuePair> params                       = new ArrayList<NameValuePair>();
 
-    public HttpPostRequest(String url) {
+    public HttpPostRequest(Context context, String url) {
+        this.context = context;
         this.url = url;
     }
 
@@ -79,7 +83,6 @@ public class HttpPostRequest {
     public void addParam(String paramName, String paramValue) {
         params.add(new BasicNameValuePair(paramName, paramValue));
     }
-    
 
     private String convertStreamToString(final InputStream is) throws AVServiceErrorException {
         final StringBuilder sb = new StringBuilder();
@@ -100,7 +103,7 @@ public class HttpPostRequest {
         }
         return sb.toString();
     }
-    
+
     public String sendRequest() throws AVServiceErrorException {
         try {
 
@@ -114,13 +117,13 @@ public class HttpPostRequest {
             // in milliseconds which is the timeout for waiting for data.
             int timeoutSocket = 5000;
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-            
 
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
 
-            httpPost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+            httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
-            httpPost.addHeader(HEADER_APP_VERSION, "1.0.0");
+            final int currentVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            httpPost.addHeader(HEADER_APP_VERSION, "" + currentVersionCode);
             httpPost.addHeader(HEADER_APP_PLATFORM, "android_family");
             httpPost.addHeader(HEADER_APP_DEVICE_MODEL, (Build.MANUFACTURER + " " + Build.DEVICE).trim());
             httpPost.addHeader(HEADER_APP_REQUEST_SIGNATURE, sha1(MAGIC_KEY + params.get(0).getValue()));
@@ -128,6 +131,8 @@ public class HttpPostRequest {
             // Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
 
             final HttpResponse response = httpClient.execute(httpPost);
+            Utils.handeResponseHeaders(context, response, false);
+
             final HttpEntity entity = response.getEntity();
             content = entity.getContent();
             contentString = convertStreamToString(content);
@@ -144,26 +149,22 @@ public class HttpPostRequest {
         } catch (NoSuchAlgorithmException e) {
             Log.e(Constants.PROJECT_TAG, "NoSuchAlgorithmException", e);
             throw new AVServiceErrorException(999);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(Constants.PROJECT_TAG, "error in sendRequest : ", e);
             throw new AVServiceErrorException(999);
         }
-        
 
         try {
-            
-            Log.d(Constants.PROJECT_TAG,"contenString: "+contentString);
+
+            Log.d(Constants.PROJECT_TAG, "contenString: " + contentString);
             JSONObject jo = new JSONObject(contentString);
             int resultnum = jo.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
             Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
             if (resultnum != 0) throw new AVServiceErrorException(resultnum);
-            
-            
 
         } catch (JSONException e) {
             Log.w(Constants.PROJECT_TAG, "JSONException in onPostExecute");
-            //throw new AVServiceErrorException(999);
+            // throw new AVServiceErrorException(999);
         }
 
         return contentString;

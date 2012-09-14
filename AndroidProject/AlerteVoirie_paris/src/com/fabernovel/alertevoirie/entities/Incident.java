@@ -58,11 +58,13 @@ public class Incident extends OverlayItem {
     public int               invalidations;
     public JSONObject        json;
     public int               priority        = 3;
+    public String            email           = "";
 
     public JSONObject getNewIncidentRequest(Context c) {
         try {
             return new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_NEW_INCIDENT)
                                    .put(JsonData.PARAM_UDID, c != null ? Utils.getUdid(c) : "0000")
+                                   .put(JsonData.PARAM_EMAIL, email)
                                    .put(JsonData.PARAM_INCIDENT,
                                         new JSONObject().put(JsonData.PARAM_INCIDENT_CATEGORY, categoryId)
                                                         .put(JsonData.PARAM_INCIDENT_ADDRESS, address)

@@ -20,13 +20,18 @@
 package com.fabernovel.alertevoirie.entities;
 
 public final class Constants {
-    public static final String  PROJECT_TAG                  = "Alerte Voirie";
-    public static final String  RESOURCES_PACKAGE            = "com.fabernovel.alertevoirie";
-    public static final int     PICTURE_PREFERED_WIDTH       = 640;
-    public static final String  NEW_REPORT                   = "NewReport";
-    public static final String  SDCARD_PATH                  = "/Android/data/" + RESOURCES_PACKAGE;
-    public static final boolean DEBUGMODE                    = false;
-    public static final long    TIMEOUT                      = 20000;
+
+    public final static String  HTTPHEADERKEY_APP_AVAILABLE_VERSION  = "X-App-Available-Version";
+    public final static String  HTTPHEADERKEY_APP_X_APP_FORCE_UPDATE = "X-App-Force-Update";
+    public static final String  KEY_NEW_VERSION_MSG                  = "KEY_NEW_VERSION_MSG";
+
+    public static final String  PROJECT_TAG                          = "Alerte Voirie";
+    public static final String  RESOURCES_PACKAGE                    = "com.fabernovel.alertevoirie";
+    public static final int     PICTURE_PREFERED_WIDTH               = 640;
+    public static final String  NEW_REPORT                           = "NewReport";
+    public static final String  SDCARD_PATH                          = "/Android/data/" + RESOURCES_PACKAGE;
+    public static final boolean DEBUGMODE                            = false;
+    public static final long    TIMEOUT                              = 20000;
 
     // C4M =====================================================================
     /*
@@ -39,10 +44,10 @@ public final class Constants {
 
     // Ville de Paris ==========================================================
 
-    private static final String AV_URL_DEV_LUTECE_SIRA_INTEG = "http://dev.lutece.paris.fr/sira-integ/rest/signalement/api/";
-    private static final String AV_URL_DEV_LUTECE_SIRA_R7    = "http://dev.lutece.paris.fr/sira/rest/signalement/api/";
-    private static final String AV_URL_DEV_LUTECE_R57_SIRA   = "http://r57-sira-ws.rec.apps.paris.fr/sira/rest/signalement/api/";
-    public static final String  AV_URL                       = AV_URL_DEV_LUTECE_R57_SIRA;
-    public static final String  CATEGORY_PROVIDER_AUTHORITY  = "fr.paris.android.signalement.dataprovider.advice";
+    private static final String AV_URL_DEV_LUTECE_SIRA_INTEG         = "http://dev.lutece.paris.fr/sira-integ/rest/signalement/api/";
+    private static final String AV_URL_DEV_LUTECE_SIRA_R7            = "http://dev.lutece.paris.fr/sira/rest/signalement/api/";
+    private static final String AV_URL_DEV_LUTECE_R57_SIRA           = "http://r57-sira-ws.rec.apps.paris.fr/sira/rest/signalement/api/";
+    public static final String  AV_URL                               = AV_URL_DEV_LUTECE_R57_SIRA;
+    public static final String  CATEGORY_PROVIDER_AUTHORITY          = "fr.paris.android.signalement.dataprovider.advice";
 
 }

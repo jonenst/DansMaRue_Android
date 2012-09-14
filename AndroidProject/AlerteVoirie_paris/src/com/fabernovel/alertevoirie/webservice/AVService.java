@@ -90,8 +90,9 @@ public class AVService {
 
         @Override
         protected String doInBackground(String... params) {
-            HttpPostRequest req = new HttpPostRequest(params[PARAM_URL]);
+            HttpPostRequest req = new HttpPostRequest(AVService.this.context, params[PARAM_URL]);
             req.addParam(HttpPostRequest.PARAM_JSON, params[PARAM_JSON]);
+
             try {
                 return req.sendRequest();
             } catch (AVServiceErrorException e) {

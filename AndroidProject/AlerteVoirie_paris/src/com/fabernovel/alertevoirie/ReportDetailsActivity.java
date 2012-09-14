@@ -59,6 +59,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +68,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -222,9 +225,13 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         findViewById(R.id.LinearLayout_category).setOnClickListener(this);
         findViewById(R.id.LinearLayout_where).setOnClickListener(this);
         findViewById(R.id.LinearLayout_priority).setOnClickListener(this);
+        findViewById(R.id.LinearLayout_email).setOnClickListener(this);
 
-        TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);
-        tv.setText(getResources().getStringArray(R.array.priorities)[currentIncident.priority - 1]);
+        TextView prio_tv = (TextView) findViewById(R.id.TextView_sub_priority);
+        prio_tv.setText(getResources().getStringArray(R.array.priorities)[currentIncident.priority - 1]);
+
+        TextView mail_tv = (TextView) findViewById(R.id.TextView_sub_email);
+        mail_tv.setText(currentIncident.email);
 
         validate.setOnClickListener(this);
 
@@ -398,6 +405,42 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                                              });
                 AlertDialog alert = builder.create();
                 alert.show();
+
+                break;
+            case R.id.LinearLayout_email:
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(this);
+                input.setText(currentIncident.email);
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+                new AlertDialog.Builder(ReportDetailsActivity.this).setTitle(getResources().getString(R.string.report_details_email))
+                                                                   .setMessage(getResources().getString(R.string.report_details_email_msg))
+                                                                   .setView(input)
+                                                                   .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                                       @Override
+                                                                       public void onClick(DialogInterface dialog, int whichButton) {
+                                                                           Editable value = input.getText();
+
+                                                                           if (value.toString().matches(".+?@.+?\\..+?")) {
+                                                                               currentIncident.email = value.toString();
+
+                                                                               TextView tv = (TextView) findViewById(R.id.TextView_sub_email);
+                                                                               tv.setText(currentIncident.email);
+                                                                           } else {
+                                                                               Toast.makeText(ReportDetailsActivity.this, R.string.email_non_valide,
+                                                                                              Toast.LENGTH_LONG).show();
+                                                                           }
+
+                                                                       }
+                                                                   })
+                                                                   .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                       @Override
+                                                                       public void onClick(DialogInterface dialog, int whichButton) {
+                                                                           // Do nothing.
+                                                                       }
+                                                                   })
+                                                                   .show();
 
                 break;
             case R.id.LinearLayout_comment:

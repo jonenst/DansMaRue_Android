@@ -7,5 +7,10 @@
     <string name="gps_error">"Erreur de géolocalisation, temps de recherche dépassé"</string>
     <string name="gps_map">"Afficher la carte"</string>
     <string name="error_popup_title">Erreur</string>
+    
+    <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible</string>
+    <string name="new_version_dialog_title">"Nouvelle version disponible"</string>
+    <string name="new_version_dialog_ok">"Télécharger"</string>
+    <string name="new_version_dialog_cancel">"Annuler"</string>
 
 </resources>

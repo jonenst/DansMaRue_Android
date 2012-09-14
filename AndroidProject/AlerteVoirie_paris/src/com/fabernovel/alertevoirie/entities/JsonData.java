@@ -38,6 +38,7 @@ public interface JsonData {
     String PARAM_ANSWER                            = "answer";
 
     String PARAM_UDID                              = "udid";
+    String PARAM_EMAIL                             = "email";
     String PARAM_RADIUS                            = "radius";
     String PARAM_STATUS                            = "status";
     String PARAM_CLOSEST_INCIDENTS                 = "closest_incidents";
