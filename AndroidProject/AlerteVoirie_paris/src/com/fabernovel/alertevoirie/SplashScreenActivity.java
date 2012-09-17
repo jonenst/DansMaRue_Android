@@ -82,7 +82,7 @@ public class SplashScreenActivity extends Activity implements RequestListener {
         try {
             SharedPreferences sp = getSharedPreferences(JsonData.PARAM_CATEGORIES, Context.MODE_PRIVATE);
             JSONObject categoriesRequest = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_CATEGORIES)
-                                                           .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0.9"));
+                                                           .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0"));
 
             AVService.getInstance(this).postJSON(new JSONArray().put(categoriesRequest), this);
         } catch (JSONException e) {
@@ -103,27 +103,36 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     public void onRequestcompleted(int requestCode, Object result) {
         if (requestCode == AVService.REQUEST_JSON && result != null) {
             try {
-                Log.d("DEBUG", "result=" + result);
+                Log.d(Constants.PROJECT_TAG, "downloaded =" + result);
+                //
+                // JSONObject rootObj = new JSONObject((String) result);
+                // JSONObject answerObj = (JSONObject) rootObj.get(JsonData.PARAM_ANSWER);
+                //
 
-                JSONObject rootObj = new JSONObject((String) result);
-                JSONObject answerObj = (JSONObject) rootObj.get(JsonData.PARAM_ANSWER);
+                // ---Workaround ---
+                JSONArray answerArr = new JSONArray((String) result);
+                JSONObject answerObj = answerArr.getJSONObject(0);
+                // ----------------
 
                 // Version
                 String version = answerObj.getString(JsonData.PARAM_VERSION);
                 SharedPreferences sp = getSharedPreferences(JsonData.PARAM_CATEGORIES, Context.MODE_PRIVATE);
 
-                if (!sp.getString(JsonData.PARAM_CURRENT_VERSION, "1.0").equals(version)) {
+                if (!sp.getString(JsonData.PARAM_CURRENT_VERSION, "0").equals(version)) {
 
                     Editor e = sp.edit();
                     e.putString(JsonData.PARAM_CURRENT_VERSION, version);
                     e.commit();
 
                     // Categories
-                    JSONObject categories = (JSONObject) rootObj.get(JsonData.PARAM_CATEGORIES);
+                    JSONObject categories = (JSONObject) answerObj.get(JsonData.PARAM_CATEGORIES);
+                    getApplicationContext().deleteFile("categories.json");
                     try {
                         FileOutputStream fos = getApplicationContext().openFileOutput("categories.json", Context.MODE_PRIVATE);
                         Writer out = new OutputStreamWriter(fos);
-                        out.write(categories.toString());
+                        String strObj = categories.toString();
+                        Log.d(Constants.PROJECT_TAG, "---> Write to file = " + strObj);
+                        out.write(strObj);
                         out.close();
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -133,13 +142,19 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                 next();
 
             } catch (JSONException e) {
+                e.printStackTrace();
                 Log.e(Constants.PROJECT_TAG, "Erreur dde recuperation des categories", e);
-            }/*
-              * catch (FileNotFoundException e) {
-              * // TODO Auto-generated catch block
-              * Log.e(Constants.PROJECT_TAG,"File not found",e);
-              * }
-              */
+
+                new AlertDialog.Builder(this).setTitle(R.string.error_popup_title)
+                                             .setMessage(e.getLocalizedMessage())
+                                             .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(DialogInterface dialog, int which) {
+                                                     finish();
+                                                 }
+                                             })
+                                             .show();
+            }
 
         } else if (requestCode == AVService.REQUEST_ERROR) {
             AVServiceErrorException error = null;

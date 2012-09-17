@@ -35,7 +35,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,7 +44,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fabernovel.alertevoirie.entities.Constants;
-import com.fabernovel.alertevoirie.entities.JsonData;
 
 public class AVService {
     public static final int     REQUEST_ERROR = 0;
@@ -107,26 +105,27 @@ public class AVService {
 
             Log.d("AlerteVoirie_PM", "Request response : " + result);
             if (exception == null) {
-                try {
-                    JSONArray jo = new JSONArray(result);
-                    if (jo.getJSONObject(0).has(JsonData.PARAM_ANSWER)) {
-                        int resultnum = jo.getJSONObject(0).getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
-                        Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
-                        if (resultnum != 0 && resultnum != 18) throw new AVServiceErrorException(resultnum);
-                        listener.onRequestcompleted(REQUEST_JSON, result);
-                    } else {
-                        listener.onRequestcompleted(REQUEST_ERROR, new JSONException("Answer is missing"));
-                    }
-
-                } catch (JSONException e) {
-                    Log.e(Constants.PROJECT_TAG, "JSONException in onPostExecute", e);
-                    toastServerError();
-                    listener.onRequestcompleted(REQUEST_ERROR, e);
-                } catch (AVServiceErrorException e) {
-                    Log.e(Constants.PROJECT_TAG, "AVServiceErrorException in onPostExecute", e);
-                    // toastServerError();
-                    listener.onRequestcompleted(REQUEST_ERROR, e);
-                }
+                // try {
+                // JSONArray jo = new JSONArray(result);
+                // if (jo.getJSONObject(0).has(JsonData.PARAM_ANSWER)) {
+                // int resultnum = jo.getJSONObject(0).getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
+                // Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
+                // if (resultnum != 0 && resultnum != 18) throw new AVServiceErrorException(resultnum);
+                listener.onRequestcompleted(REQUEST_JSON, result);
+                // } else {
+                // listener.onRequestcompleted(REQUEST_ERROR, new JSONException("Answer is missing"));
+                // }
+                //
+                // } catch (JSONException e) {
+                // Log.e(Constants.PROJECT_TAG, "JSONException in onPostExecute", e);
+                // toastServerError();
+                // listener.onRequestcompleted(REQUEST_ERROR, e);
+                // }
+                // catch (AVServiceErrorException e) {
+                // Log.e(Constants.PROJECT_TAG, "AVServiceErrorException in onPostExecute", e);
+                // // toastServerError();
+                // listener.onRequestcompleted(REQUEST_ERROR, e);
+                // }
 
             } else {
                 toastServerError();

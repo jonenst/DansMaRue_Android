@@ -4,7 +4,7 @@
  */
 package fr.paris.android.signalement.data;
 
-import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -38,23 +38,32 @@ public class CategoryProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        categories = new JSONObject();
-        // load json data
-        DataInputStream in = new DataInputStream(getContext().getResources().openRawResource(fr.paris.android.signalement.R.raw.categories));
-        try {
-            // open categorie file located in the internal memory
-            // FileInputStream in = getContext().openFileInput("categories.json");
-            byte[] buffer = new byte[in.available()];
-            in.read(buffer);
-            categories = (JSONObject) new JSONTokener(new String(buffer)).nextValue();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            Log.e("Alerte Voirie", "JSON error", e);
-        } catch (ClassCastException e) {
-            Log.e("Alerte Voirie", "JSON error", e);
-        }
+
         return true;
+    }
+
+    public void laodDataIfNeeded() {
+
+        if (categories == null) {
+            categories = new JSONObject();
+            // load json data
+            // DataInputStream in = new DataInputStream(getContext().getResources().openRawResource(fr.paris.android.signalement.R.raw.categories));
+            try {
+                // open categorie file located in the internal memory
+                FileInputStream in = getContext().openFileInput("categories.json");
+                byte[] buffer = new byte[in.available()];
+                in.read(buffer);
+                String bufferStr = new String(buffer);
+                Log.d(Constants.PROJECT_TAG, "<--- Read from file = " + bufferStr);
+                categories = (JSONObject) new JSONTokener(bufferStr).nextValue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                Log.e("Alerte Voirie", "JSON error", e);
+            } catch (ClassCastException e) {
+                Log.e("Alerte Voirie", "JSON error", e);
+            }
+        }
     }
 
     @Override
@@ -75,6 +84,9 @@ public class CategoryProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+
+        laodDataIfNeeded();
+
         JSONArray array = new JSONArray();
         try {
             String categoryId = JsonData.VALUE_NULL;
