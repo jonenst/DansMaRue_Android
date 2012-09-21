@@ -278,15 +278,15 @@ public class AVService {
         @Override
         protected void onPostExecute(HttpResponse[] result) {
             // error somewhere... asuming all went done
-            if (listener != null) {
-                listener.onRequestcompleted(REQUEST_IMAGE, null);
-            }
             // try {
-            //
             // JSONArray jo = new JSONArray(convertStreamToString(result[0].getEntity().getContent()));
             // int resultnum = jo.getJSONObject(0).getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
             // Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
             // if (resultnum != 0) throw new AVServiceErrorException(resultnum);
+            //
+            if (listener != null) {
+                listener.onRequestcompleted(REQUEST_IMAGE, null);
+            }
             //
             // } catch (JSONException e) {
             // Log.e(Constants.PROJECT_TAG, "JSONException in onPostExecute", e);

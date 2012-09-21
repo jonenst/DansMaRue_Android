@@ -104,14 +104,14 @@ public class SplashScreenActivity extends Activity implements RequestListener {
         if (requestCode == AVService.REQUEST_JSON && result != null) {
             try {
                 Log.d(Constants.PROJECT_TAG, "downloaded =" + result);
-                //
-                // JSONObject rootObj = new JSONObject((String) result);
-                // JSONObject answerObj = (JSONObject) rootObj.get(JsonData.PARAM_ANSWER);
-                //
+
+                JSONArray rootArr = new JSONArray((String) result);
+                JSONObject rootObj = rootArr.optJSONObject(0);
+                JSONObject answerObj = (JSONObject) rootObj.get(JsonData.PARAM_ANSWER);
 
                 // ---Workaround ---
-                JSONArray answerArr = new JSONArray((String) result);
-                JSONObject answerObj = answerArr.getJSONObject(0);
+                // JSONArray answerArr = new JSONArray((String) result);
+                // JSONObject answerObj = answerArr.getJSONObject(0);
                 // ----------------
 
                 // Version

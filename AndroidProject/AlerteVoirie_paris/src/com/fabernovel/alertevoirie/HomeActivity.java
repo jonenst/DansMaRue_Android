@@ -152,6 +152,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
             // TODO : DEBUG ONLY!!
             Last_Location.longitude = 2.369384;
             Last_Location.latitude = 48.8467231;
+            // /
 
             JSONObject request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_STATS)
                                                  .put(JsonData.PARAM_UDID, Utils.getUdid(this))
