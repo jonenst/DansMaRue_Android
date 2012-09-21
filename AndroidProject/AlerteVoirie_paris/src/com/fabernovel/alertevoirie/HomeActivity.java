@@ -146,12 +146,12 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
 
         try {
 
-            // Last_Location.longitude = location.getLongitude();
-            // Last_Location.latitude = location.getLatitude();
+            Last_Location.longitude = location.getLongitude();
+            Last_Location.latitude = location.getLatitude();
 
-            // TODO : DEBUG ONLY!!
-            Last_Location.longitude = 2.369384;
-            Last_Location.latitude = 48.8467231;
+            // DEBUG ONLY when not on Paris!!
+            // Last_Location.longitude = 2.369384;
+            // Last_Location.latitude = 48.8467231;
             // /
 
             JSONObject request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_STATS)
