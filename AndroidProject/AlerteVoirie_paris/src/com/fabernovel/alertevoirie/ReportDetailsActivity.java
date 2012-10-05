@@ -112,7 +112,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
     private boolean             hasPic;
 
-    private Uri                 uriOfPicFromCamera;
+    private String              pathOfPicFromCamera;
 
     private Incident            currentIncident             = new Incident();
 
@@ -152,6 +152,10 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         setContentView(R.layout.layout_report_details);
 
         boolean existingIncident = getIntent().getBooleanExtra("existing", false);
+
+        if (savedInstanceState != null) {
+            this.pathOfPicFromCamera = savedInstanceState.getString("pathOfPicFromCamera");
+        }
 
         // init title
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, existingIncident ? R.drawable.icon_mes_rapports : R.drawable.icon_nouveau_rapport);
@@ -240,6 +244,11 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             setCategory(getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, 0));
             startActivityForResult(new Intent(this, SelectPositionActivity.class), REQUEST_POSITION);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        state.putString("pathOfPicFromCamera", this.pathOfPicFromCamera);
     }
 
     @Override
@@ -621,8 +630,8 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         }
 
         Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        uriOfPicFromCamera = Uri.fromFile(tmpFile);
-        camIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriOfPicFromCamera);
+        pathOfPicFromCamera = tmpFile.getAbsolutePath();
+        camIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 
         Intent gallIntent = new Intent();
         gallIntent.setType("image/*");
@@ -647,7 +656,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 if (resultCode == RESULT_OK) {
                     try {
 
-                        String finalPath;
+                        String finalPath = null;
 
                         if (data != null) {
                             Uri path = data.getData();
@@ -665,58 +674,64 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                             }
                             // boolean isImage = true;
                         } else {
-                            finalPath = uriOfPicFromCamera.getPath();
+
+                            if (pathOfPicFromCamera != null) {
+                                finalPath = pathOfPicFromCamera;
+                            }
+
                         }
 
-                        // if (data == null || getMimeType(finalPath).startsWith("image")) {
-                        InputStream in;
-                        BitmapFactory.Options opt = new BitmapFactory.Options();
+                        Log.d("DEBUG", "finalPath=" + finalPath);
 
-                        // get the sample size to have a smaller image
-                        in = getContentResolver().openInputStream(Uri.fromFile(new File(finalPath)));
-                        opt.inSampleSize = getSampleSize(getContentResolver().openInputStream(Uri.fromFile(new File(finalPath))));
-                        in.close();
+                        if (finalPath != null) {
+                            InputStream in;
+                            BitmapFactory.Options opt = new BitmapFactory.Options();
 
-                        // decode a sampled version of the picture
-                        in = getContentResolver().openInputStream(Uri.fromFile(new File(finalPath)));
-                        Bitmap picture = BitmapFactory.decodeStream(in, null, opt);
+                            // get the sample size to have a smaller image
+                            in = getContentResolver().openInputStream(Uri.fromFile(new File(finalPath)));
+                            opt.inSampleSize = getSampleSize(getContentResolver().openInputStream(Uri.fromFile(new File(finalPath))));
+                            in.close();
 
-                        // Bitmap picture = BitmapFactory.decodeFile(finalPath);
-                        in.close();
+                            // decode a sampled version of the picture
+                            in = getContentResolver().openInputStream(Uri.fromFile(new File(finalPath)));
+                            Bitmap picture = BitmapFactory.decodeStream(in, null, opt);
 
-                        File f = new File(uriOfPicFromCamera.getPath());
-                        f.delete();
+                            // Bitmap picture = BitmapFactory.decodeFile(finalPath);
+                            in.close();
 
-                        // save the new image
-                        String pictureName = requestCode == R.id.ImageView_close ? CAPTURE_CLOSE : CAPTURE_FAR;
-                        FileOutputStream fos = openFileOutput(pictureName, MODE_PRIVATE);
+                            File f = new File(pathOfPicFromCamera);
+                            f.delete();
 
-                        picture.compress(CompressFormat.JPEG, 80, fos);
-                        fos.close();
+                            // save the new image
+                            String pictureName = requestCode == R.id.ImageView_close ? CAPTURE_CLOSE : CAPTURE_FAR;
+                            FileOutputStream fos = openFileOutput(pictureName, MODE_PRIVATE);
 
-                        if (requestCode == R.id.ImageView_far || mAdditionalImageType == ADDITIONAL_IMAGE_TYPE_FAR) {
-                            loadZoom();
-                        } else if (mAdditionalImageType == ADDITIONAL_IMAGE_TYPE_CLOSE) {
-                            File img = new File(getFilesDir() + "/" + CAPTURE_FAR);
-                            mCurrentAction = ACTION_ADD_IMAGE;
-                            timeoutHandler.postDelayed(timeout, TIMEOUT);
-                            AVService.getInstance(this).postImage(this, Utils.getUdid(this), "", Long.toString(currentIncident.id), null, img, false);
+                            picture.compress(CompressFormat.JPEG, 80, fos);
+                            fos.close();
+
+                            if (requestCode == R.id.ImageView_far || mAdditionalImageType == ADDITIONAL_IMAGE_TYPE_FAR) {
+                                loadZoom();
+                            } else if (mAdditionalImageType == ADDITIONAL_IMAGE_TYPE_CLOSE) {
+                                File img = new File(getFilesDir() + "/" + CAPTURE_FAR);
+                                mCurrentAction = ACTION_ADD_IMAGE;
+                                timeoutHandler.postDelayed(timeout, TIMEOUT);
+                                AVService.getInstance(this).postImage(this, Utils.getUdid(this), "", Long.toString(currentIncident.id), null, img, false);
+                            }
+
+                            if (requestCode != R.id.existing_incidents_add_picture) {
+                                setPictureToImageView(pictureName, (ImageView) findViewById(requestCode));
+                            }
+
+                            if (requestCode == R.id.ImageView_far && ((TextView) findViewById(R.id.TextView_address)).getText().length() > 0) {
+                                ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
+                            }
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            AlertDialog alert;
+                            builder.setMessage("Image invalide").setCancelable(false).setPositiveButton("Ok", null);
+                            alert = builder.create();
+                            alert.show();
                         }
-
-                        if (requestCode != R.id.existing_incidents_add_picture) {
-                            setPictureToImageView(pictureName, (ImageView) findViewById(requestCode));
-                        }
-
-                        if (requestCode == R.id.ImageView_far && ((TextView) findViewById(R.id.TextView_address)).getText().length() > 0) {
-                            ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
-                        }
-                        // }
-
-                        // FileOutputStream fos = openFileOutput("capture", MODE_WORLD_READABLE);
-                        // InputStream in = getContentResolver().openInputStream(uriOfPicFromCamera);
-                        // Utils.fromInputToOutput(in, fos);
-                        // fos.close();
-                        // in.close();
 
                         mAdditionalImageType = 0;
                     } catch (FileNotFoundException e) {
@@ -724,18 +739,14 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     } catch (IOException e) {
                         Log.e("AlerteVoirie_PM", "", e);
                     } catch (NullPointerException e) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        AlertDialog alert;
-                        builder.setMessage("Image invalide").setCancelable(false).setPositiveButton("Ok", null);
-                        alert = builder.create();
-                        alert.show();
+                        e.printStackTrace();
                     }
 
                 } else if (resultCode == RESULT_CANCELED) {
-                    if (uriOfPicFromCamera != null) {
-                        File tmpFile = new File(uriOfPicFromCamera.getPath());
+                    if (pathOfPicFromCamera != null) {
+                        File tmpFile = new File(pathOfPicFromCamera);
                         tmpFile.delete();
-                        uriOfPicFromCamera = null;
+                        pathOfPicFromCamera = null;
                     }
                 }
                 break;
