@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +56,8 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkForUpdates();
     }
 
     @Override
@@ -75,6 +80,13 @@ public class SplashScreenActivity extends Activity implements RequestListener {
         // next();
         // }
         // }.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkForCrashes();
     }
 
     private void init() {
@@ -103,16 +115,11 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     public void onRequestcompleted(int requestCode, Object result) {
         if (requestCode == AVService.REQUEST_JSON && result != null) {
             try {
-                Log.d(Constants.PROJECT_TAG, "downloaded =" + result);
+                // Log.d(Constants.PROJECT_TAG, "downloaded =" + result);
 
                 JSONArray rootArr = new JSONArray((String) result);
                 JSONObject rootObj = rootArr.optJSONObject(0);
                 JSONObject answerObj = (JSONObject) rootObj.get(JsonData.PARAM_ANSWER);
-
-                // ---Workaround ---
-                // JSONArray answerArr = new JSONArray((String) result);
-                // JSONObject answerObj = answerArr.getJSONObject(0);
-                // ----------------
 
                 // Version
                 String version = answerObj.getString(JsonData.PARAM_VERSION);
@@ -131,7 +138,7 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                         FileOutputStream fos = getApplicationContext().openFileOutput("categories.json", Context.MODE_PRIVATE);
                         Writer out = new OutputStreamWriter(fos);
                         String strObj = categories.toString();
-                        Log.d(Constants.PROJECT_TAG, "---> Write to file = " + strObj);
+                        // Log.d(Constants.PROJECT_TAG, "---> Write to file = " + strObj);
                         out.write(strObj);
                         out.close();
                     } catch (IOException e1) {
@@ -192,5 +199,17 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                                          .show();
         }
 
+    }
+
+    private void checkForCrashes() {
+        if (Constants.USE_HOCKEYAPP) {
+            CrashManager.register(this, Constants.HOCKEY_APP_ID);
+        }
+    }
+
+    private void checkForUpdates() {
+        if (Constants.USE_HOCKEYAPP) {
+            UpdateManager.register(this, Constants.HOCKEY_APP_ID);
+        }
     }
 }

@@ -36,5 +36,9 @@
 		<string
 				name="address_distance">à xm</string>
 
-
+		<string
+				name="search_position">"Recherche de votre position géographique..."</string>
+		
+		<string
+				name="activate_gps">"Le GPS est désactivé, voulez vous l'activer?"</string>
 </resources>

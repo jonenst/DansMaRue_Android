@@ -21,6 +21,9 @@ package com.fabernovel.alertevoirie.entities;
 
 public final class Constants {
 
+    public static final boolean USE_HOCKEYAPP                        = true;
+    public static final String  HOCKEY_APP_ID                        = "b9b8fe70b6839e828c37ac95b8206293";
+
     public final static String  HTTPHEADERKEY_APP_AVAILABLE_VERSION  = "X-App-Available-Version";
     public final static String  HTTPHEADERKEY_APP_X_APP_FORCE_UPDATE = "X-App-Force-Update";
     public static final String  KEY_NEW_VERSION_MSG                  = "KEY_NEW_VERSION_MSG";

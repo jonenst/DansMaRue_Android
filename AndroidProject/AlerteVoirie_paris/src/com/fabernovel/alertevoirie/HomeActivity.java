@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -35,6 +36,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,10 +84,39 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
         findViewById(R.id.Button_new_incident).setOnClickListener(this);
         findViewById(R.id.Button_incidents).setOnClickListener(this);
 
+        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (provider != null) {
+            if (!provider.contains("gps")) {
+                // Notify users and show settings if they want to enable GPS
+                new AlertDialog.Builder(HomeActivity.this).setMessage(getString(R.string.activate_gps))
+                                                          .setPositiveButton("Activer", new DialogInterface.OnClickListener() {
+
+                                                              @Override
+                                                              public void onClick(DialogInterface dialog, int which) {
+                                                                  // TODO Auto-generated method stub
+                                                                  Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                                  startActivityForResult(intent, 5);
+                                                              }
+                                                          })
+                                                          .setNegativeButton("Ignorer", new DialogInterface.OnClickListener() {
+
+                                                              @Override
+                                                              public void onClick(DialogInterface dialog, int which) {
+
+                                                              }
+                                                          })
+                                                          .show();
+            } else {
+                searchForLocation(savedInstanceState);
+            }
+        }
+    }
+
+    private void searchForLocation(Bundle savedInstanceState) {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         lastlocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (savedInstanceState == null) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 25, this);
 
             dialog_shown = true;
             showDialog(DIALOG_PROGRESS);
@@ -94,7 +125,25 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
         } else {
             handleNewLocation(lastlocation);
         }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 5 && resultCode == 0) {
+            String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (provider != null) {
+                switch (provider.length()) {
+                    case 0:
+                        // GPS still not enabled..
+                        break;
+                    default:
+                        searchForLocation(null);
+                        break;
+                }
+            }
+        } else {
+            // the user did not enable his GPS
+        }
     }
 
     @Override

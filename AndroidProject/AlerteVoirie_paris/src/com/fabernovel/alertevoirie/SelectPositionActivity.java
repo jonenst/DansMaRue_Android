@@ -24,7 +24,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -34,6 +38,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,6 +67,8 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
     private CursorOveray                     cursorOverlay;
     private AsyncTask<String, Void, Address> adressTask;
+
+    ProgressDialog                           pd;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -166,21 +173,85 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             };
             adressTask.execute(oldAddress);
         } else {
-            // Acquire a reference to the system Location Manager
-            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-            // Register the listener with the Location Manager to receive location
-            // updates
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (provider != null) {
+                if (!provider.contains("gps")) {
+                    // Notify users and show settings if they want to enable GPS
+                    new AlertDialog.Builder(SelectPositionActivity.this).setMessage(getString(R.string.activate_gps))
+                                                                        .setPositiveButton("Activer", new DialogInterface.OnClickListener() {
 
-            cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-            map.getOverlays().add(cursorOverlay);
-            map.invalidate();
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                // TODO Auto-generated method stub
+                                                                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                                                startActivityForResult(intent, 5);
+                                                                            }
+                                                                        })
+                                                                        .setNegativeButton("Ignorer", new DialogInterface.OnClickListener() {
+
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                            }
+                                                                        })
+                                                                        .show();
+                } else {
+                    searchForLocation();
+                }
+            }
         }
+
+    }
+
+    private void searchForLocation() {
+        pd = new ProgressDialog(this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setIndeterminate(true);
+        pd.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                locationManager.removeUpdates(SelectPositionActivity.this);
+                if (pd.isShowing()) pd.dismiss();
+            }
+        });
+        pd.setMessage(getString(R.string.search_position));
+        pd.show();
+
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        // Register the listener with the Location Manager to receive location
+        // updates
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
+
+        cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+        map.getOverlays().add(cursorOverlay);
+        map.invalidate();
+
         if (currentBestLocation != null) {
             handleNewLocation(currentBestLocation);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 5 && resultCode == 0) {
+            String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (provider != null) {
+                switch (provider.length()) {
+                    case 0:
+                        // GPS still not enabled..
+                        break;
+                    default:
+                        searchForLocation();
+                        break;
+                }
+            }
+        } else {
+            // the user did not enable his GPS
         }
     }
 
@@ -197,6 +268,12 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         // Called when a new location is found by the location provider.
         if (LocationHelper.isBetterLocation(location, currentBestLocation)) {
             handleNewLocation(location);
+
+            // disable GPS if accurate enough
+            if (location.getAccuracy() <= 80) {
+                locationManager.removeUpdates(this);
+                if (pd != null && pd.isShowing()) pd.dismiss();
+            }
         }
     }
 
@@ -233,9 +310,11 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         currentPoint = newGeo;
 
         // ((TextView) findViewById(R.id.TextView_address)).setText(null);
-        ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
-        Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
-        if (!search) new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
+        // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
+        if (!search) {
+            Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
+            new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
+        }
     }
 
     @Override

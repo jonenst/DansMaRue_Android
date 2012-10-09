@@ -625,22 +625,30 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("capture", ".tmp", getExternalFilesDir(null));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        pathOfPicFromCamera = tmpFile.getAbsolutePath();
-        camIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
+        if (tmpFile != null) {
+            Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            pathOfPicFromCamera = tmpFile.getAbsolutePath();
+            camIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
 
-        Intent gallIntent = new Intent();
-        gallIntent.setType("image/*");
-        gallIntent.setAction(Intent.ACTION_GET_CONTENT);
+            Intent gallIntent = new Intent();
+            gallIntent.setType("image/*");
+            gallIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-        if (type == 0) {
-            ReportDetailsActivity.this.startActivityForResult(camIntent, RequestCode);
-        } else if (type == 1) {
-            ReportDetailsActivity.this.startActivityForResult(Intent.createChooser(gallIntent, "Galerie photo"), RequestCode);
+            if (type == 0) {
+                ReportDetailsActivity.this.startActivityForResult(camIntent, RequestCode);
+            } else if (type == 1) {
+                ReportDetailsActivity.this.startActivityForResult(Intent.createChooser(gallIntent, "Galerie photo"), RequestCode);
+            }
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog alert;
+            builder.setMessage("Impossible de lancer la camera").setCancelable(false).setPositiveButton("Ok", null);
+            alert = builder.create();
+            alert.show();
         }
         // startActivityForResult(intent, v.getId());
 
@@ -745,7 +753,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 } else if (resultCode == RESULT_CANCELED) {
                     if (pathOfPicFromCamera != null) {
                         File tmpFile = new File(pathOfPicFromCamera);
-                        tmpFile.delete();
+                        if (tmpFile != null) tmpFile.delete();
                         pathOfPicFromCamera = null;
                     }
                 }
@@ -965,8 +973,14 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         if (requestCode == AVService.REQUEST_JSON && result != null) {
             try {
                 JSONObject answer = new JSONArray((String) result).getJSONObject(0);
-                boolean isIncident = JsonData.VALUE_REQUEST_NEW_INCIDENT.equals(answer.getString(JsonData.PARAM_REQUEST));
-                boolean isOk = (JsonData.VALUE_INCIDENT_SAVED == (answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)));
+                boolean isIncident = false;
+                if (answer.has(JsonData.PARAM_REQUEST)) {
+                    isIncident = JsonData.VALUE_REQUEST_NEW_INCIDENT.equals(answer.getString(JsonData.PARAM_REQUEST));
+                }
+                boolean isOk = false;
+                if (answer.has(JsonData.PARAM_ANSWER)) {
+                    isOk = (JsonData.VALUE_INCIDENT_SAVED == (answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)));
+                }
 
                 if (isIncident && isOk) {
                     /*
@@ -1005,86 +1019,102 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     alert.show();
                 } else {
 
+                    Log.d(Constants.PROJECT_TAG, "Error for answer:" + answer);
                     // hotfix nico : here we can have valid answer for incident updates !!!
                     // handle answer and display popup here instead of when we click on buttons
-                    int statuscode = answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
+                    if (answer != null && answer.has(JsonData.PARAM_ANSWER) && answer.getJSONObject(JsonData.PARAM_ANSWER).has(JsonData.PARAM_STATUS)) {
+                        int statuscode = answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
 
-                    if (statuscode == 0) {
-                        // FIXME end activity when resolve incident ??
-                        switch (mCurrentAction) {
-                            case ACTION_GET_IMAGES:
-                                // Log.d("AlerteVoirie_PM", "images : " + result);
-                                JSONArray imgList = answer.getJSONObject(JsonData.PARAM_ANSWER).getJSONArray(JsonData.PARAM_PHOTOS);
-                                ViewGroup photocontainer = (ViewGroup) findViewById(R.id.extra_images_container);
-                                photocontainer.removeAllViews();
-                                LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-                                for (int i = 0; i < imgList.length() - 2; i++) {
-                                    JSONObject imgObj = imgList.getJSONObject(i);
-                                    // Log.d("AlerteVoirie_PM", "received image obj : " + imgObj);
-                                    View v = getLayoutInflater().inflate(R.layout.extra_photo, null);
-                                    v.setLayoutParams(params);
-                                    TextView date = (TextView) v.findViewById(R.id.textView_date);
-                                    TextView comment = (TextView) v.findViewById(R.id.textView_comment);
-                                    ImageView icon = (ImageView) v.findViewById(R.id.imageView_icon);
+                        if (statuscode == 0) {
+                            // FIXME end activity when resolve incident ??
+                            switch (mCurrentAction) {
+                                case ACTION_GET_IMAGES:
+                                    // Log.d("AlerteVoirie_PM", "images : " + result);
+                                    JSONArray imgList = answer.getJSONObject(JsonData.PARAM_ANSWER).getJSONArray(JsonData.PARAM_PHOTOS);
+                                    ViewGroup photocontainer = (ViewGroup) findViewById(R.id.extra_images_container);
+                                    photocontainer.removeAllViews();
+                                    LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+                                    for (int i = 0; i < imgList.length() - 2; i++) {
+                                        JSONObject imgObj = imgList.getJSONObject(i);
+                                        // Log.d("AlerteVoirie_PM", "received image obj : " + imgObj);
+                                        View v = getLayoutInflater().inflate(R.layout.extra_photo, null);
+                                        v.setLayoutParams(params);
+                                        TextView date = (TextView) v.findViewById(R.id.textView_date);
+                                        TextView comment = (TextView) v.findViewById(R.id.textView_comment);
+                                        ImageView icon = (ImageView) v.findViewById(R.id.imageView_icon);
 
-                                    // format date
-                                    String dateString = imgObj.getString(JsonData.PARAM_IMAGES_DATE);
-                                    date.setText(getFormatedDate(dateString));
+                                        // format date
+                                        String dateString = imgObj.getString(JsonData.PARAM_IMAGES_DATE);
+                                        date.setText(getFormatedDate(dateString));
 
-                                    comment.setText(imgObj.getString(JsonData.PARAM_IMAGES_COMMENT));
-                                    imgd.download(imgObj.getString(JsonData.PARAM_IMAGES_URL), icon);
-                                    photocontainer.addView(v);
+                                        comment.setText(imgObj.getString(JsonData.PARAM_IMAGES_COMMENT));
+                                        imgd.download(imgObj.getString(JsonData.PARAM_IMAGES_URL), icon);
+                                        photocontainer.addView(v);
+                                    }
+                                    if (imgList.length() > 2) {
+                                        findViewById(R.id.TextView_additional_photos_header).setVisibility(View.VISIBLE);
+                                    } else {
+                                        findViewById(R.id.TextView_additional_photos_header).setVisibility(View.GONE);
+                                    }
+                                    break;
+                                case ACTION_CONFIRM_INCIDENT:
+                                    findViewById(R.id.existing_incidents_confirmed).setEnabled(false);
+                                    new AlertDialog.Builder(this).setMessage(R.string.news_incidents_confirmed)
+                                                                 .setPositiveButton(android.R.string.ok, null)
+                                                                 .show();
+                                    break;
+                                case ACTION_INVALID_INCIDENT: {
+                                    AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.news_incidents_invalidated)
+                                                                                      .setPositiveButton(android.R.string.ok, null)
+                                                                                      .create();
+                                    dialog.setOnDismissListener(new OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            finish();
+                                        }
+                                    });
+                                    dialog.show();
+                                    break;
                                 }
-                                if (imgList.length() > 2) {
-                                    findViewById(R.id.TextView_additional_photos_header).setVisibility(View.VISIBLE);
-                                } else {
-                                    findViewById(R.id.TextView_additional_photos_header).setVisibility(View.GONE);
+                                case ACTION_SOLVE_INCIDENT: {
+                                    AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.news_incidents_resolved)
+                                                                                      .setPositiveButton(android.R.string.ok, null)
+                                                                                      .create();
+                                    dialog.setOnDismissListener(new OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            finish();
+                                        }
+                                    });
+                                    dialog.show();
+                                    break;
                                 }
-                                break;
-                            case ACTION_CONFIRM_INCIDENT:
+                                default:
+                                    // assume it's a generic update request in other cases ...
+                                    new AlertDialog.Builder(this).setMessage(R.string.report_detail_update_ok)
+                                                                 .setPositiveButton(android.R.string.ok, null)
+                                                                 .show();
+                                    break;
+                            }
+                        } else {
+
+                            Log.d(Constants.PROJECT_TAG, "other reason");
+                            // other things
+                            // FIXME show popups instead of toasts !
+                            if ((answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)) == 18) {
                                 findViewById(R.id.existing_incidents_confirmed).setEnabled(false);
-                                new AlertDialog.Builder(this).setMessage(R.string.news_incidents_confirmed).setPositiveButton(android.R.string.ok, null).show();
-                                break;
-                            case ACTION_INVALID_INCIDENT: {
-                                AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.news_incidents_invalidated)
-                                                                                  .setPositiveButton(android.R.string.ok, null)
-                                                                                  .create();
-                                dialog.setOnDismissListener(new OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        finish();
-                                    }
-                                });
-                                dialog.show();
-                                break;
+                                Toast.makeText(this, getString(R.string.incident_already_confirmed), Toast.LENGTH_LONG).show();
+                            } else {
+                                // Log.d("AlerteVoirie_PM", "erreur ?");
+                                Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                             }
-                            case ACTION_SOLVE_INCIDENT: {
-                                AlertDialog dialog = new AlertDialog.Builder(this).setMessage(R.string.news_incidents_resolved)
-                                                                                  .setPositiveButton(android.R.string.ok, null)
-                                                                                  .create();
-                                dialog.setOnDismissListener(new OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        finish();
-                                    }
-                                });
-                                dialog.show();
-                                break;
-                            }
-                            default:
-                                // assume it's a generic update request in other cases ...
-                                new AlertDialog.Builder(this).setMessage(R.string.report_detail_update_ok).setPositiveButton(android.R.string.ok, null).show();
-                                break;
                         }
                     } else {
-                        // other things
-                        // FIXME show popups instead of toasts !
-                        if ((answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)) == 18) {
-                            findViewById(R.id.existing_incidents_confirmed).setEnabled(false);
-                            Toast.makeText(this, getString(R.string.incident_already_confirmed), Toast.LENGTH_LONG).show();
-                        } else {
-                            // Log.d("AlerteVoirie_PM", "erreur ?");
-                            Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
+
+                        if (answer != null && answer.has(JsonData.PARAM_ERROR_MESSAGE)) {
+                            // Error for
+                            // answer:{"error":7,"error_message":"l'arrondissement n'est pas trouvé pour cette latitude et longitude. Etes vous bien dans Paris ? lat,lng : 43.309586,5.366887"}
+                            Toast.makeText(this, answer.getString(JsonData.PARAM_ERROR_MESSAGE), Toast.LENGTH_LONG).show();
                         }
                     }
                 }

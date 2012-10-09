@@ -92,4 +92,5 @@ public interface JsonData {
 
     String PARAM_CURRENT_VERSION                   = "curVersion";
     String PARAM_VERSION                           = "version";
+    String PARAM_ERROR_MESSAGE                     = "error_message";
 }

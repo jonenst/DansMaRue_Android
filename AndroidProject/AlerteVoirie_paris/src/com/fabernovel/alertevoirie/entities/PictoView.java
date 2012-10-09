@@ -10,12 +10,12 @@
  * 
  * Alerte Voirie is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Alerte Voirie.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Alerte Voirie. If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 package com.fabernovel.alertevoirie.entities;
 
@@ -52,21 +52,28 @@ public class PictoView extends ImageView {
     private boolean  firstmove   = false;
     Bitmap           arrow;
 
-    public PictoView(Context context) {
-        super(context);
-        setDrawingCacheEnabled(true);
+    Paint            mPaint;
 
-    }
+    // public PictoView(Context context) {
+    // super(context);
+    // setDrawingCacheEnabled(true);
+    //
+    // }
 
     public PictoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setDrawingCacheEnabled(true);
+        setDrawingCacheQuality(DRAWING_CACHE_QUALITY_HIGH);
+
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+
     }
 
-    public PictoView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        setDrawingCacheEnabled(true);
-    }
+    // public PictoView(Context context, AttributeSet attrs, int defStyle) {
+    // super(context, attrs, defStyle);
+    // setDrawingCacheEnabled(true);
+    // }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -223,10 +230,9 @@ public class PictoView extends ImageView {
         Canvas myCanvas = new Canvas(b);
 
         // and then just draw them on canvas
-        myCanvas.drawBitmap(arrow, (b.getWidth() - arrow.getWidth()) / 2 + scaledOffsetX, (b.getHeight() - arrow.getHeight()) / 2 + scaledOffsetY, new Paint());
+        myCanvas.drawBitmap(arrow, (b.getWidth() - arrow.getWidth()) / 2 + scaledOffsetX, (b.getHeight() - arrow.getHeight()) / 2 + scaledOffsetY, mPaint);
 
         b.compress(CompressFormat.JPEG, 80, c.openFileOutput("arrowed.jpg", Context.MODE_PRIVATE));
         return b;
     }
-
 }
