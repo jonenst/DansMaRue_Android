@@ -44,18 +44,18 @@ public class Incident extends OverlayItem {
     public static final char STATUS_RESOLVED = 'R';
     public static final char STATUS_UPDATED  = 'U';
 
-    public String            address;
-    public String            description;
-    public long              categoryId;
-    public double            latitude;
-    public double            longitude;
-    public String            date;
-    public char              state;
-    public int               confirms;
-    public long              id;
-    public JSONArray         pictures_far;
-    public JSONArray         pictures_close;
-    public int               invalidations;
+    public String            address         = "";
+    public String            description     = "";
+    public long              categoryId      = 0;
+    public double            latitude        = 0;
+    public double            longitude       = 0;
+    public String            date            = "";
+    public char              state           = 0;
+    public int               confirms        = 0;
+    public long              id              = 0;
+    public JSONArray         pictures_far    = new JSONArray();
+    public JSONArray         pictures_close  = new JSONArray();
+    public int               invalidations   = 0;
     public JSONObject        json;
     public int               priority        = 3;
     public String            email           = "";
@@ -114,26 +114,54 @@ public class Incident extends OverlayItem {
 
             double latitude = obj.getDouble(JsonData.PARAM_INCIDENT_LATITUDE);
             double longitude = obj.getDouble(JsonData.PARAM_INCIDENT_LONGITUDE);
-            String name = obj.getString(JsonData.PARAM_INCIDENT_DESCRIPTION);
+
+            String name = "";
+            if (obj.has(JsonData.PARAM_INCIDENT_DESCRIPTION)) {
+                name = obj.getString(JsonData.PARAM_INCIDENT_DESCRIPTION);
+            }
 
             Incident result = new Incident(new GeoPoint((int) (latitude * 1E6), (int) (longitude * 1E6)), name, "snippet");
             result.json = obj;
             result.latitude = latitude;
             result.longitude = longitude;
-            result.address = obj.getString(JsonData.PARAM_INCIDENT_ADDRESS);
+            if (obj.has(JsonData.PARAM_INCIDENT_ADDRESS)) {
+                result.address = obj.getString(JsonData.PARAM_INCIDENT_ADDRESS);
+            }
             result.description = name;
-            result.date = obj.getString(JsonData.PARAM_INCIDENT_DATE);
-            result.state = obj.getString(JsonData.PARAM_INCIDENT_STATUS).charAt(0);
+
+            if (obj.has(JsonData.PARAM_INCIDENT_DATE)) {
+                result.date = obj.getString(JsonData.PARAM_INCIDENT_DATE);
+            } else {
+                result.date = "";
+            }
+
+            if (obj.has(JsonData.PARAM_INCIDENT_STATUS)) {
+                result.state = obj.getString(JsonData.PARAM_INCIDENT_STATUS).charAt(0);
+            }
             result.categoryId = obj.getLong(JsonData.PARAM_INCIDENT_CATEGORY);
 
             result.confirms = obj.getInt(JsonData.PARAM_INCIDENT_CONFIRMS);
             result.invalidations = obj.getInt(JsonData.PARAM_INCIDENT_INVALIDATION);
             result.id = obj.getLong(JsonData.PARAM_INCIDENT_ID);
-            result.pictures_far = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_FAR);
-            result.pictures_close = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_CLOSE);
+
+            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES_FAR)) {
+                result.pictures_far = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_FAR);
+            } else {
+                result.pictures_far = new JSONArray();
+            }
+
+            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES_CLOSE)) {
+                result.pictures_close = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_CLOSE);
+            } else {
+                result.pictures_close = new JSONArray();
+            }
 
             if (obj.has(JsonData.PARAM_INCIDENT_PRIORITY)) {
                 result.priority = obj.getInt(JsonData.PARAM_INCIDENT_PRIORITY);
+            }
+
+            if (obj.has(JsonData.PARAM_INCIDENT_EMAIL)) {
+                result.email = obj.getString(JsonData.PARAM_INCIDENT_EMAIL);
             }
 
             result.setMarker(c.getResources().getDrawable(fr.paris.android.signalement.R.drawable.map_cursor));
@@ -142,6 +170,32 @@ public class Incident extends OverlayItem {
             Log.e(Constants.PROJECT_TAG, "Can't create Incident", e);
             return null;
         }
+    }
+
+    public static JSONObject toJSONObject(Incident input) {
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put(JsonData.PARAM_INCIDENT_LATITUDE, input.latitude);
+            jsonObj.put(JsonData.PARAM_INCIDENT_LONGITUDE, input.longitude);
+            jsonObj.put(JsonData.PARAM_INCIDENT_ADDRESS, input.address);
+            jsonObj.put(JsonData.PARAM_INCIDENT_DESCRIPTION, input.description);
+            jsonObj.put(JsonData.PARAM_INCIDENT_DATE, input.date);
+            jsonObj.put(JsonData.PARAM_INCIDENT_STATUS, input.state);
+            jsonObj.put(JsonData.PARAM_INCIDENT_CATEGORY, input.categoryId);
+            jsonObj.put(JsonData.PARAM_INCIDENT_CONFIRMS, input.confirms);
+            jsonObj.put(JsonData.PARAM_INCIDENT_INVALIDATION, input.invalidations);
+            jsonObj.put(JsonData.PARAM_INCIDENT_ID, input.id);
+            JSONObject pictures = new JSONObject();
+            pictures.put(JsonData.PARAM_INCIDENT_PICTURES_FAR, input.pictures_far);
+            pictures.put(JsonData.PARAM_INCIDENT_PICTURES_CLOSE, input.pictures_close);
+            jsonObj.put(JsonData.PARAM_INCIDENT_PICTURES, pictures);
+            jsonObj.put(JsonData.PARAM_INCIDENT_PRIORITY, input.priority);
+            jsonObj.put(JsonData.PARAM_INCIDENT_EMAIL, input.email);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObj;
     }
 
     @Override

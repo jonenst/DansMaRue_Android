@@ -151,7 +151,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.layout_report_details);
 
-        Log.d("DEBUG", "ReportDetailsActivity onCreate");
+        // Log.d("DEBUG", "ReportDetailsActivity onCreate");
 
         boolean existingIncident = getIntent().getBooleanExtra("existing", false);
 
@@ -169,10 +169,6 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         File img_close = new File(getFilesDir() + "/" + CAPTURE_CLOSE);
         File img_far = new File(getFilesDir() + "/" + CAPTURE_ARROW);
         File img_far2 = new File(getFilesDir() + "/" + CAPTURE_FAR);
-
-        img_close.delete();
-        img_far.delete();
-        img_far2.delete();
 
         if (existingIncident) {
             validate.setVisibility(View.GONE);
@@ -242,23 +238,64 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
         validate.setOnClickListener(this);
 
-        if (getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1) != -1) {
-            setCategory(getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, 0));
-            startActivityForResult(new Intent(this, SelectPositionActivity.class), REQUEST_POSITION);
+        if (savedInstanceState == null) {
+
+            img_close.delete();
+            img_far.delete();
+            img_far2.delete();
+
+            if (getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1) != -1) {
+                setCategory(getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, 0));
+                startActivityForResult(new Intent(this, SelectPositionActivity.class), REQUEST_POSITION);
+            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle state) {
 
-        Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
+        // Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
         state.putString("pathOfPicFromCamera", this.pathOfPicFromCamera);
+
+        String jsonStr = Incident.toJSONObject(currentIncident).toString();
+        // Log.d("DEBUG", "-->>>jsonStr=" + jsonStr);
+        state.putString("currentIncident", jsonStr);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Log.d("DEBUG", "ReportDetailsActivity onRestoreInstanceState");
+
+        String jsonStr = savedInstanceState.getString("currentIncident");
+        // Log.d("DEBUG", "<<<<--jsonStr=" + jsonStr);
+
+        try {
+            currentIncident = Incident.fromJSONObject(this, new JSONObject(savedInstanceState.getString("currentIncident")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // reconfigure views
+        if (getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1) != -1) {
+            setCategory(getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, 0));
+        }
+        ((TextView) findViewById(R.id.TextView_comment)).setText(currentIncident.description);
+        ((TextView) findViewById(R.id.TextView_address)).setText(currentIncident.address);
+        if (currentIncident.address != null && currentIncident.address.length() > 0) {
+            ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
+        }
+        TextView mail_tv = (TextView) findViewById(R.id.TextView_sub_email);
+        mail_tv.setText(currentIncident.email);
+        TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);
+        tv.setText(getResources().getStringArray(R.array.priorities)[currentIncident.priority - 1]);
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onDestroy() {
 
-        Log.d("DEBUG", "ReportDetailsActivity onDestroy");
+        // Log.d("DEBUG", "ReportDetailsActivity onDestroy");
         super.onDestroy();
     }
 

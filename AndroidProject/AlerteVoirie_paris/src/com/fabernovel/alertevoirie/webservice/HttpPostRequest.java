@@ -115,7 +115,7 @@ public class HttpPostRequest {
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             // Set the default socket timeout (SO_TIMEOUT)
             // in milliseconds which is the timeout for waiting for data.
-            int timeoutSocket = 5000;
+            int timeoutSocket = 50000;
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);

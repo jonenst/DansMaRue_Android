@@ -2,5 +2,6 @@
 <resources>
     
     <!--<string name="map_api_key">0zv3oFzgfk69s9l6wFfYtFKaULdDVyQ531tNq3Q</string>  PLE (Home) -->
-    <string name="map_api_key">0G45FiY8kp4NoF61aKRniP3aernIy7yKsrizIxA</string> <!-- TLA (Work) -->
+    <!--<string name="map_api_key">0G45FiY8kp4NoF61aKRniP3aernIy7yKsrizIxA</string> TLA (Work) -->
+    <string name="map_api_key">0C8yhKNmxdiFwPxGaGkZTDoGItVUmF6CVOVlOmw</string> <!-- R75 -->
 </resources>

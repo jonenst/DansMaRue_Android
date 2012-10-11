@@ -211,6 +211,7 @@ public class PictoView extends ImageView {
      */
     public Bitmap setSupport(Bitmap picture, float targetx, float targety, Context c) throws FileNotFoundException {
         // 320*480
+        if (picture == null) return picture;
 
         Bitmap arrow = ((BitmapDrawable) this.getDrawable()).getBitmap();
 

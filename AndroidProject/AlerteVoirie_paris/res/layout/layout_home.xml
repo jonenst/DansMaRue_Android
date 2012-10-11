@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/RelativeLayout01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/Button_reports"
         android:layout_weight="1" >
 
         <Button
@@ -17,7 +20,7 @@
             android:layout_marginLeft="@dimen/home_button_margin_side"
             android:layout_marginTop="@dimen/home_button_vertical_spacing"
             android:background="@drawable/btn_new_incident"
-            android:text="NEW INCIDENT" />
+            android:text="@string/home_btn_new_incident" />
 
         <Button
             android:id="@+id/Button_incidents"
@@ -56,12 +59,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
-        android:text="@string/home_label_reports" >
-    </TextView>
+        android:text="@string/home_label_reports" />
 
     <LinearLayout
+        android:id="@+id/LinearLayout01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/RelativeLayout01"
         android:layout_gravity="center"
         android:layout_marginBottom="10dip"
         android:layout_marginLeft="10dip"
@@ -71,6 +75,7 @@
         android:orientation="horizontal" >
 
         <LinearLayout
+            android:id="@+id/LinearLayout02"
             style="@style/Button"
             android:layout_width="70dip"
             android:layout_height="wrap_content"
@@ -87,11 +92,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center"
-                android:textSize="13dip" >
-            </TextView>
+                android:textSize="13dip" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/LinearLayout04"
             style="@style/Button"
             android:layout_width="70dip"
             android:layout_height="wrap_content"
@@ -106,11 +111,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="13dip" >
-            </TextView>
+                android:textSize="13dip" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/LinearLayout03"
             style="@style/Button"
             android:layout_width="70dip"
             android:layout_height="wrap_content"
@@ -126,8 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="13dip" >
-            </TextView>
+                android:textSize="13dip" />
         </LinearLayout>
     </LinearLayout>
 

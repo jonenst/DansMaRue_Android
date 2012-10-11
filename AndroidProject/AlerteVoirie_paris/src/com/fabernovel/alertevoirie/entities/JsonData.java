@@ -68,6 +68,7 @@ public interface JsonData {
     String PARAM_INCIDENT_CONFIRMS                 = "confirms";
     String PARAM_INCIDENTS                         = "incidents";
     String PARAM_INCIDENT_PRIORITY                 = "priorityId";
+    String PARAM_INCIDENT_EMAIL                    = "email";
 
     String ANSWER_INCIDENT_ID                      = "incidentId";
     String PARAM_DECLARED_INCIDENTS                = "declared_incidents";
