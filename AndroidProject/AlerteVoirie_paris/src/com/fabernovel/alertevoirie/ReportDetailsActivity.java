@@ -151,6 +151,8 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.layout_report_details);
 
+        Log.d("DEBUG", "ReportDetailsActivity onCreate");
+
         boolean existingIncident = getIntent().getBooleanExtra("existing", false);
 
         if (savedInstanceState != null) {
@@ -248,7 +250,16 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
     @Override
     public void onSaveInstanceState(Bundle state) {
+
+        Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
         state.putString("pathOfPicFromCamera", this.pathOfPicFromCamera);
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        Log.d("DEBUG", "ReportDetailsActivity onDestroy");
+        super.onDestroy();
     }
 
     @Override
@@ -610,6 +621,9 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
     }
 
     protected void loadZoom() {
+
+        Log.d("DEBUG", "loadZoom");
+
         canvalidate = true;
         findViewById(R.id.LinearLayout_comment).setVisibility(View.VISIBLE);
         // Log.d("AlerteVoirie_PM", "launch the damn thing !");
@@ -804,13 +818,19 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 }
                 break;
             case REQUEST_DETAILS:
+
+                Log.d("DEBUG", "onActivityResult REQUEST_DETAILS");
                 if (resultCode == RESULT_OK) {
+
+                    Log.d("DEBUG", "RESULT_OK");
                     // startActivityForResult(data, requestCode)
 
                     if (mCurrentAction == ACTION_ADD_IMAGE) {
+                        Log.d("DEBUG", "--1");
                         Intent i = new Intent(getApplicationContext(), AddCommentActivity.class);
                         startActivityForResult(i, REQUEST_IMAGE_COMMENT);
                     } else {
+                        Log.d("DEBUG", "--2");
                         // set new img
                         setPictureToImageView("arrowed.jpg", (ImageView) findViewById(R.id.ImageView_far));
                         loadComment(REQUEST_COMMENT);
