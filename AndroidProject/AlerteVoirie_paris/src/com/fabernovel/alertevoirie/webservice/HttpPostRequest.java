@@ -130,7 +130,9 @@ public class HttpPostRequest {
 
             // Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
 
-            final HttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response;
+            response = httpClient.execute(httpPost);
+
             Utils.handeResponseHeaders(context, response, false);
 
             final HttpEntity entity = response.getEntity();
@@ -140,6 +142,9 @@ public class HttpPostRequest {
         } catch (final UnsupportedEncodingException uee) {
             Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);
             throw new AVServiceErrorException(999);
+        } catch (org.apache.http.conn.ConnectTimeoutException cte) {
+            cte.printStackTrace();
+            throw new AVServiceErrorException(998);
         } catch (final IOException ioe) {
             Log.e(Constants.PROJECT_TAG, "IOException", ioe);
             throw new AVServiceErrorException(999);

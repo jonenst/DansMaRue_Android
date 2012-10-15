@@ -1188,7 +1188,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             AVServiceErrorException error = null;
             if (result instanceof JSONException) {
                 error = new AVServiceErrorException(7);
-                Toast.makeText(getApplicationContext(), "Erreur serveur : mauvais flux JSON", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Erreur serveur : mauvais flux JSON", Toast.LENGTH_LONG).show();
             } else {
                 error = (AVServiceErrorException) result;
             }
@@ -1253,15 +1253,15 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 return mPd;
 
             case DIALOG_TIMEOUT:
-                return new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.timeout_popup_title)
-                                                                       .setMessage(R.string.timeout_popup_message)
-                                                                       .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                                           @Override
-                                                                           public void onClick(DialogInterface dialog, int which) {
-                                                                               finish();
-                                                                           }
-                                                                       })
-                                                                       .create();
+                return new AlertDialog.Builder(this).setTitle(R.string.timeout_popup_title)
+                                                    .setMessage(R.string.timeout_popup_message)
+                                                    .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .create();
 
             default:
                 return super.onCreateDialog(id);

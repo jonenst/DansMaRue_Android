@@ -77,17 +77,17 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
                                                      public void run() {
                                                          if (mPd != null) {
                                                              mPd.dismiss();
-                                                             new AlertDialog.Builder(getApplicationContext()).setTitle(R.string.timeout_popup_title)
-                                                                                                             .setMessage(R.string.timeout_popup_message)
-                                                                                                             .setNegativeButton(android.R.string.ok,
-                                                                                                                                new DialogInterface.OnClickListener() {
-                                                                                                                                    @Override
-                                                                                                                                    public void onClick(DialogInterface dialog,
-                                                                                                                                                        int which) {
-                                                                                                                                        finish();
-                                                                                                                                    }
-                                                                                                                                })
-                                                                                                             .show();
+                                                             new AlertDialog.Builder(MyIncidentsActivity.this).setTitle(R.string.timeout_popup_title)
+                                                                                                              .setMessage(R.string.timeout_popup_message)
+                                                                                                              .setNegativeButton(android.R.string.ok,
+                                                                                                                                 new DialogInterface.OnClickListener() {
+                                                                                                                                     @Override
+                                                                                                                                     public void onClick(DialogInterface dialog,
+                                                                                                                                                         int which) {
+                                                                                                                                         finish();
+                                                                                                                                     }
+                                                                                                                                 })
+                                                                                                              .show();
                                                          }
                                                      }
                                                  };
