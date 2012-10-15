@@ -59,6 +59,7 @@ public class SelectZoomDetail extends Activity {
 
         photo = ((ImageView) findViewById(R.id.ImageViewPictoBG));
         picto = ((PictoView) findViewById(R.id.ViewPicto));
+        final Button okBtn = (Button) findViewById(R.id.ButtonViewPicto);
 
         setPictureToImageView(ReportDetailsActivity.CAPTURE_FAR, photo);
 
@@ -73,13 +74,14 @@ public class SelectZoomDetail extends Activity {
                 params.height = photo.getHeight();
 
                 picto.setLayoutParams(params);
+                okBtn.setVisibility(View.VISIBLE);
             }
         }, 1000);
         ((EditText) SelectZoomDetail.this.findViewById(R.id.Comment_img)).setText(getIntent().getStringExtra("comment"));
 
         ((EditText) SelectZoomDetail.this.findViewById(R.id.Comment_img)).setVisibility(View.INVISIBLE);
 
-        ((Button) findViewById(R.id.ButtonViewPicto)).setOnClickListener(new OnClickListener() {
+        okBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -105,7 +107,7 @@ public class SelectZoomDetail extends Activity {
 
             }
         });
-
+        okBtn.postInvalidate();
     }
 
     private void setPictureToImageView(String pictureName, ImageView imageView) {

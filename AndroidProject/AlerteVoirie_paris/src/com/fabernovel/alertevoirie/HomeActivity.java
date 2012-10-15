@@ -19,6 +19,9 @@
  */
 package com.fabernovel.alertevoirie;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,6 +113,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
                 searchForLocation(savedInstanceState);
             }
         }
+        checkForUpdates();
     }
 
     private void searchForLocation(Bundle savedInstanceState) {
@@ -147,6 +151,15 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        hidedialog = true;
+
+        retreiveIncidentsStats();
+        checkForCrashes();
+    }
+
+    @Override
     protected void onPause() {
         this.hidedialog = false;
         super.onPause();
@@ -156,19 +169,19 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Button_news:
-                Log.d("TEST", "Click button news");
+                // Log.d("DEBUG", "Click button news");
                 startActivity(new Intent(this, NewsActivity.class));
                 break;
             case R.id.Button_reports:
-                Log.d("TEST", "Click button reports");
+                // Log.d("DEBUG", "Click button reports");
                 startActivity((new Intent(this, MyIncidentsActivity.class)));
                 break;
             case R.id.Button_incidents:
-                Log.d("TEST", "Click button incidents");
+                // Log.d("DEBUG", "Click button incidents");
                 startActivity((new Intent(this, IncidentsActivityMap.class)));
                 break;
             case R.id.Button_new_incident:
-                Log.d("TEST", "Click button new incident");
+                // Log.d("DEBUG", "Click button new incident");
                 Intent i = new Intent(this, ExistingIncidentsActivity.class);
                 i.putExtra(Constants.NEW_REPORT, true);
                 startActivity(i);
@@ -198,25 +211,32 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
             Last_Location.longitude = location.getLongitude();
             Last_Location.latitude = location.getLatitude();
 
-            // DEBUG ONLY when not on Paris!!
-            // Last_Location.longitude = 2.369384;
-            // Last_Location.latitude = 48.8467231;
+            // DEBUG ONLY when not on Paris (2 rue de la cité 75004 Paris)!!
+            Last_Location.longitude = 2.347629;
+            Last_Location.latitude = 48.854491;
             // /
 
-            JSONObject request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_STATS)
-                                                 .put(JsonData.PARAM_UDID, Utils.getUdid(this))
-                                                 .put(JsonData.PARAM_POSITION,
-                                                      new JSONObject().put(JsonData.PARAM_POSITION_LONGITUDE, Last_Location.longitude)
-                                                                      .put(JsonData.PARAM_POSITION_LATITUDE, Last_Location.latitude));
-            AVService.getInstance(this).postJSON(new JSONArray().put(request), this);
+            retreiveIncidentsStats();
 
             hidedialog = true;
-        } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Error loading existing incidents", e);
         } catch (NullPointerException e) {
             Log.e(Constants.PROJECT_TAG, "Nullpointer Error", e);
         }
 
+    }
+
+    public void retreiveIncidentsStats() {
+        JSONObject request;
+        try {
+            request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_STATS)
+                                      .put(JsonData.PARAM_UDID, Utils.getUdid(this))
+                                      .put(JsonData.PARAM_POSITION,
+                                           new JSONObject().put(JsonData.PARAM_POSITION_LONGITUDE, Last_Location.longitude)
+                                                           .put(JsonData.PARAM_POSITION_LATITUDE, Last_Location.latitude));
+            AVService.getInstance(this).postJSON(new JSONArray().put(request), this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -313,13 +333,6 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
     }
 
     @Override
-    protected void onResume() {
-        hidedialog = true;
-        // handleNewLocation(lastlocation);
-        super.onResume();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_CREDITS, Menu.FIRST, R.string.menu_credits).setIcon(android.R.drawable.ic_menu_info_details);
         return super.onCreateOptionsMenu(menu);
@@ -337,5 +350,17 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void checkForCrashes() {
+        if (Constants.USE_HOCKEYAPP) {
+            CrashManager.register(this, Constants.HOCKEY_APP_ID);
+        }
+    }
+
+    private void checkForUpdates() {
+        if (Constants.USE_HOCKEYAPP) {
+            UpdateManager.register(this, Constants.HOCKEY_APP_ID);
+        }
     }
 }

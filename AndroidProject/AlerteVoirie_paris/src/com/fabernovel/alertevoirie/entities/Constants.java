@@ -50,7 +50,7 @@ public final class Constants {
     private static final String AV_URL_DEV_LUTECE_SIRA_INTEG         = "http://dev.lutece.paris.fr/sira-integ/rest/signalement/api/";
     private static final String AV_URL_DEV_LUTECE_SIRA_R7            = "http://dev.lutece.paris.fr/sira/rest/signalement/api/";
     private static final String AV_URL_DEV_LUTECE_R57_SIRA           = "http://r57-sira-ws.rec.apps.paris.fr/sira/rest/signalement/api/";
-    public static final String  AV_URL                               = AV_URL_DEV_LUTECE_R57_SIRA;
+    public static final String  AV_URL                               = AV_URL_DEV_LUTECE_SIRA_INTEG;
     public static final String  CATEGORY_PROVIDER_AUTHORITY          = "fr.paris.android.signalement.dataprovider.advice";
 
 }

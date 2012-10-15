@@ -12,6 +12,7 @@
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
 				android:adjustViewBounds="true"></ImageView>
+		
 		<com.fabernovel.alertevoirie.entities.PictoView
 				android:id="@+id/ViewPicto"
 				android:src="@drawable/big_arrow"
@@ -34,5 +35,6 @@
 				android:layout_gravity="bottom|right"
 				android:text="ok"
 				style="@style/Button"
-				android:layout_margin="10dip"></Button>
+				android:layout_margin="10dip"
+				android:visibility="gone"></Button>
 </FrameLayout>

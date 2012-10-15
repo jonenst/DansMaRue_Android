@@ -24,9 +24,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,8 +53,6 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        checkForUpdates();
     }
 
     @Override
@@ -80,13 +75,6 @@ public class SplashScreenActivity extends Activity implements RequestListener {
         // next();
         // }
         // }.start();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        checkForCrashes();
     }
 
     private void init() {
@@ -201,15 +189,4 @@ public class SplashScreenActivity extends Activity implements RequestListener {
 
     }
 
-    private void checkForCrashes() {
-        if (Constants.USE_HOCKEYAPP) {
-            CrashManager.register(this, Constants.HOCKEY_APP_ID);
-        }
-    }
-
-    private void checkForUpdates() {
-        if (Constants.USE_HOCKEYAPP) {
-            UpdateManager.register(this, Constants.HOCKEY_APP_ID);
-        }
-    }
 }

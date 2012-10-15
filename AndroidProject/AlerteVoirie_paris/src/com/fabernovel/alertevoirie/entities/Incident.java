@@ -144,13 +144,15 @@ public class Incident extends OverlayItem {
             result.invalidations = obj.getInt(JsonData.PARAM_INCIDENT_INVALIDATION);
             result.id = obj.getLong(JsonData.PARAM_INCIDENT_ID);
 
-            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES_FAR)) {
+            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES)) {
                 result.pictures_far = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_FAR);
+                Log.d("DEBUG", "--->>result.pictures_far=" + result.pictures_far.toString());
             } else {
                 result.pictures_far = new JSONArray();
+                Log.d("DEBUG", "--->>result.pictures_far empty");
             }
 
-            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES_CLOSE)) {
+            if (obj.has(JsonData.PARAM_INCIDENT_PICTURES)) {
                 result.pictures_close = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_CLOSE);
             } else {
                 result.pictures_close = new JSONArray();

@@ -142,8 +142,10 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                     JSONArray items2 = new JSONArray();
 
                     for (int i = 0; i < items.length(); i++) {
-                        Incident inc = Incident.fromJSONObject(this, items.getJSONObject(i));
-                        if (inc.state != 'R') items2.put(items.getJSONObject(i));
+                        JSONObject jsonObj = items.getJSONObject(i);
+                        // Log.d("DEBUG", "--->>jsonObj=" + jsonObj.toString());
+                        Incident inc = Incident.fromJSONObject(this, jsonObj);
+                        if (inc.state != 'R') items2.put(jsonObj);
                     }
                     setListAdapter(new MagicAdapter(this, items2, R.layout.cell_report, new String[] { JsonData.PARAM_INCIDENT_DESCRIPTION },
                                                     new int[] { R.id.TextView_text }));
