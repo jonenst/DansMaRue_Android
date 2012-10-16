@@ -212,8 +212,10 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
             Last_Location.latitude = location.getLatitude();
 
             // DEBUG ONLY when not on Paris (2 rue de la cité 75004 Paris)!!
-            Last_Location.longitude = 2.347629;
-            Last_Location.latitude = 48.854491;
+            if (Constants.DEBUGMODE) {
+                Last_Location.longitude = 2.347629;
+                Last_Location.latitude = 48.854491;
+            }
             // /
 
             retreiveIncidentsStats();

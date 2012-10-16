@@ -21,7 +21,9 @@ package com.fabernovel.alertevoirie.entities;
 
 public final class Constants {
 
-    public static final boolean USE_HOCKEYAPP                        = true;
+    public static final boolean DEBUGMODE                            = false;
+
+    public static final boolean USE_HOCKEYAPP                        = DEBUGMODE;
     public static final String  HOCKEY_APP_ID                        = "b9b8fe70b6839e828c37ac95b8206293";
 
     public final static String  HTTPHEADERKEY_APP_AVAILABLE_VERSION  = "X-App-Available-Version";
@@ -33,7 +35,6 @@ public final class Constants {
     public static final int     PICTURE_PREFERED_WIDTH               = 640;
     public static final String  NEW_REPORT                           = "NewReport";
     public static final String  SDCARD_PATH                          = "/Android/data/" + RESOURCES_PACKAGE;
-    public static final boolean DEBUGMODE                            = false;
     public static final long    TIMEOUT                              = 30000;
 
     // C4M =====================================================================
@@ -50,7 +51,7 @@ public final class Constants {
     private static final String AV_URL_DEV_LUTECE_SIRA_INTEG         = "http://dev.lutece.paris.fr/sira-integ/rest/signalement/api/";
     private static final String AV_URL_DEV_LUTECE_SIRA_R7            = "http://dev.lutece.paris.fr/sira/rest/signalement/api/";
     private static final String AV_URL_DEV_LUTECE_R57_SIRA           = "http://r57-sira-ws.rec.apps.paris.fr/sira/rest/signalement/api/";
-    public static final String  AV_URL                               = AV_URL_DEV_LUTECE_R57_SIRA;
     public static final String  CATEGORY_PROVIDER_AUTHORITY          = "fr.paris.android.signalement.dataprovider.advice";
 
+    public static final String  AV_URL                               = DEBUGMODE ? AV_URL_DEV_LUTECE_SIRA_INTEG : AV_URL_DEV_LUTECE_R57_SIRA;
 }

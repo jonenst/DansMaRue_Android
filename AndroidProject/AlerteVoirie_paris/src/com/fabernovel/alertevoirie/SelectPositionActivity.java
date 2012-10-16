@@ -368,7 +368,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             try {
                 List<Address> addr;
 
-                if (!search) {
+                if (!search && params.length == 2) {
                     addr = geo.getFromLocation(params[0], params[1], 1);
                 } else {
                     String address = ((TextView) findViewById(R.id.EditText_address_number)).getText().toString() + " "
