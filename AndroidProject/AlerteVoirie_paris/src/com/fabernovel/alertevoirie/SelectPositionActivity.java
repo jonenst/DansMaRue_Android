@@ -161,14 +161,17 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
                 @Override
                 protected void onPostExecute(Address result) {
-                    ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
-                    ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
-                    ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
-                    cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-                    GeoPoint oldGeo = new GeoPoint((int) (result.getLatitude() * 1E6), (int) (result.getLongitude() * 1E6));
-                    cursorOverlay.setGeopoint(oldGeo);
-                    map.getOverlays().add(cursorOverlay);
-                    map.getController().animateTo(oldGeo);
+
+                    if (result != null) {
+                        ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
+                        ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
+                        ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
+                        cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+                        GeoPoint oldGeo = new GeoPoint((int) (result.getLatitude() * 1E6), (int) (result.getLongitude() * 1E6));
+                        cursorOverlay.setGeopoint(oldGeo);
+                        map.getOverlays().add(cursorOverlay);
+                        map.getController().animateTo(oldGeo);
+                    }
                 };
             };
             adressTask.execute(oldAddress);

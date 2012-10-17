@@ -53,6 +53,8 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_splash);
     }
 
     @Override
@@ -91,12 +93,12 @@ public class SplashScreenActivity extends Activity implements RequestListener {
     }
 
     private void next() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
-            }
-        });
+        // runOnUiThread(new Runnable() {
+        // @Override
+        // public void run() {
+        startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
+        // }
+        // });
     }
 
     @Override
@@ -140,15 +142,15 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                 e.printStackTrace();
                 Log.e(Constants.PROJECT_TAG, "Erreur dde recuperation des categories", e);
 
-                new AlertDialog.Builder(this).setTitle(R.string.error_popup_title)
-                                             .setMessage(e.getLocalizedMessage())
-                                             .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(DialogInterface dialog, int which) {
-                                                     finish();
-                                                 }
-                                             })
-                                             .show();
+                new AlertDialog.Builder(SplashScreenActivity.this).setTitle(R.string.error_popup_title)
+                                                                  .setMessage(e.getLocalizedMessage())
+                                                                  .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                      @Override
+                                                                      public void onClick(DialogInterface dialog, int which) {
+                                                                          finish();
+                                                                      }
+                                                                  })
+                                                                  .show();
             }
 
         } else if (requestCode == AVService.REQUEST_ERROR) {
@@ -176,15 +178,17 @@ public class SplashScreenActivity extends Activity implements RequestListener {
                 }
             }
 
-            new AlertDialog.Builder(this).setTitle(R.string.error_popup_title)
-                                         .setMessage(errorString)
-                                         .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                             @Override
-                                             public void onClick(DialogInterface dialog, int which) {
-                                                 finish();
-                                             }
-                                         })
-                                         .show();
+            if (!this.isFinishing()) {
+                new AlertDialog.Builder(SplashScreenActivity.this).setTitle(R.string.error_popup_title)
+                                                                  .setMessage(errorString)
+                                                                  .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                      @Override
+                                                                      public void onClick(DialogInterface dialog, int which) {
+                                                                          finish();
+                                                                      }
+                                                                  })
+                                                                  .show();
+            }
         }
 
     }

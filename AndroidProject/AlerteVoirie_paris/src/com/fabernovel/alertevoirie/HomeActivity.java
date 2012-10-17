@@ -266,7 +266,10 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
                 pd.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        if (dialog_shown) removeDialog(DIALOG_PROGRESS);
+                        if (dialog_shown) {
+                            removeDialog(DIALOG_PROGRESS);
+                            dialog_shown = false;
+                        }
                     }
                 });
                 pd.setOnCancelListener(new OnCancelListener() {
@@ -329,7 +332,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
         } catch (ClassCastException e) {
             Log.e(Constants.PROJECT_TAG, "Invalid result. Trying to cast " + result.getClass() + "into String", e);
         } finally {
-            if (hidedialog) dismissDialog(DIALOG_PROGRESS);
+            if (hidedialog && dialog_shown == true) dismissDialog(DIALOG_PROGRESS);
             dialog_shown = false;
         }
     }
