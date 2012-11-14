@@ -21,9 +21,9 @@ package com.fabernovel.alertevoirie.entities;
 
 public final class Constants {
 
-    public static final boolean DEBUGMODE                            = false;
-    public static final boolean USE_HOCKEYAPP                        = true;                                                                 // to remove for
-                                                                                                                                              // publish build
+    public static final boolean DEBUGMODE                            = true;
+    public static final boolean USE_HOCKEYAPP                        = DEBUGMODE;                                                        // to remove for
+    // publish build
 
     public static final String  HOCKEY_APP_ID                        = "b9b8fe70b6839e828c37ac95b8206293";
 
@@ -55,5 +55,5 @@ public final class Constants {
     public static final String  CATEGORY_PROVIDER_AUTHORITY          = "fr.paris.android.signalement.dataprovider.advice";
     private static final String AV_URL_PROD                          = "http://r57-sira-ws.apps.paris.fr/sira/rest/signalement/api/";
 
-    public static final String  AV_URL                               = DEBUGMODE ? AV_URL_DEV_LUTECE_SIRA_INTEG : AV_URL_DEV_LUTECE_R57_SIRA;
+    public static final String  AV_URL                               = DEBUGMODE ? AV_URL_DEV_LUTECE_R57_SIRA : AV_URL_PROD;
 }

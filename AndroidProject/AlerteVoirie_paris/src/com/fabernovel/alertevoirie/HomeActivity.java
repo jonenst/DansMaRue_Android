@@ -216,7 +216,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
                 Last_Location.longitude = 2.347629;
                 Last_Location.latitude = 48.854491;
             }
-            // /
+            //
 
             retreiveIncidentsStats();
 

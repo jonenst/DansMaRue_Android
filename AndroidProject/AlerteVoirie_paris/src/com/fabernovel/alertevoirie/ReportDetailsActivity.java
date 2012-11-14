@@ -453,6 +453,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                                              new DialogInterface.OnClickListener() {
                                                  @Override
                                                  public void onClick(DialogInterface dialog, int item) {
+                                                     // Log.d("DEBUG", "onClick=" + item);
                                                      currentIncident.priority = item + 1;
 
                                                      TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);

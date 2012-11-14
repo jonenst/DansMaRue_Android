@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 		<string
-				name="add_comment_title">Nouveau rapport</string>
+				name="add_comment_title">Nouveau message</string>
 		<string
 				name="add_comment_header">Votre commentaire</string>
 		<string

@@ -3,23 +3,23 @@
 <string name="home_btn_new_incident">Nouveau</string>
     <string name="home_btn_incidents">Anomalies</string>
 <string name="home_btn_news">Actualités</string>
-<string name="home_btn_reports">Mes rapports</string>
+<string name="home_btn_reports">Mes messages</string>
 <string name="home_label_reports">Anomalies autour de vous :</string>
 <plurals
         name="home_label_current">
-        <item quantity="zero">%1$d\nnouveau</item>
-        <item quantity="one">%1$d\nnouveau</item>
-        <item quantity="other">%1$d\nnouveaux</item>
+        <item quantity="zero">%1$d\nnouvelle</item>
+        <item quantity="one">%1$d\nnouvelle</item>
+        <item quantity="other">%1$d\nnouvelles</item>
 </plurals>
 <plurals
         name="home_label_update">
-        <item quantity="other">%1$d\nmis à jour</item>
+        <item quantity="other">%1$d\nmise à jour</item>
 </plurals>
 <plurals
         name="home_label_solved">
-        <item quantity="zero">%1$d\nrésolu</item>
-        <item quantity="one">%1$d\nrésolu</item>
-        <item quantity="other">%1$d\nrésolus</item>
+        <item quantity="zero">%1$d\nrésolue</item>
+        <item quantity="one">%1$d\nrésolue</item>
+        <item quantity="other">%1$d\nrésolues</item>
 </plurals>
         <string name="menu_credits">Crédits</string>
 

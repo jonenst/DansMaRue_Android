@@ -2,9 +2,9 @@
 <resources>
 
 		<string
-				name="select_position_title">"Nouveau rapport"</string>
+				name="select_position_title">"Nouveau message"</string>
 		<string
-				name="select_position_header1">"Lieu précis de l'incident"</string>
+				name="select_position_header1">"Lieu précis de l'anomalie"</string>
 		<string
 				name="select_position_header2">"Touchez la carte pour ajuster votre position"</string>
 		<string
