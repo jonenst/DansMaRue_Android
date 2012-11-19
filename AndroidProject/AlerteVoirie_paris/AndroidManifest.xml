@@ -6,7 +6,7 @@
     android:versionName="@string/app_version">
         
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="10" />
 
     <uses-permission
@@ -47,51 +47,51 @@
         <activity
             android:name="com.fabernovel.alertevoirie.HomeActivity"
             android:theme="@style/Home"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.NewsActivity"
             android:label="@string/news_title"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:label="@string/my_reports_title"
             android:theme="@style/TabBar"
-            android:screenOrientation="portrait"
+            android:screenOrientation="sensor"
             android:name="com.fabernovel.alertevoirie.MyIncidentsActivity"></activity>
 
         <activity
             android:label="@string/my_reports_title"
             android:name="com.fabernovel.alertevoirie.MyIncidentsActivityMap"
             android:theme="@style/TabBar"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:label="@string/existing_incidents_title"
             android:name="com.fabernovel.alertevoirie.ExistingIncidentsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.IncidentsActivityMap"
             android:label="@string/incidents_title"
             android:theme="@style/TabBar"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.SelectCategoryActivity"
             android:label="@string/select_category_title"
             android:theme="@style/Categories"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.SelectPositionActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.ReportDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.AddCommentActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.SelectZoomDetail"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity 
             android:name="com.fabernovel.alertevoirie.CreditsActivity" 
-            android:screenOrientation="portrait" android:theme="@style/Main">
+            android:screenOrientation="sensor" android:theme="@style/Main">
         </activity>
         <activity 
             android:name="com.fabernovel.alertevoirie.NewVersionDialogActivity" >
