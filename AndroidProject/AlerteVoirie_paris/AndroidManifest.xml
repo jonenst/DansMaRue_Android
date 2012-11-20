@@ -79,7 +79,7 @@
             android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.SelectPositionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="sensor"></activity>
         <activity
             android:name="com.fabernovel.alertevoirie.ReportDetailsActivity"
             android:screenOrientation="sensor"></activity>

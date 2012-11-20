@@ -8,7 +8,7 @@
 		<string
 				name="existing_incidents_button_validate">"Non, déclarer mon anomalie"</string>
 		<string
-				name="existing_incidents_header">"L'anomalies est-elle déjà déclarée ?"</string>
+				name="existing_incidents_header">"L'anomalie est-elle déjà déclarée ?"</string>
 		<string
 				name="existing_incidents_invalid">"Anomalies non-valide"</string>
 		<string
@@ -18,18 +18,18 @@
 		<string
 				name="existing_incidents_add_picture">"Ajouter une photo"</string>
 		<string
-				name="existing_incidents_status">"Personne n'a confirmé cette anomalies"</string>
+				name="existing_incidents_status">"Personne n'a confirmé cette anomalie"</string>
 		<string
-				name="news_incidents_created">"L'anomalies a été créé "</string>
+				name="news_incidents_created">"L'anomalie a été créé "</string>
 		<string
-				name="news_incidents_resolved">"L'anomalies a été résolue "</string>
+				name="news_incidents_resolved">"L'anomalie a été résolue "</string>
 		<string
-				name="news_incidents_confirmed">"L'anomalies a été confirmée "</string>
+				name="news_incidents_confirmed">"L'anomalie a été confirmée "</string>
 		<string
 				name="news_photo_added">"La photo à été ajoutée "</string>
 		<string
-				name="news_incidents_invalidated">"L'anomalies a été invalidée "</string>
+				name="news_incidents_invalidated">"L'anomalie a été invalidée "</string>
 		<string
 				name="news_incidents_picture_added">"Photo ajoutée dans "</string>
-		<string name="incident_already_confirmed">Anomalies déjà confirmé</string>
+		<string name="incident_already_confirmed">Anomalie déjà confirmée</string>
 </resources>
