@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Co-Cité Paris</string>
+    <string name="app_name">Paris DansMaRue</string>
     <string name="app_version">v009R7</string>
     <string name="server_error">"Erreur de connexion, veuillez essayer à nouveau"</string>
     <string name="gps_error">"Erreur de géolocalisation, temps de recherche dépassé"</string>

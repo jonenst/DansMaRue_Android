@@ -170,7 +170,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
         switch (v.getId()) {
             case R.id.Button_news:
                 // Log.d("DEBUG", "Click button news");
-                startActivity(new Intent(this, NewsActivity.class));
+                startActivity(new Intent(this, NewsSimpleActivity.class));
                 break;
             case R.id.Button_reports:
                 // Log.d("DEBUG", "Click button reports");

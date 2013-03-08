@@ -157,6 +157,8 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
         if (savedInstanceState != null) {
             this.pathOfPicFromCamera = savedInstanceState.getString("pathOfPicFromCamera");
+            setPictureToImageView(CAPTURE_ARROW, (ImageView) findViewById(R.id.ImageView_far));
+            setPictureToImageView(CAPTURE_CLOSE, (ImageView) findViewById(R.id.ImageView_close));
         }
 
         // init title

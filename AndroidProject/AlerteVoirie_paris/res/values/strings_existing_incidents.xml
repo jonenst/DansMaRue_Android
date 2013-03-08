@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 		<string
-				name="existing_incidents_title">"Nouveau message"</string>
+				name="existing_incidents_title">"Nouvelle anomalie"</string>
 
 		<string
 				name="incidents_title">"Carte des anomalies"</string>

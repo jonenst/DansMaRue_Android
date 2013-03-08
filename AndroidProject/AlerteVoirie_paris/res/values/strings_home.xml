@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="home_btn_new_incident">Nouveau</string>
+<string name="home_btn_new_incident">Nouvelle</string>
     <string name="home_btn_incidents">Anomalies</string>
 <string name="home_btn_news">Actualités</string>
-<string name="home_btn_reports">Mes messages</string>
+<string name="home_btn_reports">Mes anomalies</string>
 <string name="home_label_reports">Anomalies autour de vous :</string>
 <plurals
         name="home_label_current">
