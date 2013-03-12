@@ -20,9 +20,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.fabernovel.alertevoirie.entities.Constants;
-import com.fabernovel.alertevoirie.entities.JsonData;
-import com.fabernovel.alertevoirie.utils.JSONCursor;
+import com.c4mprod.dansmarue.entities.Constants;
+import com.c4mprod.dansmarue.entities.JsonData;
+import com.c4mprod.dansmarue.utils.JSONCursor;
 
 public class CategoryProvider extends ContentProvider {
 

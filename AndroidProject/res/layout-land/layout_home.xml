@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="com.fabernovel.alertevoirie.HomeActivity" >
+    tools:context="com.c4mprod.dansmarue.HomeActivity" >
 
     <LinearLayout
         android:layout_width="wrap_content"

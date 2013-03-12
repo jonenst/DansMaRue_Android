@@ -32,7 +32,7 @@
         android:theme="@style/Main" android:debuggable="false" android:hardwareAccelerated="false">
         <activity
             android:label="@string/app_name"
-            android:name="com.fabernovel.alertevoirie.SplashScreenActivity"
+            android:name="com.c4mprod.dansmarue.SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/Splash"
             android:screenOrientation="portrait">
@@ -45,56 +45,56 @@
         </activity>
 
         <activity
-            android:name="com.fabernovel.alertevoirie.HomeActivity"
+            android:name="com.c4mprod.dansmarue.HomeActivity"
             android:theme="@style/Home"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.NewsActivity"
+            android:name="com.c4mprod.dansmarue.NewsActivity"
             android:label="@string/news_title"
             android:screenOrientation="sensor"></activity>
         <activity
             android:label="@string/my_reports_title"
             android:theme="@style/TabBar"
             android:screenOrientation="sensor"
-            android:name="com.fabernovel.alertevoirie.MyIncidentsActivity"></activity>
+            android:name="com.c4mprod.dansmarue.MyIncidentsActivity"></activity>
 
         <activity
             android:label="@string/my_reports_title"
-            android:name="com.fabernovel.alertevoirie.MyIncidentsActivityMap"
+            android:name="com.c4mprod.dansmarue.MyIncidentsActivityMap"
             android:theme="@style/TabBar"
             android:screenOrientation="sensor"></activity>
         <activity
             android:label="@string/existing_incidents_title"
-            android:name="com.fabernovel.alertevoirie.ExistingIncidentsActivity"
+            android:name="com.c4mprod.dansmarue.ExistingIncidentsActivity"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.IncidentsActivityMap"
+            android:name="com.c4mprod.dansmarue.IncidentsActivityMap"
             android:label="@string/incidents_title"
             android:theme="@style/TabBar"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.SelectCategoryActivity"
+            android:name="com.c4mprod.dansmarue.SelectCategoryActivity"
             android:label="@string/select_category_title"
             android:theme="@style/Categories"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.SelectPositionActivity"
+            android:name="com.c4mprod.dansmarue.SelectPositionActivity"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.ReportDetailsActivity"
+            android:name="com.c4mprod.dansmarue.ReportDetailsActivity"
             android:screenOrientation="sensor"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.AddCommentActivity"
+            android:name="com.c4mprod.dansmarue.AddCommentActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
-            android:name="com.fabernovel.alertevoirie.SelectZoomDetail"
+            android:name="com.c4mprod.dansmarue.SelectZoomDetail"
             android:screenOrientation="sensor"></activity>
         <activity 
-            android:name="com.fabernovel.alertevoirie.CreditsActivity" 
+            android:name="com.c4mprod.dansmarue.CreditsActivity" 
             android:screenOrientation="sensor" android:theme="@style/Main">
         </activity>
         <activity 
-            android:name="com.fabernovel.alertevoirie.NewVersionDialogActivity" >
+            android:name="com.c4mprod.dansmarue.NewVersionDialogActivity" >
         </activity>
         
         <provider
@@ -106,7 +106,7 @@
         <uses-library
             android:name="com.google.android.maps">
         </uses-library>
-        <activity android:name="com.fabernovel.alertevoirie.NewsSimpleActivity"></activity>
+        <activity android:name="com.c4mprod.dansmarue.NewsSimpleActivity"></activity>
 
 
     </application>

@@ -1,6 +1,6 @@
 package fr.paris.android.signalement;
 
-import com.fabernovel.alertevoirie.SplashScreenActivity;
+import com.c4mprod.dansmarue.SplashScreenActivity;
 
 /*
  * To change this template, choose Tools | Templates
