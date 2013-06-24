@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="news_title">Actualités</string>
 
-<string name="news_text">"L'application PARIS DansMaRue est une expérimentation à l'échelle de tout Paris. Elle utilise certaines fonctionnalités de votre smartphone et nécessite d’être utilisée en extérieur (notamment pour l’accès et l’usage
+    <string name="news_title">Actualités</string>
+    <string name="news_text">"L'application PARIS DansMaRue est une expérimentation à l'échelle de tout Paris. Elle utilise certaines fonctionnalités de votre smartphone et nécessite d’être utilisée en extérieur (notamment pour l’accès et l’usage
 du GPS de votre smartphone) et une bonne couverture de connexion 3G lors de son utilisation. Vous allez peut-être rencontrer certaines
 difficultés liées à votre connexion 3G ou à l'usage intensif de certaines fonctionnalités de votre smartphone. Dans ce cas, n'hésitez pas à nous
 les signaler en décrivant précisant le souci rencontré. Merci de votre participation et de votre compréhension.\n
+
+DansMaRue_App@paris.fr
 \n
-DansMaRue_App@paris.fr"</string>
+Le dispositif “DansMaRue” (application mobile et formulaire Internet) a pour objectif de faciliter la communication entre les usagers parisiens, la Mairie de Paris et, le cas échéant ses différents partenaires concernant les anomalies constatées sur l’espace public municipal. Les informations transmises par les utilisateurs via le dispositif doivent être considérées comme des documents de travail qui aideront la Mairie de Paris et ses partenaires à organiser leur activité. Ces informations n’engagent donc en aucune façon la Mairie de Paris et ses partenaires à prendre des mesures dans un délai donné. La Mairie de Paris et ses partenaires restent libres de déterminer les actions à mettre en place.
+\n
+Les situations présentant un caractère dangereux et nécessitant la mise en œuvre de mesures de protections rapides doivent continuer à faire l\'objet d’une déclaration auprès des services d\'urgence."</string>
+
 </resources>

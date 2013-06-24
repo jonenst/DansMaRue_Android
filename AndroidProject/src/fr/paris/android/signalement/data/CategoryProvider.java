@@ -54,14 +54,14 @@ public class CategoryProvider extends ContentProvider {
                 byte[] buffer = new byte[in.available()];
                 in.read(buffer);
                 String bufferStr = new String(buffer);
-                Log.d(Constants.PROJECT_TAG, "<--- Read from file = " + bufferStr);
+                //Log.d(Constants.PROJECT_TAG, "<--- Read from file = " + bufferStr);
                 categories = (JSONObject) new JSONTokener(bufferStr).nextValue();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
-                Log.e("Alerte Voirie", "JSON error", e);
+                //Log.e("Alerte Voirie", "JSON error", e);
             } catch (ClassCastException e) {
-                Log.e("Alerte Voirie", "JSON error", e);
+                //Log.e("Alerte Voirie", "JSON error", e);
             }
         }
     }
@@ -109,7 +109,7 @@ public class CategoryProvider extends ContentProvider {
                 case CATEGORY_ID:
                     categoryId = uri.getLastPathSegment();
                     array.put(categories.getJSONObject(categoryId));
-                    Log.d(Constants.PROJECT_TAG, "category returned = " + categories.getJSONObject(categoryId));
+                    //Log.d(Constants.PROJECT_TAG, "category returned = " + categories.getJSONObject(categoryId));
                     break;
 
                 default:

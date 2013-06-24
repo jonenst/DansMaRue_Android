@@ -62,7 +62,7 @@ public class CategoryProvider extends ContentProvider {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
-            Log.e("Alerte Voirie", "JSON error", e);
+            //Log.e("Alerte Voirie", "JSON error", e);
         }
         return true;
     }
@@ -107,7 +107,7 @@ public class CategoryProvider extends ContentProvider {
                 case CATEGORY_ID:
                     categoryId = uri.getLastPathSegment();
                     array.put(categories.getJSONObject(categoryId));
-                    Log.d(Constants.PROJECT_TAG, "category returned = " + categories.getJSONObject(categoryId));
+                    //Log.d(Constants.PROJECT_TAG, "category returned = " + categories.getJSONObject(categoryId));
                     break;
 
                 default:

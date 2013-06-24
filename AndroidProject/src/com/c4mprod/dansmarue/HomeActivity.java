@@ -169,19 +169,19 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.Button_news:
-                // Log.d("DEBUG", "Click button news");
+                // //Log.d("DEBUG", "Click button news");
                 startActivity(new Intent(this, NewsSimpleActivity.class));
                 break;
             case R.id.Button_reports:
-                // Log.d("DEBUG", "Click button reports");
+                // //Log.d("DEBUG", "Click button reports");
                 startActivity((new Intent(this, MyIncidentsActivity.class)));
                 break;
             case R.id.Button_incidents:
-                // Log.d("DEBUG", "Click button incidents");
+                // //Log.d("DEBUG", "Click button incidents");
                 startActivity((new Intent(this, IncidentsActivityMap.class)));
                 break;
             case R.id.Button_new_incident:
-                // Log.d("DEBUG", "Click button new incident");
+                // //Log.d("DEBUG", "Click button new incident");
                 Intent i = new Intent(this, ExistingIncidentsActivity.class);
                 i.putExtra(Constants.NEW_REPORT, true);
                 startActivity(i);
@@ -222,7 +222,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
 
             hidedialog = true;
         } catch (NullPointerException e) {
-            Log.e(Constants.PROJECT_TAG, "Nullpointer Error", e);
+            //Log.e(Constants.PROJECT_TAG, "Nullpointer Error", e);
         }
 
     }
@@ -291,7 +291,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
     public void onRequestcompleted(int requestCode, Object result) {
         try {
             JSONArray responses;
-            // Log.d(Constants.PROJECT_TAG, (String) result);
+            // //Log.d(Constants.PROJECT_TAG, (String) result);
             responses = new JSONArray((String) result);
 
             JSONObject response = responses.getJSONObject(0);
@@ -328,9 +328,9 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
             // findViewById(R.id.LinearLayout04).startAnimation(set);
             // findViewById(R.id.LinearLayout03).startAnimation(set);
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "JSONException", e);
+            //Log.e(Constants.PROJECT_TAG, "JSONException", e);
         } catch (ClassCastException e) {
-            Log.e(Constants.PROJECT_TAG, "Invalid result. Trying to cast " + result.getClass() + "into String", e);
+            //Log.e(Constants.PROJECT_TAG, "Invalid result. Trying to cast " + result.getClass() + "into String", e);
         } finally {
             if (hidedialog && dialog_shown == true) dismissDialog(DIALOG_PROGRESS);
             dialog_shown = false;

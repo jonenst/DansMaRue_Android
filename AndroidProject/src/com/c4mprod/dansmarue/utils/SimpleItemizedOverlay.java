@@ -93,7 +93,7 @@ public class SimpleItemizedOverlay extends ItemizedOverlay {
                 mBubbleView = ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_map_bubble, null);
             }
 
-            Log.d("AlerteVoirie_PM", "state of incident : " + tappedIncident.state);
+            //Log.d("AlerteVoirie_PM", "state of incident : " + tappedIncident.state);
             
             if (tappedIncident.invalidations == 0 && tappedIncident.state != 'R') {
                 mBubbleView.findViewById(R.id.Bubble_arrow).setVisibility(View.VISIBLE);
@@ -121,7 +121,7 @@ public class SimpleItemizedOverlay extends ItemizedOverlay {
 
             title.setText(tappedIncident.description);
             subtitle.setText(tappedIncident.address);
-            Log.d("AlerteVoirie_PM", "tapped incident " + tappedIncident.toString());
+            //Log.d("AlerteVoirie_PM", "tapped incident " + tappedIncident.toString());
             mBubbleView.setTag(tappedIncident.toString());
             mMapView.addView(mBubbleView, params);
             mMapView.getController().animateTo(tapped.getPoint());

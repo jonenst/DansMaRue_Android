@@ -151,7 +151,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.layout_report_details);
 
-        // Log.d("DEBUG", "ReportDetailsActivity onCreate");
+        // //Log.d("DEBUG", "ReportDetailsActivity onCreate");
 
         boolean existingIncident = getIntent().getBooleanExtra("existing", false);
 
@@ -180,7 +180,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             try {
                 imgd = new ImageDownloader(this);
                 String jsonEvent = getIntent().getStringExtra("event");
-                // Log.d("AlerteVoirie_PM", "json : " + jsonEvent);
+                // //Log.d("AlerteVoirie_PM", "json : " + jsonEvent);
                 currentIncident = Incident.fromJSONObject(this, new JSONObject(jsonEvent));
                 setCategory(currentIncident.categoryId);
 
@@ -214,7 +214,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 }
 
             } catch (JSONException e) {
-                Log.e(Constants.PROJECT_TAG, "JSONException in onCreate", e);
+                //Log.e(Constants.PROJECT_TAG, "JSONException in onCreate", e);
             }
 
             // launch the json request to load additional images
@@ -256,20 +256,20 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
     @Override
     public void onSaveInstanceState(Bundle state) {
 
-        // Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
+        // //Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
         state.putString("pathOfPicFromCamera", this.pathOfPicFromCamera);
 
         String jsonStr = Incident.toJSONObject(currentIncident).toString();
-        // Log.d("DEBUG", "-->>>jsonStr=" + jsonStr);
+        // //Log.d("DEBUG", "-->>>jsonStr=" + jsonStr);
         state.putString("currentIncident", jsonStr);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Log.d("DEBUG", "ReportDetailsActivity onRestoreInstanceState");
+        // //Log.d("DEBUG", "ReportDetailsActivity onRestoreInstanceState");
 
         String jsonStr = savedInstanceState.getString("currentIncident");
-        // Log.d("DEBUG", "<<<<--jsonStr=" + jsonStr);
+        // //Log.d("DEBUG", "<<<<--jsonStr=" + jsonStr);
 
         try {
             currentIncident = Incident.fromJSONObject(this, new JSONObject(savedInstanceState.getString("currentIncident")));
@@ -297,7 +297,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
     @Override
     protected void onDestroy() {
 
-        // Log.d("DEBUG", "ReportDetailsActivity onDestroy");
+        // //Log.d("DEBUG", "ReportDetailsActivity onDestroy");
         super.onDestroy();
     }
 
@@ -325,7 +325,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
     public void onClick(final View v) {
         // AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // AlertDialog alert;
-        // Log.d(Constants.PROJECT_TAG, "onClick : " + v.getId());
+        // //Log.d(Constants.PROJECT_TAG, "onClick : " + v.getId());
         mCurrentAction = -1;
         switch (v.getId()) {
             case R.id.ImageView_close:
@@ -455,7 +455,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                                              new DialogInterface.OnClickListener() {
                                                  @Override
                                                  public void onClick(DialogInterface dialog, int item) {
-                                                     // Log.d("DEBUG", "onClick=" + item);
+                                                     // //Log.d("DEBUG", "onClick=" + item);
                                                      currentIncident.priority = item + 1;
 
                                                      TextView tv = (TextView) findViewById(R.id.TextView_sub_priority);
@@ -662,11 +662,11 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
     protected void loadZoom() {
 
-        Log.d("DEBUG", "loadZoom");
+        //Log.d("DEBUG", "loadZoom");
 
         canvalidate = true;
         findViewById(R.id.LinearLayout_comment).setVisibility(View.VISIBLE);
-        // Log.d("AlerteVoirie_PM", "launch the damn thing !");
+        // //Log.d("AlerteVoirie_PM", "launch the damn thing !");
         Intent i = new Intent(ReportDetailsActivity.this, SelectZoomDetail.class);
         i.putExtra("comment", img_comment);
         startActivityForResult(i, REQUEST_DETAILS);
@@ -710,7 +710,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Log.d("AlerteVoirie_PM", "Result : " + requestCode);
+        // //Log.d("AlerteVoirie_PM", "Result : " + requestCode);
         switch (requestCode) {
             case R.id.existing_incidents_add_picture:
             case R.id.ImageView_far:
@@ -743,7 +743,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
                         }
 
-                        Log.d("DEBUG", "finalPath=" + finalPath);
+                        //Log.d("DEBUG", "finalPath=" + finalPath);
 
                         if (finalPath != null) {
                             InputStream in;
@@ -797,9 +797,9 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
                         mAdditionalImageType = 0;
                     } catch (FileNotFoundException e) {
-                        Log.e("AlerteVoirie_PM", "", e);
+                        //Log.e("AlerteVoirie_PM", "", e);
                     } catch (IOException e) {
-                        Log.e("AlerteVoirie_PM", "", e);
+                        //Log.e("AlerteVoirie_PM", "", e);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -859,18 +859,18 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 break;
             case REQUEST_DETAILS:
 
-                Log.d("DEBUG", "onActivityResult REQUEST_DETAILS");
+                //Log.d("DEBUG", "onActivityResult REQUEST_DETAILS");
                 if (resultCode == RESULT_OK) {
 
-                    Log.d("DEBUG", "RESULT_OK");
+                    //Log.d("DEBUG", "RESULT_OK");
                     // startActivityForResult(data, requestCode)
 
                     if (mCurrentAction == ACTION_ADD_IMAGE) {
-                        Log.d("DEBUG", "--1");
+                        //Log.d("DEBUG", "--1");
                         Intent i = new Intent(getApplicationContext(), AddCommentActivity.class);
                         startActivityForResult(i, REQUEST_IMAGE_COMMENT);
                     } else {
-                        Log.d("DEBUG", "--2");
+                        //Log.d("DEBUG", "--2");
                         // set new img
                         setPictureToImageView("arrowed.jpg", (ImageView) findViewById(R.id.ImageView_far));
                         loadComment(REQUEST_COMMENT);
@@ -909,7 +909,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
     private void setCategory(long l) {
         String subCategories = EMPTY_STRING, category = EMPTY_STRING;
         long catId = l;
-        // Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
+        // //Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
         currentIncident.categoryId = catId;
 
         do {
@@ -1022,7 +1022,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             // clear pd from memory to avoid progress bar freeze when showed again
             removeDialog(DIALOG_PROGRESS);
         }
-        // //Log.d(Constants.PROJECT_TAG, "Request result " + (String) result);
+        // ////Log.d(Constants.PROJECT_TAG, "Request result " + (String) result);
 
         if (requestCode == AVService.REQUEST_IMAGE) {
             new AlertDialog.Builder(this).setMessage(R.string.news_photo_added).setPositiveButton(android.R.string.ok, null).show();
@@ -1079,7 +1079,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     alert.show();
                 } else {
 
-                    Log.d(Constants.PROJECT_TAG, "Error for answer:" + answer);
+                    //Log.d(Constants.PROJECT_TAG, "Error for answer:" + answer);
                     // hotfix nico : here we can have valid answer for incident updates !!!
                     // handle answer and display popup here instead of when we click on buttons
                     if (answer != null && answer.has(JsonData.PARAM_ANSWER) && answer.getJSONObject(JsonData.PARAM_ANSWER).has(JsonData.PARAM_STATUS)) {
@@ -1089,14 +1089,14 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                             // FIXME end activity when resolve incident ??
                             switch (mCurrentAction) {
                                 case ACTION_GET_IMAGES:
-                                    // Log.d("AlerteVoirie_PM", "images : " + result);
+                                    // //Log.d("AlerteVoirie_PM", "images : " + result);
                                     JSONArray imgList = answer.getJSONObject(JsonData.PARAM_ANSWER).getJSONArray(JsonData.PARAM_PHOTOS);
                                     ViewGroup photocontainer = (ViewGroup) findViewById(R.id.extra_images_container);
                                     photocontainer.removeAllViews();
                                     LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
                                     for (int i = 0; i < imgList.length() - 2; i++) {
                                         JSONObject imgObj = imgList.getJSONObject(i);
-                                        // Log.d("AlerteVoirie_PM", "received image obj : " + imgObj);
+                                        // //Log.d("AlerteVoirie_PM", "received image obj : " + imgObj);
                                         View v = getLayoutInflater().inflate(R.layout.extra_photo, null);
                                         v.setLayoutParams(params);
                                         TextView date = (TextView) v.findViewById(R.id.textView_date);
@@ -1158,14 +1158,14 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                             }
                         } else {
 
-                            Log.d(Constants.PROJECT_TAG, "other reason");
+                            //Log.d(Constants.PROJECT_TAG, "other reason");
                             // other things
                             // FIXME show popups instead of toasts !
                             if ((answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)) == 18) {
                                 findViewById(R.id.existing_incidents_confirmed).setEnabled(false);
                                 Toast.makeText(this, getString(R.string.incident_already_confirmed), Toast.LENGTH_LONG).show();
                             } else {
-                                // Log.d("AlerteVoirie_PM", "erreur ?");
+                                // //Log.d("AlerteVoirie_PM", "erreur ?");
                                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_LONG).show();
                             }
                         }
@@ -1179,11 +1179,11 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     }
                 }
             } catch (JSONException e) {
-                Log.e(Constants.PROJECT_TAG, "Erreur d'envoi d'image", e);
+                //Log.e(Constants.PROJECT_TAG, "Erreur d'envoi d'image", e);
             }/*
               * catch (FileNotFoundException e) {
               * // TODO Auto-generated catch block
-              * Log.e(Constants.PROJECT_TAG,"File not found",e);
+              * //Log.e(Constants.PROJECT_TAG,"File not found",e);
               * }
               */
 
@@ -1279,7 +1279,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 RotatePicture(imgv);
             }
         } catch (ArithmeticException e) {
-            Log.e(Constants.PROJECT_TAG, "ArithmeticException", e);
+            //Log.e(Constants.PROJECT_TAG, "ArithmeticException", e);
         }
 
     }

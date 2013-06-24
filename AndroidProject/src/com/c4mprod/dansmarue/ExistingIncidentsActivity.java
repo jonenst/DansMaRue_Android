@@ -95,7 +95,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
             AVService.getInstance(this).postJSON(new JSONArray().put(request), this);
 
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Error loading existing incidents", e);
+            //Log.e(Constants.PROJECT_TAG, "Error loading existing incidents", e);
         }
         super.onResume();
     }
@@ -143,7 +143,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
 
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject jsonObj = items.getJSONObject(i);
-                        // Log.d("DEBUG", "--->>jsonObj=" + jsonObj.toString());
+                        // //Log.d("DEBUG", "--->>jsonObj=" + jsonObj.toString());
                         Incident inc = Incident.fromJSONObject(this, jsonObj);
                         if (inc.state != 'R') items2.put(jsonObj);
                     }
@@ -152,10 +152,10 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 }
             }
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "JSONException", e);
+            //Log.e(Constants.PROJECT_TAG, "JSONException", e);
 
         } catch (ClassCastException e) {
-            Log.e(Constants.PROJECT_TAG, "Can't read response. trying to cast " + result.getClass() + " into String", e);
+            //Log.e(Constants.PROJECT_TAG, "Can't read response. trying to cast " + result.getClass() + " into String", e);
 
         }
 
@@ -173,7 +173,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 i.putExtra(IntentData.EXTRA_CATEGORY_ID, data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
                 startActivity(i);
             }
-            Log.d(Constants.PROJECT_TAG, "Result: " + data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
+            //Log.d(Constants.PROJECT_TAG, "Result: " + data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
             finish();
         }
     }
@@ -198,7 +198,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
 
                 Incident incident = Incident.fromJSONObject(getApplicationContext(), ((JSONObject) getItem(position)));
 
-                Log.i(Constants.PROJECT_TAG, "getView : incident" + incident);
+                //Log.i(Constants.PROJECT_TAG, "getView : incident" + incident);
 
                 JSONArray imgarr = incident.pictures_far;
 
@@ -214,7 +214,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                     }
                 }
 
-                Log.d(Constants.PROJECT_TAG, "" + imgName);
+                //Log.d(Constants.PROJECT_TAG, "" + imgName);
                 if (imageDownloader.getDefault_img() == null) {
                     imageDownloader.setDefault_img(icone.getDrawable());
                 }
@@ -246,7 +246,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 long catId = incident.categoryId;
 
                 String category = null;
-                Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
+                //Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
 
                 Cursor c = getContentResolver().query(ContentUris.withAppendedId(Category.CONTENT_URI, catId), new String[] { Category.PARENT, Category.NAME },
                                                       null, null, null);
@@ -266,9 +266,9 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 }
 
             } catch (JSONException e) {
-                Log.e(Constants.PROJECT_TAG, ((JSONObject) getItem(position)).toString(), e);
+                //Log.e(Constants.PROJECT_TAG, ((JSONObject) getItem(position)).toString(), e);
             } catch (ClassCastException e) {
-                Log.e(Constants.PROJECT_TAG, getItem(position).getClass().toString(), e);
+                //Log.e(Constants.PROJECT_TAG, getItem(position).getClass().toString(), e);
             }
 
             if (getItemViewType(position) == TYPE_ITEM) {
@@ -304,7 +304,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // Log.d(Constants.PROJECT_TAG, "onListItemClick : "+l.getAdapter().getItem(position));
+        // //Log.d(Constants.PROJECT_TAG, "onListItemClick : "+l.getAdapter().getItem(position));
         Intent i = new Intent(this, ReportDetailsActivity.class);
         i.putExtra("existing", true);
         i.putExtra("event", l.getAdapter().getItem(position).toString());
@@ -314,7 +314,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
             if (incident.state == 'R' || incident.invalidations > 0) return;
             if (incident.categoryId < 0) return; // HACK MDP
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
+            //Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
         }
         startActivity(i);
         // super.onListItemClick(l, v, position, id);

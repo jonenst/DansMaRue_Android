@@ -79,10 +79,10 @@ public class PictoView extends ImageView {
     public boolean onTouchEvent(MotionEvent event) {
         // dumpEvent(event);
 
-        Log.d(Constants.PROJECT_TAG, "1:" + (event.getX() < (getWidth() / 2) + offsetx + 50));
-        Log.d(Constants.PROJECT_TAG, "2:" + (event.getX() > (getWidth() / 2) + offsetx - 50));
-        Log.d(Constants.PROJECT_TAG, "3:" + (event.getY() < (getHeight() / 2) + offsety + 50));
-        Log.d(Constants.PROJECT_TAG, "4:" + (event.getX() > (getHeight() / 2) + offsety - 50));
+        //Log.d(Constants.PROJECT_TAG, "1:" + (event.getX() < (getWidth() / 2) + offsetx + 50));
+        //Log.d(Constants.PROJECT_TAG, "2:" + (event.getX() > (getWidth() / 2) + offsetx - 50));
+        //Log.d(Constants.PROJECT_TAG, "3:" + (event.getY() < (getHeight() / 2) + offsety + 50));
+        //Log.d(Constants.PROJECT_TAG, "4:" + (event.getX() > (getHeight() / 2) + offsety - 50));
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -96,7 +96,7 @@ public class PictoView extends ImageView {
                     lastx = event.getX();
                     lasty = event.getY();
 
-                    Log.d(Constants.PROJECT_TAG, "mode=DRAG");
+                    //Log.d(Constants.PROJECT_TAG, "mode=DRAG");
                     mode = DRAG;
                 } else {
                     mode = ROTATE;
@@ -105,11 +105,11 @@ public class PictoView extends ImageView {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 mode = NONE;
-                Log.d(Constants.PROJECT_TAG, "mode=NONE");
+                //Log.d(Constants.PROJECT_TAG, "mode=NONE");
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 mode = ROTATE;
-                Log.d(Constants.PROJECT_TAG, "mode=ROTATE");
+                //Log.d(Constants.PROJECT_TAG, "mode=ROTATE");
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mode == DRAG) {
@@ -166,7 +166,7 @@ public class PictoView extends ImageView {
             offsetx = 0;
             offsety = 0;
         }
-        Log.d(Constants.PROJECT_TAG, "Translation : " + offsetx + "," + offsety);
+        //Log.d(Constants.PROJECT_TAG, "Translation : " + offsetx + "," + offsety);
         canvas.translate(offsetx, offsety);
 
         super.onDraw(canvas);
@@ -198,7 +198,7 @@ public class PictoView extends ImageView {
             if (i + 1 < event.getPointerCount()) sb.append(";");
         }
         sb.append("]");
-        Log.d(Constants.PROJECT_TAG, sb.toString());
+        //Log.d(Constants.PROJECT_TAG, sb.toString());
     }
 
     /**

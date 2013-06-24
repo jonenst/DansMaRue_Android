@@ -315,7 +315,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         // ((TextView) findViewById(R.id.TextView_address)).setText(null);
         // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
         if (!search) {
-            Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
+            //Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
             new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
         }
     }
@@ -398,7 +398,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                     }
                 }
             } catch (IOException e) {
-                Log.e(Constants.PROJECT_TAG, "Address error", e);
+                //Log.e(Constants.PROJECT_TAG, "Address error", e);
             }
             return result;
         }
@@ -412,10 +412,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 geopoint = null;
             }
 
-            Log.d(Constants.PROJECT_TAG, "n° : " + result[0]);
-            Log.d(Constants.PROJECT_TAG, "Rue : " + result[1]);
-            Log.d(Constants.PROJECT_TAG, "CP : " + result[2]);
-            Log.d(Constants.PROJECT_TAG, "Ville : " + result[3]);
+            //Log.d(Constants.PROJECT_TAG, "n° : " + result[0]);
+            //Log.d(Constants.PROJECT_TAG, "Rue : " + result[1]);
+            //Log.d(Constants.PROJECT_TAG, "CP : " + result[2]);
+            //Log.d(Constants.PROJECT_TAG, "Ville : " + result[3]);
 
             String number = "", street = "", postcode = "", town = "";
 
@@ -449,10 +449,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             ((Button) findViewById(R.id.Button_validate)).setText(R.string.select_position_btn_validate);
             search = false;
 
-            Log.d(Constants.PROJECT_TAG, "Number : " + number);
-            Log.d(Constants.PROJECT_TAG, "Street : " + street);
-            Log.d(Constants.PROJECT_TAG, "Postcode : " + postcode);
-            Log.d(Constants.PROJECT_TAG, "Town : " + town);
+            //Log.d(Constants.PROJECT_TAG, "Number : " + number);
+            //Log.d(Constants.PROJECT_TAG, "Street : " + street);
+            //Log.d(Constants.PROJECT_TAG, "Postcode : " + postcode);
+            //Log.d(Constants.PROJECT_TAG, "Town : " + town);
         }
     }
 }

@@ -73,7 +73,7 @@ public class Incident extends OverlayItem {
                                    .put(JsonData.PARAM_POSITION,
                                         new JSONObject().put(JsonData.PARAM_POSITION_LATITUDE, latitude).put(JsonData.PARAM_POSITION_LONGITUDE, longitude));
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Error creating new incident", e);
+            // Log.e(Constants.PROJECT_TAG, "Error creating new incident", e);
             return null;
         }
     }
@@ -88,14 +88,16 @@ public class Incident extends OverlayItem {
                                    .put(JsonData.PARAM_POSITION,
                                         new JSONObject().put(JsonData.PARAM_POSITION_LATITUDE, latitude).put(JsonData.PARAM_POSITION_LONGITUDE, longitude));
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Error creating new incident", e);
+            // Log.e(Constants.PROJECT_TAG, "Error creating new incident", e);
             return null;
         }
     }
 
     public JSONObject getUpdateIncidentRequest(Context c, String status) {
 
-        if (Constants.DEBUGMODE) Log.d(Constants.PROJECT_TAG, "updateIncidentRequest : ");
+        if (Constants.DEBUGMODE) {
+            Log.d(Constants.PROJECT_TAG, "updateIncidentRequest : ");
+        }
         try {
             return new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_UPDATE_INCIDENT)
                                    .put(JsonData.PARAM_UPDATE_INCIDENT_LOG,
@@ -103,14 +105,14 @@ public class Incident extends OverlayItem {
                                                         .put(JsonData.PARAM_UDID, Utils.getUdid(c))
                                                         .put(JsonData.PARAM_STATUS, status));
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Error updating incident", e);
+            // Log.e(Constants.PROJECT_TAG, "Error updating incident", e);
             return null;
         }
     }
 
     public static Incident fromJSONObject(Context c, JSONObject obj) {
         try {
-            Log.d(Constants.PROJECT_TAG, obj.toString());
+            // Log.d(Constants.PROJECT_TAG, obj.toString());
 
             double latitude = obj.getDouble(JsonData.PARAM_INCIDENT_LATITUDE);
             double longitude = obj.getDouble(JsonData.PARAM_INCIDENT_LONGITUDE);
@@ -146,10 +148,10 @@ public class Incident extends OverlayItem {
 
             if (obj.has(JsonData.PARAM_INCIDENT_PICTURES)) {
                 result.pictures_far = obj.getJSONObject(JsonData.PARAM_INCIDENT_PICTURES).getJSONArray(JsonData.PARAM_INCIDENT_PICTURES_FAR);
-                Log.d("DEBUG", "--->>result.pictures_far=" + result.pictures_far.toString());
+                // Log.d("DEBUG", "--->>result.pictures_far=" + result.pictures_far.toString());
             } else {
                 result.pictures_far = new JSONArray();
-                Log.d("DEBUG", "--->>result.pictures_far empty");
+                // Log.d("DEBUG", "--->>result.pictures_far empty");
             }
 
             if (obj.has(JsonData.PARAM_INCIDENT_PICTURES)) {
@@ -169,7 +171,7 @@ public class Incident extends OverlayItem {
             result.setMarker(c.getResources().getDrawable(fr.paris.android.signalement.R.drawable.map_cursor));
             return result;
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "Can't create Incident", e);
+            // Log.e(Constants.PROJECT_TAG, "Can't create Incident", e);
             return null;
         }
     }

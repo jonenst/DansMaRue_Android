@@ -72,9 +72,9 @@ public class JSONAdapter extends BaseAdapter {
 
         if (data != null) for (int i = 0, j = 0; i < data.length(); i++, j++) {
             String cat = getCategoryOfItem(i);
-            Log.d(Constants.PROJECT_TAG, "catégorie : " + cat);
+            //Log.d(Constants.PROJECT_TAG, "catégorie : " + cat);
             if (!cat.equals(currentCat)) {
-                Log.d(Constants.PROJECT_TAG, "category " + j + " : " + cat);
+                //Log.d(Constants.PROJECT_TAG, "category " + j + " : " + cat);
                 categories.put(j++, cat);
                 currentCat = cat;
 
@@ -95,7 +95,7 @@ public class JSONAdapter extends BaseAdapter {
                 return data.getJSONObject(itemId).getString(categoryField);
             }
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "category error", e);
+            //Log.e(Constants.PROJECT_TAG, "category error", e);
             return null;
         }
     }
@@ -103,10 +103,10 @@ public class JSONAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (data != null) {
-            Log.d(Constants.PROJECT_TAG, "get count = " + data.length());
+            //Log.d(Constants.PROJECT_TAG, "get count = " + data.length());
             return data.length() + (categories == null ? 0 : categories.size());
         } else {
-            Log.d(Constants.PROJECT_TAG, "zero !!!");
+            //Log.d(Constants.PROJECT_TAG, "zero !!!");
             return 0;
         }
     }
@@ -123,7 +123,7 @@ public class JSONAdapter extends BaseAdapter {
                 return data.get(position);
             }
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "get item exception", e);
+            //Log.e(Constants.PROJECT_TAG, "get item exception", e);
         }
         return null;
     }
@@ -136,21 +136,21 @@ public class JSONAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if (categories != null && categories.indexOfKey(position) >= 0) {
-            Log.d(Constants.PROJECT_TAG, "type categorie");
+            //Log.d(Constants.PROJECT_TAG, "type categorie");
             return TYPE_CATEGORY;
         } else {
-            Log.d(Constants.PROJECT_TAG, "type item ");
+            //Log.d(Constants.PROJECT_TAG, "type item ");
             return TYPE_ITEM;
         }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d(Constants.PROJECT_TAG, "getview position : " + position);
+        //Log.d(Constants.PROJECT_TAG, "getview position : " + position);
 
         switch (getItemViewType(position)) {
             case TYPE_ITEM:
-                Log.d(Constants.PROJECT_TAG, "get item number " + position);
+                //Log.d(Constants.PROJECT_TAG, "get item number " + position);
                 View v;
                 View[] subViews;
                 if (convertView != null && convertView.getTag() != null) {
@@ -177,12 +177,12 @@ public class JSONAdapter extends BaseAdapter {
                         }
                     }
                 } catch (Exception e) {
-                    Log.e(Constants.PROJECT_TAG, "Error getting views", e);
+                    //Log.e(Constants.PROJECT_TAG, "Error getting views", e);
                 }
                 return v;
 
             case TYPE_CATEGORY:
-                Log.d(Constants.PROJECT_TAG, "getCat : " + position);
+                //Log.d(Constants.PROJECT_TAG, "getCat : " + position);
                 TextView tv;
                 if (convertView != null && convertView instanceof TextView) {
                     tv = (TextView) convertView;
@@ -203,7 +203,7 @@ public class JSONAdapter extends BaseAdapter {
         for (; i <= position && i < categories.size(); i++) {
             if (categories.keyAt(i) >= position) break;
         }
-        Log.d(Constants.PROJECT_TAG, "category for position " + position + " = " + (i - 1));
+        //Log.d(Constants.PROJECT_TAG, "category for position " + position + " = " + (i - 1));
 
         return i - 1;
     }

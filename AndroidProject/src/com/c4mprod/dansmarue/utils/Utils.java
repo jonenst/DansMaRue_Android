@@ -52,7 +52,7 @@ public class Utils {
         Header[] response_headers = response.getAllHeaders();
         for (int i = 0; i < response_headers.length; i++) {
             Header header = response_headers[i];
-            Log.i(Constants.PROJECT_TAG, "RESPONSE HEADERS          : " + header.getName() + ":" + header.getValue());
+            //Log.i(Constants.PROJECT_TAG, "RESPONSE HEADERS          : " + header.getName() + ":" + header.getValue());
 
         }
 

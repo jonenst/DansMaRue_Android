@@ -62,7 +62,7 @@ public class SelectCategoryActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         categoryCursor.moveToPosition(position);
 
-        Log.d(Constants.PROJECT_TAG, "setResult? " + categoryCursor.isNull(categoryCursor.getColumnIndex(Category.CHILDREN)));
+        //Log.d(Constants.PROJECT_TAG, "setResult? " + categoryCursor.isNull(categoryCursor.getColumnIndex(Category.CHILDREN)));
         if (categoryCursor.isNull(categoryCursor.getColumnIndex(Category.CHILDREN))) {
             Intent result = new Intent();
             result.putExtra(IntentData.EXTRA_CATEGORY_ID, id);

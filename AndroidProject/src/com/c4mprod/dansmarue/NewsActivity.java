@@ -92,7 +92,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
             showDialog(DIALOG_PROGRESS);
 
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "error in onCreate : JSONException", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onCreate : JSONException", e);
         }
     }
 
@@ -134,7 +134,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
 
     @Override
     public void onRequestcompleted(int requestCode, Object result) {
-        Log.d(Constants.PROJECT_TAG, "resp : " + result);
+        // Log.d(Constants.PROJECT_TAG, "resp : " + result);
 
 //@formatter:off
 /**
@@ -170,7 +170,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
                         JSONObject job = ongoingIncidents.getJSONObject(i);
                         int key = job.getInt(JsonData.PARAM_INCIDENT_ID);
                         if (logs.get(key) != null) {
-                            Log.d("AlerteVoirie_PM", "add ongoing incident " + key);
+                            // Log.d("AlerteVoirie_PM", "add ongoing incident " + key);
                             events.put(key, job);// items.put(job);
                         }
                     }
@@ -182,7 +182,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
                         JSONObject job = updatedIncidents.getJSONObject(i);
                         int key = job.getInt(JsonData.PARAM_INCIDENT_ID);
                         if (logs.get(key) != null) {
-                            Log.d("AlerteVoirie_PM", "add updated incident " + key);
+                            // Log.d("AlerteVoirie_PM", "add updated incident " + key);
                             events.put(key, job);
                         }
                     }
@@ -194,14 +194,14 @@ public class NewsActivity extends ListActivity implements RequestListener {
                         JSONObject job = resolvedIncidents.getJSONObject(i);
                         int key = job.getInt(JsonData.PARAM_INCIDENT_ID);
                         if (logs.get(key) != null) {
-                            Log.d("AlerteVoirie_PM", "add resolved incident " + key);
+                            // Log.d("AlerteVoirie_PM", "add resolved incident " + key);
                             events.put(key, job);
                         }
                     }
 
                     for (JSONObject log : logList.values()) {
                         int id = log.getInt(JsonData.ANSWER_INCIDENT_ID);
-                        Log.d("AlerteVoirie_PM", "key bug " + id);
+                        // Log.d("AlerteVoirie_PM", "key bug " + id);
                         JSONObject jsonObject = events.get(id);
                         if (jsonObject != null) {
                             String json = jsonObject.toString();
@@ -223,11 +223,11 @@ public class NewsActivity extends ListActivity implements RequestListener {
             }
 
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : ", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : ", e);
         } catch (ClassCastException e) {
-            Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : CLasscastException", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : CLasscastException", e);
         } catch (NullPointerException e) {
-            Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : NullPointerException", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : NullPointerException", e);
         } finally {
 
             if (requestCode == AVService.REQUEST_JSON) dismissDialog(DIALOG_PROGRESS);
@@ -244,7 +244,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
         protected String getCategoryOfItem(int itemId) {
             String date = super.getCategoryOfItem(itemId).substring(0, 10);
 
-            Log.d(Constants.PROJECT_TAG, date);
+            // Log.d(Constants.PROJECT_TAG, date);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -253,7 +253,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
             try {
                 return ((String) DateFormat.format("d MMMM yyyy", sdf.parse(date)));
             } catch (ParseException e) {
-                Log.e(Constants.PROJECT_TAG, "Error parsing date", e);
+                // Log.e(Constants.PROJECT_TAG, "Error parsing date", e);
             }
             return date;
         }
@@ -285,13 +285,15 @@ public class NewsActivity extends ListActivity implements RequestListener {
                 String status = null;
                 try {
                     JSONObject job = (JSONObject) logList.values().toArray()[getRealPositionOfItem(position)];// -getRealPositionOfItem(position));
-                    if (Constants.DEBUGMODE) Log.d(Constants.PROJECT_TAG, "getView : incident id " + incident.id);
+                    if (Constants.DEBUGMODE) {
+                        Log.d(Constants.PROJECT_TAG, "getView : incident id " + incident.id);
+                    }
                     if (job != null) {
                         status = job.getString(JsonData.PARAM_STATUS);
                     }
 
                 } catch (JSONException e) {
-                    Log.e(Constants.PROJECT_TAG, "JSONException in getView", e);
+                    // Log.e(Constants.PROJECT_TAG, "JSONException in getView", e);
                     switch (incident.state) {
                         case 'O':
                             iw.setImageResource(R.drawable.icn_creer);
@@ -353,7 +355,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // Log.d(Constants.PROJECT_TAG, "onListItemClick : "+l.getAdapter().getItem(position));
+        // //Log.d(Constants.PROJECT_TAG, "onListItemClick : "+l.getAdapter().getItem(position));
         Intent i = new Intent(this, ReportDetailsActivity.class);
         i.putExtra("existing", true);
 
@@ -373,7 +375,7 @@ public class NewsActivity extends ListActivity implements RequestListener {
              */
 
         } catch (JSONException e) {
-            Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
+            // Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
         }
         startActivityForResult(i, 1);
         // startActivity(i);

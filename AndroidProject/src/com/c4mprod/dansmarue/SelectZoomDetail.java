@@ -89,11 +89,12 @@ public class SelectZoomDetail extends Activity {
                     layout_with = picto.getWidth();
                     layout_height = picto.getHeight();
 
-                    Log.d(Constants.PROJECT_TAG, "Margin: " + (((photo.getWidth() + layout_with) / 2) - photo.getWidth()) * photo.getWidth() / photo_width
-                                                 + "," + (((photo.getHeight() + layout_height) / 2) - photo.getHeight()) * photo.getHeight() / photo_heigth);
-                    if (Constants.DEBUGMODE)
-                        Log.d(Constants.PROJECT_TAG, "onClick : Photo widht/height" + photo.getWidth() + "/" + photo.getHeight() + " ImageView: " + photo_width
-                                                     + "/" + photo_heigth);
+                    // if (Constants.DEBUGMODE) {
+                    // Log.d(Constants.PROJECT_TAG, "Margin: " + (((photo.getWidth() + layout_with) / 2) - photo.getWidth()) * photo.getWidth() / photo_width
+                    // + "," + (((photo.getHeight() + layout_height) / 2) - photo.getHeight()) * photo.getHeight() / photo_heigth);
+                    // Log.d(Constants.PROJECT_TAG, "onClick : Photo widht/height" + photo.getWidth() + "/" + photo.getHeight() + " ImageView: " + photo_width
+                    // + "/" + photo_heigth);
+                    // }
                     picto.setSupport(picture, photo_width, photo_heigth, getApplicationContext());
 
                     Intent data = new Intent();
@@ -129,7 +130,7 @@ public class SelectZoomDetail extends Activity {
 
             imageView.setImageBitmap(picture);
 
-            Log.d(Constants.PROJECT_TAG, picture.getWidth() + "," + picture.getHeight());
+            // Log.d(Constants.PROJECT_TAG, picture.getWidth() + "," + picture.getHeight());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

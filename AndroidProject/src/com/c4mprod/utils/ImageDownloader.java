@@ -266,11 +266,11 @@ public class ImageDownloader {
 
         try {
 
-            // Log.i(Constants.PROJECT_TAG, "Downloading " + url);
+            // //Log.i(Constants.PROJECT_TAG, "Downloading " + url);
             HttpResponse response = client.execute(getRequest);
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                // Log.w(Constants.PROJECT_TAG, "Error " + statusCode + " while retrieving bitmap from " + url);
+                // //Log.w(Constants.PROJECT_TAG, "Error " + statusCode + " while retrieving bitmap from " + url);
                 return null;
             }
 
@@ -280,18 +280,18 @@ public class ImageDownloader {
                 try {
                     inputStream = entity.getContent();
 
-                    // Log.d(Constants.PROJECT_TAG, "image url:" + urlString);
+                    // //Log.d(Constants.PROJECT_TAG, "image url:" + urlString);
                     Drawable drawable = Drawable.createFromStream(inputStream, "src");
 
                     Bitmap bm = ((BitmapDrawable) drawable).getBitmap();
 
-                    // Log.d(Constants.PROJECT_TAG, "Bm width : " + bm.getWidth());
+                    // //Log.d(Constants.PROJECT_TAG, "Bm width : " + bm.getWidth());
 
-                    // Log.d(Constants.PROJECT_TAG, "got a thumbnail drawable: " + drawable.getBounds() + ", " + drawable.getIntrinsicHeight() + ","
+                    // //Log.d(Constants.PROJECT_TAG, "got a thumbnail drawable: " + drawable.getBounds() + ", " + drawable.getIntrinsicHeight() + ","
                     // + drawable.getIntrinsicWidth() + ", " + drawable.getMinimumHeight() + "," + drawable.getMinimumWidth());
                     if (mExternalStorageWriteable) {
                         File f = new File(mfolder, URLEncoder.encode(url));
-                        // Log.d(Constants.PROJECT_TAG, f.getPath());
+                        // //Log.d(Constants.PROJECT_TAG, f.getPath());
                         if (f.createNewFile()) {
 
                             OutputStream out = new FileOutputStream(f);
@@ -322,13 +322,13 @@ public class ImageDownloader {
             }
         } catch (IOException e) {
             getRequest.abort();
-            Log.w(LOG_TAG, "I/O error while retrieving bitmap from " + url, e);
+            //Log.w(LOG_TAG, "I/O error while retrieving bitmap from " + url, e);
         } catch (IllegalStateException e) {
             getRequest.abort();
-            Log.w(LOG_TAG, "Incorrect URL: " + url);
+            //Log.w(LOG_TAG, "Incorrect URL: " + url);
         } catch (Exception e) {
             getRequest.abort();
-            Log.w(LOG_TAG, "Error while retrieving bitmap from " + url, e);
+            //Log.w(LOG_TAG, "Error while retrieving bitmap from " + url, e);
         } finally {
             if ((client instanceof AndroidHttpClient)) {
                 ((AndroidHttpClient) client).close();
@@ -511,7 +511,7 @@ public class ImageDownloader {
                     return BitmapFactory.decodeFile(f.getPath());
 
                 } catch (Exception e) {
-                    // Log.e(Constants.PROJECT_TAG, "Error in retrieving picture", e);
+                    // //Log.e(Constants.PROJECT_TAG, "Error in retrieving picture", e);
                     e.printStackTrace();
                 }
             }

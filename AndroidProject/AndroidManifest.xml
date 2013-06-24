@@ -1,115 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.paris.android.signalement"
-    android:versionCode="9" 
-    android:versionName="@string/app_version">
-        
+    android:versionCode="1"
+    android:versionName="@string/app_version" >
+
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="10" />
 
-    <uses-permission
-        android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_OWNER_DATA" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    </uses-permission>
 
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    <uses-permission
-        android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-    <uses-permission
-        android:name="android.permission.WRITE_OWNER_DATA"></uses-permission>
-    <uses-permission
-        android:name="android.permission.READ_OWNER_DATA"></uses-permission>
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-        
-        
     <application
+        android:debuggable="false"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Main" android:debuggable="false" android:hardwareAccelerated="false">
+        android:theme="@style/Main" >
         <activity
-            android:label="@string/app_name"
             android:name="com.c4mprod.dansmarue.SplashScreenActivity"
+            android:label="@string/app_name"
             android:noHistory="true"
-            android:theme="@style/Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Splash" >
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN" />
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.c4mprod.dansmarue.HomeActivity"
-            android:theme="@style/Home"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor"
+            android:theme="@style/Home" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.NewsActivity"
             android:label="@string/news_title"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor" >
+        </activity>
         <activity
+            android:name="com.c4mprod.dansmarue.MyIncidentsActivity"
             android:label="@string/my_reports_title"
-            android:theme="@style/TabBar"
             android:screenOrientation="sensor"
-            android:name="com.c4mprod.dansmarue.MyIncidentsActivity"></activity>
-
+            android:theme="@style/TabBar" >
+        </activity>
         <activity
-            android:label="@string/my_reports_title"
             android:name="com.c4mprod.dansmarue.MyIncidentsActivityMap"
-            android:theme="@style/TabBar"
-            android:screenOrientation="sensor"></activity>
+            android:label="@string/my_reports_title"
+            android:screenOrientation="sensor"
+            android:theme="@style/TabBar" >
+        </activity>
         <activity
-            android:label="@string/existing_incidents_title"
             android:name="com.c4mprod.dansmarue.ExistingIncidentsActivity"
-            android:screenOrientation="sensor"></activity>
+            android:label="@string/existing_incidents_title"
+            android:screenOrientation="sensor" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.IncidentsActivityMap"
             android:label="@string/incidents_title"
-            android:theme="@style/TabBar"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor"
+            android:theme="@style/TabBar" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.SelectCategoryActivity"
             android:label="@string/select_category_title"
-            android:theme="@style/Categories"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor"
+            android:theme="@style/Categories" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.SelectPositionActivity"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.ReportDetailsActivity"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.AddCommentActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
         <activity
             android:name="com.c4mprod.dansmarue.SelectZoomDetail"
-            android:screenOrientation="sensor"></activity>
-        <activity 
-            android:name="com.c4mprod.dansmarue.CreditsActivity" 
-            android:screenOrientation="sensor" android:theme="@style/Main">
+            android:screenOrientation="sensor" >
         </activity>
-        <activity 
-            android:name="com.c4mprod.dansmarue.NewVersionDialogActivity" >
+        <activity
+            android:name="com.c4mprod.dansmarue.CreditsActivity"
+            android:screenOrientation="sensor"
+            android:theme="@style/Main" >
         </activity>
-        
+        <activity android:name="com.c4mprod.dansmarue.NewVersionDialogActivity" >
+        </activity>
+
         <provider
             android:name="fr.paris.android.signalement.data.CategoryProvider"
             android:authorities="fr.paris.android.signalement.dataprovider.advice"
-            android:syncable="false">
+            android:syncable="false" >
         </provider>
 
-        <uses-library
-            android:name="com.google.android.maps">
+        <uses-library android:name="com.google.android.maps" >
         </uses-library>
-        <activity android:name="com.c4mprod.dansmarue.NewsSimpleActivity"></activity>
 
-
+        <activity android:name="com.c4mprod.dansmarue.NewsSimpleActivity" >
+        </activity>
     </application>
-    
-    
-</manifest> 
+
+</manifest>

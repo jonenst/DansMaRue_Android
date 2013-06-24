@@ -128,7 +128,7 @@ public class HttpPostRequest {
             httpPost.addHeader(HEADER_APP_DEVICE_MODEL, (Build.MANUFACTURER + " " + Build.DEVICE).trim());
             httpPost.addHeader(HEADER_APP_REQUEST_SIGNATURE, sha1(MAGIC_KEY + params.get(0).getValue()));
 
-            // Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
+            // //Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
 
             HttpResponse response;
             response = httpClient.execute(httpPost);
@@ -138,37 +138,37 @@ public class HttpPostRequest {
             final HttpEntity entity = response.getEntity();
             content = entity.getContent();
             contentString = convertStreamToString(content);
-            Log.d(Constants.PROJECT_TAG, "answer = " + contentString);
+            //Log.d(Constants.PROJECT_TAG, "answer = " + contentString);
         } catch (final UnsupportedEncodingException uee) {
-            Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);
+            //Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);
             throw new AVServiceErrorException(999);
         } catch (org.apache.http.conn.ConnectTimeoutException cte) {
             cte.printStackTrace();
             throw new AVServiceErrorException(998);
         } catch (final IOException ioe) {
-            Log.e(Constants.PROJECT_TAG, "IOException", ioe);
+            //Log.e(Constants.PROJECT_TAG, "IOException", ioe);
             throw new AVServiceErrorException(999);
         } catch (final IllegalStateException ise) {
-            Log.e(Constants.PROJECT_TAG, "IllegalStateException", ise);
+            //Log.e(Constants.PROJECT_TAG, "IllegalStateException", ise);
             throw new AVServiceErrorException(999);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(Constants.PROJECT_TAG, "NoSuchAlgorithmException", e);
+            //Log.e(Constants.PROJECT_TAG, "NoSuchAlgorithmException", e);
             throw new AVServiceErrorException(999);
         } catch (Exception e) {
-            Log.e(Constants.PROJECT_TAG, "error in sendRequest : ", e);
+            //Log.e(Constants.PROJECT_TAG, "error in sendRequest : ", e);
             throw new AVServiceErrorException(999);
         }
 
         try {
 
-            Log.d(Constants.PROJECT_TAG, "contenString: " + contentString);
+            //Log.d(Constants.PROJECT_TAG, "contenString: " + contentString);
             JSONObject jo = new JSONObject(contentString);
             int resultnum = jo.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
-            Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
+            //Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
             if (resultnum != 0) throw new AVServiceErrorException(resultnum);
 
         } catch (JSONException e) {
-            Log.w(Constants.PROJECT_TAG, "JSONException in onPostExecute");
+            //Log.w(Constants.PROJECT_TAG, "JSONException in onPostExecute");
             // throw new AVServiceErrorException(999);
         }
 
