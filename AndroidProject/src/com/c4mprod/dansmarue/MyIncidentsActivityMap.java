@@ -34,6 +34,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.Incident;
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.utils.SimpleItemizedOverlay;
@@ -246,9 +247,7 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
             }
         } else {
             map.getController().setZoom(14);
-            // paris : 48.869881,2.353171
-            // marseille : 43.297608, 5.381018
-            map.getController().setCenter(new GeoPoint(48869881, 2353171));
+            map.getController().setCenter(new GeoPoint(Constants.DEFAULT_LON, Constants.DEFAULT_LAT));
         }
         SimpleItemizedOverlay overlay = new SimpleItemizedOverlay(getResources().getDrawable(R.drawable.map_cursor), this, map, items);
         map.getOverlays().add(overlay);

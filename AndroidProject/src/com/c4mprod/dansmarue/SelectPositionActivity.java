@@ -46,7 +46,6 @@ import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.IntentData;
 import com.c4mprod.dansmarue.utils.LocationHelper;
 import com.google.android.maps.GeoPoint;
@@ -149,6 +148,8 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 @Override
                 protected Address doInBackground(String... params) {
                     try {
+
+                        Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
                         List<Address> results = geo.getFromLocationName(params[0], 1);
                         if (results.size() > 0) {
                             return results.get(0);
@@ -163,6 +164,9 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 protected void onPostExecute(Address result) {
 
                     if (result != null) {
+
+                        Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
+
                         ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
                         ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
                         ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
@@ -309,13 +313,15 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
     private void setMarker(GeoPoint newGeo) {
 
-        cursorOverlay.setGeopoint(newGeo);
+        if (cursorOverlay != null) {
+            cursorOverlay.setGeopoint(newGeo);
+        }
         currentPoint = newGeo;
 
         // ((TextView) findViewById(R.id.TextView_address)).setText(null);
         // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
         if (!search) {
-            //Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
+            // Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
             new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
         }
     }
@@ -372,11 +378,18 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 List<Address> addr;
 
                 if (!search && params.length == 2) {
+
+                    // Log.d("DEBUG", "GET LOCATION FROM LON LAT : " + params[0] + " " + params[1]);
                     addr = geo.getFromLocation(params[0], params[1], 1);
+
                 } else {
+
                     String address = ((TextView) findViewById(R.id.EditText_address_number)).getText().toString() + " "
                                      + ((TextView) findViewById(R.id.EditText_address_street)).getText().toString() + " , "
-                                     + ((TextView) findViewById(R.id.EditText_address_town)).getText().toString();
+                                     + ((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString() + " "
+                                     + ((TextView) findViewById(R.id.EditText_address_town)).getText().toString() + " , " + "France";
+
+                    // Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
                     addr = geo.getFromLocationName(address, 1);
 
                     if (addr.size() > 0) {
@@ -386,19 +399,37 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 }
 
                 if (addr.size() > 0) {
-                    result[0] = addr.get(0).getAddressLine(0);
-                    result[3] = addr.get(0).getLocality();
-                    result[2] = addr.get(0).getPostalCode();
 
+                    result[0] = addr.get(0).getAddressLine(0);
+                    result[2] = addr.get(0).getPostalCode();
+                    result[3] = addr.get(0).getLocality();
+
+                    // num and street mixed
                     Pattern p = Pattern.compile("^[\\d\\-]+");
                     Matcher m = p.matcher(result[0]);
                     if (m.find()) {
-                        result[1] = m.group();
-                        result[0] = result[0].replace(result[1], "");
+                        result[1] = result[0].replace(m.group(), "");
+                        result[0] = m.group();
+                    } else {
+                        result[1] = result[0];
+                        result[0] = "";
                     }
+
+                    // in case street = city
+                    result[1] = result[1] == null ? "" : result[1].trim();
+                    if (result[1].equals(result[3])) {
+                        result[1] = "";
+                    }
+
+                    // normalisation
+                    result[0] = result[0] == null ? "" : result[0].trim();
+                    if (result[0].length() > 3) result[0] = "";
+                    result[1] = result[1] == null ? "" : result[1].trim();
+                    result[2] = result[2] == null ? "" : result[2].trim();
+                    result[3] = result[3] == null ? "" : result[3].trim();
                 }
             } catch (IOException e) {
-                //Log.e(Constants.PROJECT_TAG, "Address error", e);
+                // Log.e(Constants.PROJECT_TAG, "Address error", e);
             }
             return result;
         }
@@ -412,27 +443,19 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 geopoint = null;
             }
 
-            //Log.d(Constants.PROJECT_TAG, "n° : " + result[0]);
-            //Log.d(Constants.PROJECT_TAG, "Rue : " + result[1]);
-            //Log.d(Constants.PROJECT_TAG, "CP : " + result[2]);
-            //Log.d(Constants.PROJECT_TAG, "Ville : " + result[3]);
+            // Log.d(Constants.PROJECT_TAG, "n° : " + result[0]);
+            // Log.d(Constants.PROJECT_TAG, "Rue : " + result[1]);
+            // Log.d(Constants.PROJECT_TAG, "CP : " + result[2]);
+            // Log.d(Constants.PROJECT_TAG, "Ville : " + result[3]);
 
             String number = "", street = "", postcode = "", town = "";
 
-            if (result[2] != null) {
+            number = result[0];
+            street = result[1];
+            postcode = result[2];
+            town = result[3];
 
-                number = result[2].equals(result[1]) ? "" : result[1];
-                street = (result[3]).equals(new String(result[0]).trim()) ? "" : result[0].trim();
-                postcode = result[2];
-                town = result[3];
-
-            } else {
-                for (String string : result) {
-                    street += (string != null ? " " + string : "");
-                }
-                street = street.trim();
-
-            }
+            // Log.d("DEBUG", "RECEIVED LOCATION number:" + number + " street: " + street + " postcode:" + postcode + " town:" + town);
 
             ((TextView) findViewById(R.id.EditText_address_street)).setText(street != null ? street : "");
             ((TextView) findViewById(R.id.EditText_address_number)).setText(number != null ? number : "");
@@ -449,10 +472,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             ((Button) findViewById(R.id.Button_validate)).setText(R.string.select_position_btn_validate);
             search = false;
 
-            //Log.d(Constants.PROJECT_TAG, "Number : " + number);
-            //Log.d(Constants.PROJECT_TAG, "Street : " + street);
-            //Log.d(Constants.PROJECT_TAG, "Postcode : " + postcode);
-            //Log.d(Constants.PROJECT_TAG, "Town : " + town);
+            // Log.d(Constants.PROJECT_TAG, "Number : " + number);
+            // Log.d(Constants.PROJECT_TAG, "Street : " + street);
+            // Log.d(Constants.PROJECT_TAG, "Postcode : " + postcode);
+            // Log.d(Constants.PROJECT_TAG, "Town : " + town);
         }
     }
 }

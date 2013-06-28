@@ -26,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.RadioGroup;
@@ -106,7 +105,7 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
         tabs.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
+                // Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
                 checked = checkedId;
                 setMapForTab(gettabIndex(checkedId));
             }
@@ -146,7 +145,7 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
             AVService.getInstance(this).postJSON(new JSONArray().put(request), this);
 
         } catch (Exception e) {
-            //Log.e(Constants.PROJECT_TAG, "Eror retrieving incidents", e);
+            // Log.e(Constants.PROJECT_TAG, "Eror retrieving incidents", e);
         }
 
     }
@@ -257,9 +256,8 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
                 }
             }
         } else {
-            // center on marseille
             map.getController().setZoom(14);
-            map.getController().setCenter(new GeoPoint(43297608, 5381018));
+            map.getController().setCenter(new GeoPoint(Constants.DEFAULT_LON, Constants.DEFAULT_LAT));
         }
 
         SimpleItemizedOverlay overlay = new SimpleItemizedOverlay(getResources().getDrawable(R.drawable.map_cursor), this, map, items);
@@ -289,7 +287,7 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
 
     @Override
     public void onRequestcompleted(int requestCode, Object result) {
-        //Log.d(Constants.PROJECT_TAG, "resp : " + result);
+        // Log.d(Constants.PROJECT_TAG, "resp : " + result);
 
 //@formatter:off
 /**
@@ -419,10 +417,10 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
             }
 
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : Json", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : Json", e);
             Toast.makeText(this, "Erreur serveur", Toast.LENGTH_LONG).show();
         } catch (ClassCastException e) {
-            //Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : ClasscastException", e);
+            // Log.e(Constants.PROJECT_TAG, "error in onRequestcompleted : ClasscastException", e);
             Toast.makeText(this, "Erreur serveur", Toast.LENGTH_LONG).show();
 
         }
