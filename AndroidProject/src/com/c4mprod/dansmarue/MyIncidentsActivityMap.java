@@ -27,7 +27,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
@@ -35,7 +34,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.Incident;
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.utils.SimpleItemizedOverlay;
@@ -120,7 +118,7 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
             try {
                 data = new JSONObject(getIntent().getExtras().getString("datas"));
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "JSon data exception", e);
+                // Log.e(Constants.PROJECT_TAG, "JSon data exception", e);
             }
 
             // setMapForTab(gettabIndex(tabs.getCheckedRadioButtonId()));
@@ -133,7 +131,7 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
                                                                                          .put(JsonData.PARAM_UDID, Utils.getUdid(this))), this);
                 showDialog(DIALOG_PROGRESS);
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "error launching My Incidents", e);
+                // Log.e(Constants.PROJECT_TAG, "error launching My Incidents", e);
             }
         }
 
@@ -141,7 +139,7 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
         tabs.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
+                // Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
                 checked = checkedId;
                 setMapForTab(gettabIndex(checkedId));
             }
@@ -225,7 +223,7 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
 
                     items.add(myIncident);
                 } catch (JSONException e) {
-                    //Log.e(Constants.PROJECT_TAG, "Marker error", e);
+                    // Log.e(Constants.PROJECT_TAG, "Marker error", e);
                 }
 
             }
@@ -248,7 +246,9 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
             }
         } else {
             map.getController().setZoom(14);
-            map.getController().setCenter(new GeoPoint(43297608, 5381018));
+            // paris : 48.869881,2.353171
+            // marseille : 43.297608, 5.381018
+            map.getController().setCenter(new GeoPoint(48869881, 2353171));
         }
         SimpleItemizedOverlay overlay = new SimpleItemizedOverlay(getResources().getDrawable(R.drawable.map_cursor), this, map, items);
         map.getOverlays().add(overlay);
