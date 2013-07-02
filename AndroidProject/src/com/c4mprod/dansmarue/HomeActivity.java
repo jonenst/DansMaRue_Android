@@ -40,7 +40,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -208,21 +207,20 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
 
         try {
 
-            Last_Location.longitude = location.getLongitude();
-            Last_Location.latitude = location.getLatitude();
-
             // DEBUG ONLY when not on Paris (2 rue de la cité 75004 Paris)!!
-            if (Constants.DEBUGMODE) {
-                Last_Location.longitude = 2.347629;
+            if (!Constants.DEBUGMODE && location != null) {
+                Last_Location.longitude = location.getLongitude();
+                Last_Location.latitude = location.getLatitude();
+            } else {
                 Last_Location.latitude = 48.854491;
+                Last_Location.longitude = 2.347629;
             }
-            //
 
             retreiveIncidentsStats();
 
             hidedialog = true;
         } catch (NullPointerException e) {
-            //Log.e(Constants.PROJECT_TAG, "Nullpointer Error", e);
+            // Log.e(Constants.PROJECT_TAG, "Nullpointer Error", e);
         }
 
     }
@@ -328,9 +326,9 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
             // findViewById(R.id.LinearLayout04).startAnimation(set);
             // findViewById(R.id.LinearLayout03).startAnimation(set);
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "JSONException", e);
+            // Log.e(Constants.PROJECT_TAG, "JSONException", e);
         } catch (ClassCastException e) {
-            //Log.e(Constants.PROJECT_TAG, "Invalid result. Trying to cast " + result.getClass() + "into String", e);
+            // Log.e(Constants.PROJECT_TAG, "Invalid result. Trying to cast " + result.getClass() + "into String", e);
         } finally {
             if (hidedialog && dialog_shown == true) dismissDialog(DIALOG_PROGRESS);
             dialog_shown = false;

@@ -28,16 +28,17 @@ import org.apache.http.HttpResponse;
 
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.provider.Settings;
 
 import com.c4mprod.dansmarue.NewVersionDialogActivity;
 import com.c4mprod.dansmarue.entities.Constants;
 
 public class Utils {
     public static String getUdid(Context c) {
-        TelephonyManager tel = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
-        return tel.getDeviceId();
+        // TelephonyManager tel = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+        // return tel.getDeviceId();
+
+        return Settings.Secure.ANDROID_ID;
     }
 
     public static void fromInputToOutput(InputStream in, OutputStream out) throws IOException {
@@ -52,7 +53,7 @@ public class Utils {
         Header[] response_headers = response.getAllHeaders();
         for (int i = 0; i < response_headers.length; i++) {
             Header header = response_headers[i];
-            //Log.i(Constants.PROJECT_TAG, "RESPONSE HEADERS          : " + header.getName() + ":" + header.getValue());
+            // Log.i(Constants.PROJECT_TAG, "RESPONSE HEADERS          : " + header.getName() + ":" + header.getValue());
 
         }
 

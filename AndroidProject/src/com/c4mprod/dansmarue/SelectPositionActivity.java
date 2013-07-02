@@ -234,9 +234,12 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
 
-        cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-        map.getOverlays().add(cursorOverlay);
-        map.invalidate();
+        if (currentBestLocation != null) {
+            cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+            cursorOverlay.setGeopoint(new GeoPoint((int) (currentBestLocation.getLatitude() * 1000000), (int) (currentBestLocation.getLongitude() * 1000000)));
+            map.getOverlays().add(cursorOverlay);
+            map.invalidate();
+        }
 
         if (currentBestLocation != null) {
             handleNewLocation(currentBestLocation);
@@ -313,16 +316,18 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
     private void setMarker(GeoPoint newGeo) {
 
-        if (cursorOverlay != null) {
-            cursorOverlay.setGeopoint(newGeo);
-        }
-        currentPoint = newGeo;
+        if (newGeo != null) {
+            if (cursorOverlay != null) {
+                cursorOverlay.setGeopoint(newGeo);
+            }
+            currentPoint = newGeo;
 
-        // ((TextView) findViewById(R.id.TextView_address)).setText(null);
-        // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
-        if (!search) {
-            // Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
-            new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
+            // ((TextView) findViewById(R.id.TextView_address)).setText(null);
+            // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
+            if (!search) {
+                // Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
+                new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
+            }
         }
     }
 
