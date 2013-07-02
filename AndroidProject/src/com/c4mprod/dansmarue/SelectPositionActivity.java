@@ -39,13 +39,14 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.IntentData;
 import com.c4mprod.dansmarue.utils.LocationHelper;
 import com.google.android.maps.GeoPoint;
@@ -88,8 +89,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                                                                                                                                                                                     .toString()).trim();
                     Intent result = new Intent();
                     result.putExtra(IntentData.EXTRA_ADDRESS, address);
-                    result.putExtra(IntentData.EXTRA_LONGITUDE, currentPoint.getLongitudeE6() / 1E6);
-                    result.putExtra(IntentData.EXTRA_LATITUDE, currentPoint.getLatitudeE6() / 1E6);
+                    if (currentPoint != null) {
+                        result.putExtra(IntentData.EXTRA_LONGITUDE, currentPoint.getLongitudeE6() / 1E6);
+                        result.putExtra(IntentData.EXTRA_LATITUDE, currentPoint.getLatitudeE6() / 1E6);
+                    }
                     setResult(RESULT_OK, result);
                     finish();
                 }
@@ -149,7 +152,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 protected Address doInBackground(String... params) {
                     try {
 
-                        Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
+                        // Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
                         List<Address> results = geo.getFromLocationName(params[0], 1);
                         if (results.size() > 0) {
                             return results.get(0);
@@ -165,8 +168,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
                     if (result != null) {
 
-                        Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
-
+                        // Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
                         ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
                         ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
                         ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
@@ -237,6 +239,11 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         if (currentBestLocation != null) {
             cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
             cursorOverlay.setGeopoint(new GeoPoint((int) (currentBestLocation.getLatitude() * 1000000), (int) (currentBestLocation.getLongitude() * 1000000)));
+            map.getOverlays().add(cursorOverlay);
+            map.invalidate();
+        } else {
+            cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+            cursorOverlay.setGeopoint(new GeoPoint(Constants.DEFAULT_LON, Constants.DEFAULT_LAT));
             map.getOverlays().add(cursorOverlay);
             map.invalidate();
         }
@@ -319,6 +326,11 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         if (newGeo != null) {
             if (cursorOverlay != null) {
                 cursorOverlay.setGeopoint(newGeo);
+            } else {
+                cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+                cursorOverlay.setGeopoint(newGeo);
+                map.getOverlays().add(cursorOverlay);
+                map.getController().animateTo(newGeo);
             }
             currentPoint = newGeo;
 
@@ -362,6 +374,8 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
         @Override
         public boolean onTap(GeoPoint p, MapView mapView) {
+
+            // Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
             if (locationManager != null) {
                 locationManager.removeUpdates(SelectPositionActivity.this);
             }
@@ -460,19 +474,31 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             postcode = result[2];
             town = result[3];
 
-            // Log.d("DEBUG", "RECEIVED LOCATION number:" + number + " street: " + street + " postcode:" + postcode + " town:" + town);
+            // Log.d("DEBUG", "RECEIVED LOCATION number:'" + number + "' street:'" + street + "' postcode:'" + postcode + "' town:'" + town + "'");
 
-            ((TextView) findViewById(R.id.EditText_address_street)).setText(street != null ? street : "");
-            ((TextView) findViewById(R.id.EditText_address_number)).setText(number != null ? number : "");
-            ((TextView) findViewById(R.id.EditText_address_postcode)).setText(postcode);
-            ((TextView) findViewById(R.id.EditText_address_town)).setText(town);
+            if (("".equals(number) || number == null) && ("".equals(street) || "France".equals(street) || street == null)
+                && ("".equals(postcode) || postcode == null) && ("".equals(town) || town == null)) {
+                Toast.makeText(SelectPositionActivity.this.getApplicationContext(),
+                               SelectPositionActivity.this.getResources().getText(R.string.no_adress_found), Toast.LENGTH_LONG).show();
 
-            if (!((TextView) findViewById(R.id.EditText_address_street)).getText().toString().equals("")
-                && !((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString().equals("")
-                && !((TextView) findViewById(R.id.EditText_address_town)).getText().toString().equals("")) {
-                findViewById(R.id.Button_validate).setEnabled(true);
-            } else
+                // Log.d("DEBUG", "---1");
                 findViewById(R.id.Button_validate).setEnabled(false);
+
+            } else {
+
+                // Log.d("DEBUG", "---2");
+                ((TextView) findViewById(R.id.EditText_address_street)).setText(street != null ? street : "");
+                ((TextView) findViewById(R.id.EditText_address_number)).setText(number != null ? number : "");
+                ((TextView) findViewById(R.id.EditText_address_postcode)).setText(postcode);
+                ((TextView) findViewById(R.id.EditText_address_town)).setText(town);
+
+                if (!((TextView) findViewById(R.id.EditText_address_street)).getText().toString().equals("")
+                    && !((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString().equals("")
+                    && !((TextView) findViewById(R.id.EditText_address_town)).getText().toString().equals("")) {
+                    findViewById(R.id.Button_validate).setEnabled(true);
+                } else
+                    findViewById(R.id.Button_validate).setEnabled(false);
+            }
 
             ((Button) findViewById(R.id.Button_validate)).setText(R.string.select_position_btn_validate);
             search = false;
