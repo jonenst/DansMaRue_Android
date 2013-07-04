@@ -97,7 +97,7 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
             }
             title[i] = stitle;
             ((TextView) tabs.getChildAt(i)).setText(title[i]);
-            ((TextView) tabs.getChildAt(i)).setEnabled(false);
+            // ((TextView) tabs.getChildAt(i)).setEnabled(false);
 
         }
 

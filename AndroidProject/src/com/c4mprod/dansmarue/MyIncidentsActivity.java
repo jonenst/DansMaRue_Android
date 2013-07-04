@@ -36,7 +36,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -129,18 +128,18 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
             title[1] = getIntent().getExtras().getString("tab2");
             title[2] = getIntent().getExtras().getString("tab3");
             ((TextView) tabs.getChildAt(0)).setText(title[0]);
-            if (title[0].startsWith("0")) ((TextView) tabs.getChildAt(0)).setEnabled(false);
+            // if (title[0].startsWith("0")) ((TextView) tabs.getChildAt(0)).setEnabled(false);
             ((TextView) tabs.getChildAt(1)).setText(title[1]);
-            if (title[1].startsWith("0")) ((TextView) tabs.getChildAt(1)).setEnabled(false);
+            // if (title[1].startsWith("0")) ((TextView) tabs.getChildAt(1)).setEnabled(false);
             ((TextView) tabs.getChildAt(2)).setText(title[2]);
-            if (title[2].startsWith("0")) ((TextView) tabs.getChildAt(2)).setEnabled(false);
+            // if (title[2].startsWith("0")) ((TextView) tabs.getChildAt(2)).setEnabled(false);
 
             checked = getIntent().getExtras().getInt("tab");
 
             try {
                 data = new JSONObject(getIntent().getExtras().getString("datas"));
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "JSon data exception", e);
+                // Log.e(Constants.PROJECT_TAG, "JSon data exception", e);
             }
 
             setAdapterForTab(gettabIndex(tabs.getCheckedRadioButtonId()));
@@ -154,7 +153,7 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
         tabs.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
+                // Log.d(Constants.PROJECT_TAG, "checked : " + checkedId);
                 checked = checkedId;
                 setAdapterForTab(gettabIndex(checkedId));
             }
@@ -185,7 +184,7 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
                                                                                      .put(JsonData.PARAM_UDID, Utils.getUdid(this))), this);
             showDialog(DIALOG_PROGRESS);
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "error launching My Incidents", e);
+            // Log.e(Constants.PROJECT_TAG, "error launching My Incidents", e);
         }
     }
 
@@ -205,14 +204,14 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
 
     @Override
     public void onRequestcompleted(int requestCode, Object result) {
-        //Log.d(Constants.PROJECT_TAG, "result = " + result);
+        // Log.d(Constants.PROJECT_TAG, "result = " + result);
         timeoutHandler.removeCallbacks(timeout);
 
         if (requestCode == AVService.REQUEST_JSON && result != null) {
             try {
                 JSONObject answer = new JSONArray((String) result).getJSONObject(0);
 
-                //Log.d(Constants.PROJECT_TAG, "answer = " + answer);
+                // Log.d(Constants.PROJECT_TAG, "answer = " + answer);
 
                 /*
                  * 10-01 18:25:27.116: DEBUG/Alerte Voirie(24267): result =
@@ -258,12 +257,12 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
                             title[i] = stitle;
 
                             ((TextView) tabs.getChildAt(i)).setText(title[i]);
-                            if (title[i].startsWith("0")) ((TextView) tabs.getChildAt(i)).setEnabled(false);
+                            // if (title[i].startsWith("0")) ((TextView) tabs.getChildAt(i)).setEnabled(false);
 
                         }
                         data = answer.getJSONObject(JsonData.PARAM_INCIDENTS);
                     } catch (JSONException e) {
-                        //Log.e(Constants.PROJECT_TAG, "Exception", e);
+                        // Log.e(Constants.PROJECT_TAG, "Exception", e);
                         finish();
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         Toast.makeText(this, "Erreur: pas d'incidents à afficher", Toast.LENGTH_SHORT).show();
@@ -272,7 +271,7 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
 
                 }
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "JsonException in onRequestCompleted", e);
+                // Log.e(Constants.PROJECT_TAG, "JsonException in onRequestCompleted", e);
             } finally {
                 mPd.dismiss();
             }
@@ -356,7 +355,7 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
                 protected String getCategoryOfItem(int itemId) {
                     String date = super.getCategoryOfItem(itemId).substring(0, 10);
 
-                    //Log.d(Constants.PROJECT_TAG, date);
+                    // Log.d(Constants.PROJECT_TAG, date);
 
                     return ((String) DateFormat.format("MMMM yyyy",
                                                        new Date(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(5, 7)) - 1,
@@ -384,7 +383,7 @@ public class MyIncidentsActivity extends ListActivity implements RequestListener
                 }
             });
         } catch (Exception e) {
-            //Log.e(Constants.PROJECT_TAG, "JSONException in setAdapterForTab", e);
+            // Log.e(Constants.PROJECT_TAG, "JSONException in setAdapterForTab", e);
         }
 
     }

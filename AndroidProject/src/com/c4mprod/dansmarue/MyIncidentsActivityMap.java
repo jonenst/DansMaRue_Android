@@ -108,11 +108,11 @@ public class MyIncidentsActivityMap extends MapActivity implements RequestListen
             title[1] = getIntent().getExtras().getString("tab2");
             title[2] = getIntent().getExtras().getString("tab3");
             ((TextView) tabs.getChildAt(0)).setText(title[0]);
-            if (title[0].startsWith("0")) ((TextView) tabs.getChildAt(0)).setEnabled(false);
+            // if (title[0].startsWith("0")) ((TextView) tabs.getChildAt(0)).setEnabled(false);
             ((TextView) tabs.getChildAt(1)).setText(title[1]);
-            if (title[1].startsWith("0")) ((TextView) tabs.getChildAt(1)).setEnabled(false);
+            // if (title[1].startsWith("0")) ((TextView) tabs.getChildAt(1)).setEnabled(false);
             ((TextView) tabs.getChildAt(2)).setText(title[2]);
-            if (title[2].startsWith("0")) ((TextView) tabs.getChildAt(2)).setEnabled(false);
+            // if (title[2].startsWith("0")) ((TextView) tabs.getChildAt(2)).setEnabled(false);
 
             checked = getIntent().getExtras().getInt("tab");
 

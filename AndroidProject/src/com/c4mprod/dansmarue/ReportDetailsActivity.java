@@ -43,10 +43,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -61,7 +64,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -214,7 +216,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 }
 
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "JSONException in onCreate", e);
+                // Log.e(Constants.PROJECT_TAG, "JSONException in onCreate", e);
             }
 
             // launch the json request to load additional images
@@ -235,6 +237,10 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         TextView prio_tv = (TextView) findViewById(R.id.TextView_sub_priority);
         prio_tv.setText(getResources().getStringArray(R.array.priorities)[currentIncident.priority - 1]);
 
+        if ("".equals(currentIncident.email)) {
+            SharedPreferences p = getSharedPreferences(JsonData.PARAM_INCIDENT_EMAIL, Context.MODE_PRIVATE);
+            currentIncident.email = p.getString(JsonData.PARAM_INCIDENT_EMAIL, "");
+        }
         TextView mail_tv = (TextView) findViewById(R.id.TextView_sub_email);
         mail_tv.setText(currentIncident.email);
 
@@ -471,8 +477,9 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
             case R.id.LinearLayout_email:
 
                 // Set an EditText view to get user input
+                TextView mail_tv = (TextView) findViewById(R.id.TextView_sub_email);
                 final EditText input = new EditText(this);
-                input.setText(currentIncident.email);
+                input.setText(mail_tv.getText());
                 input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
                 new AlertDialog.Builder(ReportDetailsActivity.this).setTitle(getResources().getString(R.string.report_details_email))
@@ -488,6 +495,12 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
                                                                                TextView tv = (TextView) findViewById(R.id.TextView_sub_email);
                                                                                tv.setText(currentIncident.email);
+
+                                                                               SharedPreferences p = getSharedPreferences(JsonData.PARAM_INCIDENT_EMAIL,
+                                                                                                                          Context.MODE_PRIVATE);
+                                                                               Editor e = p.edit();
+                                                                               e.putString(JsonData.PARAM_INCIDENT_EMAIL, currentIncident.email);
+                                                                               e.commit();
                                                                            } else {
                                                                                Toast.makeText(ReportDetailsActivity.this, R.string.email_non_valide,
                                                                                               Toast.LENGTH_LONG).show();
@@ -662,7 +675,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
     protected void loadZoom() {
 
-        //Log.d("DEBUG", "loadZoom");
+        // Log.d("DEBUG", "loadZoom");
 
         canvalidate = true;
         findViewById(R.id.LinearLayout_comment).setVisibility(View.VISIBLE);
@@ -743,7 +756,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
                         }
 
-                        //Log.d("DEBUG", "finalPath=" + finalPath);
+                        // Log.d("DEBUG", "finalPath=" + finalPath);
 
                         if (finalPath != null) {
                             InputStream in;
@@ -797,9 +810,9 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
                         mAdditionalImageType = 0;
                     } catch (FileNotFoundException e) {
-                        //Log.e("AlerteVoirie_PM", "", e);
+                        // Log.e("AlerteVoirie_PM", "", e);
                     } catch (IOException e) {
-                        //Log.e("AlerteVoirie_PM", "", e);
+                        // Log.e("AlerteVoirie_PM", "", e);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -859,18 +872,18 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 break;
             case REQUEST_DETAILS:
 
-                //Log.d("DEBUG", "onActivityResult REQUEST_DETAILS");
+                // Log.d("DEBUG", "onActivityResult REQUEST_DETAILS");
                 if (resultCode == RESULT_OK) {
 
-                    //Log.d("DEBUG", "RESULT_OK");
+                    // Log.d("DEBUG", "RESULT_OK");
                     // startActivityForResult(data, requestCode)
 
                     if (mCurrentAction == ACTION_ADD_IMAGE) {
-                        //Log.d("DEBUG", "--1");
+                        // Log.d("DEBUG", "--1");
                         Intent i = new Intent(getApplicationContext(), AddCommentActivity.class);
                         startActivityForResult(i, REQUEST_IMAGE_COMMENT);
                     } else {
-                        //Log.d("DEBUG", "--2");
+                        // Log.d("DEBUG", "--2");
                         // set new img
                         setPictureToImageView("arrowed.jpg", (ImageView) findViewById(R.id.ImageView_far));
                         loadComment(REQUEST_COMMENT);
@@ -1079,7 +1092,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     alert.show();
                 } else {
 
-                    //Log.d(Constants.PROJECT_TAG, "Error for answer:" + answer);
+                    // Log.d(Constants.PROJECT_TAG, "Error for answer:" + answer);
                     // hotfix nico : here we can have valid answer for incident updates !!!
                     // handle answer and display popup here instead of when we click on buttons
                     if (answer != null && answer.has(JsonData.PARAM_ANSWER) && answer.getJSONObject(JsonData.PARAM_ANSWER).has(JsonData.PARAM_STATUS)) {
@@ -1158,7 +1171,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                             }
                         } else {
 
-                            //Log.d(Constants.PROJECT_TAG, "other reason");
+                            // Log.d(Constants.PROJECT_TAG, "other reason");
                             // other things
                             // FIXME show popups instead of toasts !
                             if ((answer.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS)) == 18) {
@@ -1179,7 +1192,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     }
                 }
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, "Erreur d'envoi d'image", e);
+                // Log.e(Constants.PROJECT_TAG, "Erreur d'envoi d'image", e);
             }/*
               * catch (FileNotFoundException e) {
               * // TODO Auto-generated catch block
@@ -1279,7 +1292,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 RotatePicture(imgv);
             }
         } catch (ArithmeticException e) {
-            //Log.e(Constants.PROJECT_TAG, "ArithmeticException", e);
+            // Log.e(Constants.PROJECT_TAG, "ArithmeticException", e);
         }
 
     }

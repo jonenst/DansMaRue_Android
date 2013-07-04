@@ -167,7 +167,7 @@
                 android:scaleType="center"
                 android:src="@drawable/btn_edit" />
         </RelativeLayout>
-        
+
         <RelativeLayout
             android:id="@+id/LinearLayout_email"
             android:layout_width="fill_parent"
@@ -198,7 +198,7 @@
                 android:scaleType="center"
                 android:src="@drawable/btn_edit" />
         </RelativeLayout>
-        
+
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
@@ -333,8 +333,8 @@
                     android:layout_marginRight="1dip"
                     android:layout_marginTop="3dip"
                     android:layout_weight="1"
-                    android:text="@string/existing_incidents_solved" 
-                    android:visibility="gone">
+                    android:text="@string/existing_incidents_solved"
+                    android:visibility="gone" >
                 </Button>
 
                 <Button
@@ -344,6 +344,8 @@
                     android:layout_marginLeft="1dip"
                     android:layout_marginTop="3dip"
                     android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="20dip"
                     android:text="@string/existing_incidents_confirmed" >
                 </Button>
             </LinearLayout>
@@ -376,7 +378,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dip"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <Button
                     android:id="@+id/existing_incidents_invalid"

@@ -10,20 +10,20 @@
  * 
  * Alerte Voirie is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Alerte Voirie.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Alerte Voirie. If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 package com.c4mprod.dansmarue.entities;
 
 import org.json.JSONObject;
 
 public class Last_Location {
-    public static double     latitude  = 0;
-    public static double     longitude = 0;
+    public static double     latitude  = Constants.DEFAULT_LAT * 0.000001;
+    public static double     longitude = Constants.DEFAULT_LON * 0.000001;
     public static String     number    = "";
     public static String     street    = "";
     public static String     postcode  = "";

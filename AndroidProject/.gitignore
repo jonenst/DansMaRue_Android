@@ -2,5 +2,6 @@
 # /
 /bin
 /gen
-C4MProd.keystore
-pass.txt
+bpico.keystore
+keystore_pwd
+Constants.java

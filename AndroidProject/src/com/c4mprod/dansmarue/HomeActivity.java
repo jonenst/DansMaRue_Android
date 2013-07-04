@@ -212,8 +212,8 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
                 Last_Location.longitude = location.getLongitude();
                 Last_Location.latitude = location.getLatitude();
             } else {
-                Last_Location.latitude = 48.854491;
-                Last_Location.longitude = 2.347629;
+                Last_Location.latitude = Constants.DEFAULT_LON * 0.000001;
+                Last_Location.longitude = Constants.DEFAULT_LAT * 0.000001;
             }
 
             retreiveIncidentsStats();
