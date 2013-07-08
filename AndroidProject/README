@@ -7,5 +7,5 @@ Le code est entièrement libre, sous licence GPL.
 Si vous êtes une mairie, contactez C4M pour étudier l'adaptation à votre système d'information.
 
 --- Installation ---
-Pour commencer, vous devez copier le fichier ConstantsTemplate.java vers Constants.java.
-Ensuite, étitez ce fichier avec vos propres données (URL serveur, Hockeyapp id, etc).
+Pour commencer, vous devez copier le fichier src/com/c4mprod/dansmarue/entities/ConstantsTemplate.java vers src/com/c4mprod/dansmarue/entities/Constants.java.
+Ensuite, étitez ce nouveau fichier avec vos propres données (URL serveur, Hockeyapp id, etc).
