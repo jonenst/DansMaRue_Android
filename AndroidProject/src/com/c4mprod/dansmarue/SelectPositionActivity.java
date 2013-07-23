@@ -39,16 +39,18 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.IntentData;
 import com.c4mprod.dansmarue.utils.LocationHelper;
+import com.c4mprod.dansmarue.utils.Utils;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -63,7 +65,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
     private LocationManager                  locationManager;
     private GeoPoint                         currentPoint;
     private Geocoder                         geo;
-    private boolean                          search              = false;
+    private boolean                          isInvalidAdress     = true;
 
     private CursorOveray                     cursorOverlay;
     private AsyncTask<String, Void, Address> adressTask;
@@ -79,8 +81,14 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         findViewById(R.id.Button_validate).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (search) {
-                    new AddressGetter().execute();
+                if (isInvalidAdress) {
+
+                    if (Utils.isOnline(getApplicationContext())) {
+                        new AddressGetter().execute();
+                    } else {
+                        displayErrorPopup(R.string.server_error);
+                    }
+
                 } else {
 
                     String address = (((TextView) findViewById(R.id.EditText_address_number)).getText().toString() + " "
@@ -108,6 +116,22 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             }
         };
 
+        TextWatcher twatch = new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableSearch();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSearch();
+            }
+        };
+
         ((Button) findViewById(R.id.ButtonMapPosition)).setOnClickListener(new OnClickListener() {
 
             @Override
@@ -129,10 +153,17 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             }
         });
 
-        ((TextView) findViewById(R.id.EditText_address_number)).setOnFocusChangeListener(ofc);
-        ((TextView) findViewById(R.id.EditText_address_street)).setOnFocusChangeListener(ofc);
-        ((TextView) findViewById(R.id.EditText_address_postcode)).setOnFocusChangeListener(ofc);
-        ((TextView) findViewById(R.id.EditText_address_town)).setOnFocusChangeListener(ofc);
+        // focus
+        // ((TextView) findViewById(R.id.EditText_address_number)).setOnFocusChangeListener(ofc);
+        // ((TextView) findViewById(R.id.EditText_address_street)).setOnFocusChangeListener(ofc);
+        // ((TextView) findViewById(R.id.EditText_address_postcode)).setOnFocusChangeListener(ofc);
+        // ((TextView) findViewById(R.id.EditText_address_town)).setOnFocusChangeListener(ofc);
+
+        // text modification
+        ((TextView) findViewById(R.id.EditText_address_number)).addTextChangedListener(twatch);
+        ((TextView) findViewById(R.id.EditText_address_street)).addTextChangedListener(twatch);
+        ((TextView) findViewById(R.id.EditText_address_postcode)).addTextChangedListener(twatch);
+        ((TextView) findViewById(R.id.EditText_address_town)).addTextChangedListener(twatch);
 
         geo = new Geocoder(this);
 
@@ -143,114 +174,132 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
         findViewById(R.id.Button_validate).setEnabled(false);
 
+    }
+
+    @Override
+    protected void onResume() {
+
         // get edit info
-        String oldAddress = getIntent().getStringExtra(IntentData.EXTRA_ADDRESS);
-        boolean edit = oldAddress != null;
-        if (edit) {
-            adressTask = new AsyncTask<String, Void, Address>() {
-                @Override
-                protected Address doInBackground(String... params) {
-                    try {
+        // String oldAddress = getIntent().getStringExtra(IntentData.EXTRA_ADDRESS);
+        // boolean edit = oldAddress != null;
+        // if (edit) {
+        // adressTask = new AsyncTask<String, Void, Address>() {
+        // @Override
+        // protected Address doInBackground(String... params) {
+        // try {
+        //
+        // // Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
+        // List<Address> results = geo.getFromLocationName(params[0], 1);
+        // if (results.size() > 0) {
+        // return results.get(0);
+        // }
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
+        // return null;
+        // }
+        //
+        // @Override
+        // protected void onPostExecute(Address result) {
+        //
+        // if (result != null) {
+        //
+        // // Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
+        // ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
+        // ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
+        // ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
+        // cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+        // GeoPoint oldGeo = new GeoPoint((int) (result.getLatitude() * 1E6), (int) (result.getLongitude() * 1E6));
+        // cursorOverlay.setGeopoint(oldGeo);
+        // map.getOverlays().add(cursorOverlay);
+        // map.getController().animateTo(oldGeo);
+        // }
+        // };
+        // };
+        // adressTask.execute(oldAddress);
+        // } else {
 
-                        // Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
-                        List<Address> results = geo.getFromLocationName(params[0], 1);
-                        if (results.size() > 0) {
-                            return results.get(0);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
+        String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (provider != null) {
+            if (!provider.contains("gps")) {
+                // Notify users and show settings if they want to enable GPS
+                new AlertDialog.Builder(SelectPositionActivity.this).setMessage(getString(R.string.activate_gps))
+                                                                    .setPositiveButton("Activer", new DialogInterface.OnClickListener() {
 
-                @Override
-                protected void onPostExecute(Address result) {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            // TODO Auto-generated method stub
+                                                                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                                            startActivityForResult(intent, 5);
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("Ignorer", new DialogInterface.OnClickListener() {
 
-                    if (result != null) {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
 
-                        // Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
-                        ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
-                        ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
-                        ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
-                        cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-                        GeoPoint oldGeo = new GeoPoint((int) (result.getLatitude() * 1E6), (int) (result.getLongitude() * 1E6));
-                        cursorOverlay.setGeopoint(oldGeo);
-                        map.getOverlays().add(cursorOverlay);
-                        map.getController().animateTo(oldGeo);
-                    }
-                };
-            };
-            adressTask.execute(oldAddress);
-        } else {
-
-            String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (provider != null) {
-                if (!provider.contains("gps")) {
-                    // Notify users and show settings if they want to enable GPS
-                    new AlertDialog.Builder(SelectPositionActivity.this).setMessage(getString(R.string.activate_gps))
-                                                                        .setPositiveButton("Activer", new DialogInterface.OnClickListener() {
-
-                                                                            @Override
-                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                // TODO Auto-generated method stub
-                                                                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                                                                startActivityForResult(intent, 5);
-                                                                            }
-                                                                        })
-                                                                        .setNegativeButton("Ignorer", new DialogInterface.OnClickListener() {
-
-                                                                            @Override
-                                                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                                            }
-                                                                        })
-                                                                        .show();
-                } else {
-                    searchForLocation();
-                }
+                                                                        }
+                                                                    })
+                                                                    .show();
+            } else {
+                searchForLocation();
             }
         }
-
+        // }
+        super.onResume();
     }
 
     private void searchForLocation() {
-        pd = new ProgressDialog(this);
-        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        pd.setIndeterminate(true);
-        pd.setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                locationManager.removeUpdates(SelectPositionActivity.this);
-                if (pd.isShowing()) pd.dismiss();
+
+        if (Utils.isOnline(getApplicationContext())) {
+            pd = new ProgressDialog(this);
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.setIndeterminate(true);
+            pd.setOnDismissListener(new OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    locationManager.removeUpdates(SelectPositionActivity.this);
+                    if (pd.isShowing()) pd.dismiss();
+                }
+            });
+            pd.setMessage(getString(R.string.search_position));
+            pd.show();
+
+            // Acquire a reference to the system Location Manager
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            // Register the listener with the Location Manager to receive location
+            // updates
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
+
+            if (currentBestLocation != null) {
+                cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+                cursorOverlay.setGeopoint(new GeoPoint((int) (currentBestLocation.getLatitude() * 1000000),
+                                                       (int) (currentBestLocation.getLongitude() * 1000000)));
+                map.getOverlays().add(cursorOverlay);
+                map.invalidate();
+            } else {
+                cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
+                cursorOverlay.setGeopoint(new GeoPoint(Constants.DEFAULT_LON, Constants.DEFAULT_LAT));
+                map.getOverlays().add(cursorOverlay);
+                map.invalidate();
             }
-        });
-        pd.setMessage(getString(R.string.search_position));
-        pd.show();
 
-        // Acquire a reference to the system Location Manager
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        // Register the listener with the Location Manager to receive location
-        // updates
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 5, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
-
-        if (currentBestLocation != null) {
-            cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-            cursorOverlay.setGeopoint(new GeoPoint((int) (currentBestLocation.getLatitude() * 1000000), (int) (currentBestLocation.getLongitude() * 1000000)));
-            map.getOverlays().add(cursorOverlay);
-            map.invalidate();
+            if (currentBestLocation != null) {
+                handleNewLocation(currentBestLocation);
+            }
         } else {
+
             cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
             cursorOverlay.setGeopoint(new GeoPoint(Constants.DEFAULT_LON, Constants.DEFAULT_LAT));
             map.getOverlays().add(cursorOverlay);
             map.invalidate();
+
+            displayErrorPopup(R.string.server_error);
         }
 
-        if (currentBestLocation != null) {
-            handleNewLocation(currentBestLocation);
-        }
     }
 
     @Override
@@ -276,7 +325,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
         if (findViewById(R.id.Layoutpos01).getVisibility() == View.VISIBLE) {
             ((Button) findViewById(R.id.Button_validate)).setText(R.string.address_search);
             findViewById(R.id.Button_validate).setEnabled(true);
-            search = true;
+            isInvalidAdress = true;
         }
     }
 
@@ -336,7 +385,8 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
             // ((TextView) findViewById(R.id.TextView_address)).setText(null);
             // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
-            if (!search) {
+
+            if (Utils.isOnline(getApplicationContext())) {
                 // Log.d(Constants.PROJECT_TAG, "Position: " + newGeo.getLatitudeE6() / 1E6 + " / " + newGeo.getLongitudeE6() / 1E6);
                 new AddressGetter().execute(newGeo.getLatitudeE6() / 1E6, newGeo.getLongitudeE6() / 1E6);
             }
@@ -396,7 +446,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             try {
                 List<Address> addr;
 
-                if (!search && params.length == 2) {
+                if (params.length == 2) {
 
                     // Log.d("DEBUG", "GET LOCATION FROM LON LAT : " + params[0] + " " + params[1]);
                     addr = geo.getFromLocation(params[0], params[1], 1);
@@ -462,6 +512,9 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 geopoint = null;
             }
 
+            if (locationManager != null) locationManager.removeUpdates(SelectPositionActivity.this);
+            if (pd != null && pd.isShowing()) pd.dismiss();
+
             // Log.d(Constants.PROJECT_TAG, "n° : " + result[0]);
             // Log.d(Constants.PROJECT_TAG, "Rue : " + result[1]);
             // Log.d(Constants.PROJECT_TAG, "CP : " + result[2]);
@@ -478,8 +531,8 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
             if (("".equals(number) || number == null) && ("".equals(street) || "France".equals(street) || street == null)
                 && ("".equals(postcode) || postcode == null) && ("".equals(town) || town == null)) {
-                Toast.makeText(SelectPositionActivity.this.getApplicationContext(),
-                               SelectPositionActivity.this.getResources().getText(R.string.no_adress_found), Toast.LENGTH_LONG).show();
+
+                displayErrorPopup(R.string.no_adress_found);
 
                 // Log.d("DEBUG", "---1");
                 findViewById(R.id.Button_validate).setEnabled(false);
@@ -501,12 +554,23 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
             }
 
             ((Button) findViewById(R.id.Button_validate)).setText(R.string.select_position_btn_validate);
-            search = false;
+            isInvalidAdress = false;
 
             // Log.d(Constants.PROJECT_TAG, "Number : " + number);
             // Log.d(Constants.PROJECT_TAG, "Street : " + street);
             // Log.d(Constants.PROJECT_TAG, "Postcode : " + postcode);
             // Log.d(Constants.PROJECT_TAG, "Town : " + town);
         }
+    }
+
+    public void displayErrorPopup(int idMessage) {
+        new AlertDialog.Builder(SelectPositionActivity.this).setTitle(R.string.error_popup_title)
+                                                            .setMessage(idMessage)
+                                                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                }
+                                                            })
+                                                            .show();
     }
 }

@@ -28,6 +28,8 @@ import org.apache.http.HttpResponse;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 
 import com.c4mprod.dansmarue.NewVersionDialogActivity;
@@ -96,5 +98,14 @@ public class Utils {
         intent.putExtra(Constants.KEY_NEW_VERSION_MSG, forceUpdate);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(intent);
+    }
+
+    public static boolean isOnline(Context ctx) {
+        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 }

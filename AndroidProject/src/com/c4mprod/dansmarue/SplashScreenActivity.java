@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.c4mprod.dansmarue.entities.JsonData;
+import com.c4mprod.dansmarue.utils.Utils;
 import com.c4mprod.dansmarue.webservice.AVService;
 import com.c4mprod.dansmarue.webservice.AVServiceErrorException;
 import com.c4mprod.dansmarue.webservice.RequestListener;
@@ -71,15 +72,20 @@ public class SplashScreenActivity extends Activity implements RequestListener {
 
     private void init() {
 
-        try {
-            SharedPreferences sp = getSharedPreferences(JsonData.PARAM_CATEGORIES, Context.MODE_PRIVATE);
-            JSONObject categoriesRequest = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_CATEGORIES)
-                                                           .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0"));
+        if (Utils.isOnline(getApplicationContext())) {
+            try {
+                SharedPreferences sp = getSharedPreferences(JsonData.PARAM_CATEGORIES, Context.MODE_PRIVATE);
+                JSONObject categoriesRequest = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_CATEGORIES)
+                                                               .put(JsonData.PARAM_CURRENT_VERSION, sp.getString(JsonData.PARAM_CURRENT_VERSION, "0"));
 
-            AVService.getInstance(this).postJSON(new JSONArray().put(categoriesRequest), this);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                AVService.getInstance(this).postJSON(new JSONArray().put(categoriesRequest), this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            displayNoConnexionPopup();
         }
+
     }
 
     private void next() {
@@ -131,18 +137,7 @@ public class SplashScreenActivity extends Activity implements RequestListener {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                // Log.e(Constants.PROJECT_TAG,
-                // "Erreur dde recuperation des categories", e);
-
-                new AlertDialog.Builder(SplashScreenActivity.this).setTitle(R.string.error_popup_title)
-                                                                  .setMessage(e.getLocalizedMessage())
-                                                                  .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                                      @Override
-                                                                      public void onClick(DialogInterface dialog, int which) {
-                                                                          finish();
-                                                                      }
-                                                                  })
-                                                                  .show();
+                displayNoConnexionPopup();
             }
 
         } else if (requestCode == AVService.REQUEST_ERROR) {
@@ -183,6 +178,18 @@ public class SplashScreenActivity extends Activity implements RequestListener {
             }
         }
 
+    }
+
+    public void displayNoConnexionPopup() {
+        new AlertDialog.Builder(SplashScreenActivity.this).setTitle(R.string.error_popup_title)
+                                                          .setMessage(R.string.server_error)
+                                                          .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                              @Override
+                                                              public void onClick(DialogInterface dialog, int which) {
+                                                                  finish();
+                                                              }
+                                                          })
+                                                          .show();
     }
 
 }

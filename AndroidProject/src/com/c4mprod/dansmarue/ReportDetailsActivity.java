@@ -289,7 +289,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         }
         ((TextView) findViewById(R.id.TextView_comment)).setText(currentIncident.description);
         ((TextView) findViewById(R.id.TextView_address)).setText(currentIncident.address);
-        if (currentIncident.address != null && currentIncident.address.length() > 0) {
+        if (allowUserValidate()) {
             ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
         }
         TextView mail_tv = (TextView) findViewById(R.id.TextView_sub_email);
@@ -797,7 +797,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                                 setPictureToImageView(pictureName, (ImageView) findViewById(requestCode));
                             }
 
-                            if (requestCode == R.id.ImageView_far && ((TextView) findViewById(R.id.TextView_address)).getText().length() > 0) {
+                            if (requestCode == R.id.ImageView_far && allowUserValidate()) {
                                 ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
                             }
                         } else {
@@ -839,7 +839,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                     currentIncident.longitude = data.getDoubleExtra(IntentData.EXTRA_LONGITUDE, 0);
                     currentIncident.latitude = data.getDoubleExtra(IntentData.EXTRA_LATITUDE, 0);
                     ((TextView) findViewById(R.id.TextView_address)).setText(currentIncident.address);
-                    if (currentIncident.address != null && currentIncident.address.length() > 0 && canvalidate) {
+                    if (allowUserValidate()) {
                         ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
                     }
                     findViewById(R.id.Button_validate).setVisibility(View.VISIBLE);
@@ -895,6 +895,13 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    public boolean allowUserValidate() {
+
+        CharSequence adress = ((TextView) findViewById(R.id.TextView_address)).getText();
+        return (adress != null && adress.length() > 0 && canvalidate && pathOfPicFromCamera != null);
+
     }
 
     public String getMimeType(String fileUrl) throws java.io.IOException {
