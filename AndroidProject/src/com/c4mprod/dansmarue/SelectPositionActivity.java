@@ -20,9 +20,22 @@
 package com.c4mprod.dansmarue;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -41,6 +54,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -60,17 +74,18 @@ import com.google.android.maps.OverlayItem;
 import fr.paris.android.signalement.R;
 
 public class SelectPositionActivity extends MapActivity implements LocationListener {
+
     private Location                         currentBestLocation = null;
     private MapView                          map;
     private LocationManager                  locationManager;
-    private GeoPoint                         currentPoint;
     private Geocoder                         geo;
     private boolean                          isInvalidAdress     = true;
-
     private CursorOveray                     cursorOverlay;
     private AsyncTask<String, Void, Address> adressTask;
-
     ProgressDialog                           pd;
+
+    private GeoPoint                         mCurrentPoint;
+    private String                           mCurrentAdress;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -91,15 +106,15 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
                 } else {
 
-                    String address = (((TextView) findViewById(R.id.EditText_address_number)).getText().toString() + " "
+                    mCurrentAdress = (((TextView) findViewById(R.id.EditText_address_number)).getText().toString() + " "
                                       + ((TextView) findViewById(R.id.EditText_address_street)).getText().toString() + " \n"
                                       + ((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString() + " " + ((TextView) findViewById(R.id.EditText_address_town)).getText()
                                                                                                                                                                                     .toString()).trim();
                     Intent result = new Intent();
-                    result.putExtra(IntentData.EXTRA_ADDRESS, address);
-                    if (currentPoint != null) {
-                        result.putExtra(IntentData.EXTRA_LONGITUDE, currentPoint.getLongitudeE6() / 1E6);
-                        result.putExtra(IntentData.EXTRA_LATITUDE, currentPoint.getLatitudeE6() / 1E6);
+                    result.putExtra(IntentData.EXTRA_ADDRESS, mCurrentAdress);
+                    if (mCurrentPoint != null) {
+                        result.putExtra(IntentData.EXTRA_LONGITUDE, mCurrentPoint.getLongitudeE6() / 1E6);
+                        result.putExtra(IntentData.EXTRA_LATITUDE, mCurrentPoint.getLatitudeE6() / 1E6);
                     }
                     setResult(RESULT_OK, result);
                     finish();
@@ -179,46 +194,6 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
     @Override
     protected void onResume() {
 
-        // get edit info
-        // String oldAddress = getIntent().getStringExtra(IntentData.EXTRA_ADDRESS);
-        // boolean edit = oldAddress != null;
-        // if (edit) {
-        // adressTask = new AsyncTask<String, Void, Address>() {
-        // @Override
-        // protected Address doInBackground(String... params) {
-        // try {
-        //
-        // // Log.d("DEBUG", "GET LOCATION FROM : " + params[0]);
-        // List<Address> results = geo.getFromLocationName(params[0], 1);
-        // if (results.size() > 0) {
-        // return results.get(0);
-        // }
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // return null;
-        // }
-        //
-        // @Override
-        // protected void onPostExecute(Address result) {
-        //
-        // if (result != null) {
-        //
-        // // Log.d("DEBUG", "RECEIVED LOCATION street: " + result.getAddressLine(0) + " town:" + result.getLocality());
-        // ((TextView) findViewById(R.id.EditText_address_street)).setText(result.getAddressLine(0));
-        // ((TextView) findViewById(R.id.EditText_address_postcode)).setText(result.getPostalCode());
-        // ((TextView) findViewById(R.id.EditText_address_town)).setText(result.getLocality());
-        // cursorOverlay = new CursorOveray(getResources().getDrawable(R.drawable.map_cursor));
-        // GeoPoint oldGeo = new GeoPoint((int) (result.getLatitude() * 1E6), (int) (result.getLongitude() * 1E6));
-        // cursorOverlay.setGeopoint(oldGeo);
-        // map.getOverlays().add(cursorOverlay);
-        // map.getController().animateTo(oldGeo);
-        // }
-        // };
-        // };
-        // adressTask.execute(oldAddress);
-        // } else {
-
         String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
         if (provider != null) {
             if (!provider.contains("gps")) {
@@ -245,7 +220,6 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 searchForLocation();
             }
         }
-        // }
         super.onResume();
     }
 
@@ -381,7 +355,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                 map.getOverlays().add(cursorOverlay);
                 map.getController().animateTo(newGeo);
             }
-            currentPoint = newGeo;
+            mCurrentPoint = newGeo;
 
             // ((TextView) findViewById(R.id.TextView_address)).setText(null);
             // ((TextView) findViewById(R.id.EditText_address_number)).setText(null);
@@ -444,12 +418,20 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
             String[] result = new String[4];
             try {
-                List<Address> addr;
+                List<Address> addr = new ArrayList<Address>();
 
                 if (params.length == 2) {
 
-                    // Log.d("DEBUG", "GET LOCATION FROM LON LAT : " + params[0] + " " + params[1]);
+                    Log.d("DEBUG", "GET LOCATION FROM LAT LON : " + params[0] + " " + params[1]);
+
                     addr = geo.getFromLocation(params[0], params[1], 1);
+                    // try {
+                    // addr = getStringFromLocation(params[0], params[1]);
+                    // } catch (JSONException e) {
+                    // e.printStackTrace();
+                    // }
+
+                    Log.d("DEBUG", "addr size : " + addr.size());
 
                 } else {
 
@@ -458,9 +440,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                                      + ((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString() + " "
                                      + ((TextView) findViewById(R.id.EditText_address_town)).getText().toString() + " , " + "France";
 
-                    // Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
+                    Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
                     addr = geo.getFromLocationName(address, 1);
 
+                    Log.d("DEBUG", "addr size : " + addr.size());
                     if (addr.size() > 0) {
                         geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
 
@@ -498,7 +481,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                     result[3] = result[3] == null ? "" : result[3].trim();
                 }
             } catch (IOException e) {
-                // Log.e(Constants.PROJECT_TAG, "Address error", e);
+                Log.e("DEBUG", "Address Error : ", e);
             }
             return result;
         }
@@ -573,4 +556,47 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                                                             })
                                                             .show();
     }
+
+    // CUSTOM REVERSE GEOCODER
+
+    public static List<Address> getStringFromLocation(double lat, double lng) throws ClientProtocolException, IOException, JSONException {
+
+        String address = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?latlng=%1$f,%2$f&sensor=true&language="
+                                                       + Locale.getDefault().getCountry(), lat, lng);
+
+        // Log.d("DEBUG", "getStringFromLocation address : " + address);
+        HttpGet httpGet = new HttpGet(address);
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        List<Address> retList = null;
+
+        response = client.execute(httpGet);
+        HttpEntity entity = response.getEntity();
+        InputStream stream = entity.getContent();
+        int b;
+        while ((b = stream.read()) != -1) {
+            stringBuilder.append((char) b);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject = new JSONObject(stringBuilder.toString());
+
+        retList = new ArrayList<Address>();
+
+        if ("OK".equalsIgnoreCase(jsonObject.getString("status"))) {
+            JSONArray results = jsonObject.getJSONArray("results");
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject result = results.getJSONObject(i);
+                String indiStr = result.getString("formatted_address");
+                Address addr = new Address(Locale.getDefault());
+                addr.setAddressLine(0, indiStr);
+                retList.add(addr);
+            }
+        }
+
+        return retList;
+    }
+
 }

@@ -75,7 +75,7 @@
             android:theme="@style/Categories" >
         </activity>
         <activity
-            android:name="com.c4mprod.dansmarue.SelectPositionActivity"
+            android:name="com.c4mprod.dansmarue.FullscreenSelectPositionActivity"
             android:screenOrientation="sensor" >
         </activity>
         <activity

@@ -137,7 +137,7 @@ public class Incident extends OverlayItem {
                 result.date = "";
             }
 
-            if (obj.has(JsonData.PARAM_INCIDENT_STATUS)) {
+            if (obj.has(JsonData.PARAM_INCIDENT_STATUS) && obj.getString(JsonData.PARAM_INCIDENT_STATUS).length() > 0) {
                 result.state = obj.getString(JsonData.PARAM_INCIDENT_STATUS).charAt(0);
             }
             result.categoryId = obj.getLong(JsonData.PARAM_INCIDENT_CATEGORY);

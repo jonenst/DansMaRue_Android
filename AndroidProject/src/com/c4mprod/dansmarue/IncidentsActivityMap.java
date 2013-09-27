@@ -361,19 +361,23 @@ public class IncidentsActivityMap extends MapActivity implements RequestListener
 
                     for (int i = 0; i < items.length(); i++) {
                         Incident incident = Incident.fromJSONObject(this, items.getJSONObject(i));
-                        switch (items.getJSONObject(i).getString(JsonData.PARAM_INCIDENT_STATUS).charAt(0)) {
-                            case 'O':
-                                ongoing.add(incident);
-                                break;
-                            case 'U':
-                                updated.add(incident);
-                                break;
-                            case 'R':
-                                resolved.add(incident);
-                                break;
+                        if (items.getJSONObject(i).has(JsonData.PARAM_INCIDENT_STATUS)
+                            && items.getJSONObject(i).getString(JsonData.PARAM_INCIDENT_STATUS).length() > 0) {
+                            switch (items.getJSONObject(i).getString(JsonData.PARAM_INCIDENT_STATUS).charAt(0)) {
+                                case 'O':
+                                    ongoing.add(incident);
+                                    break;
+                                case 'U':
+                                    updated.add(incident);
+                                    break;
+                                case 'R':
+                                    resolved.add(incident);
+                                    break;
 
-                            default:
-                                break;
+                                default:
+                                    break;
+                            }
+
                         }
                     }
                     setMapForTab(gettabIndex(checked));

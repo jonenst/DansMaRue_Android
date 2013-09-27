@@ -254,7 +254,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
             if (getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1) != -1) {
                 setCategory(getIntent().getLongExtra(IntentData.EXTRA_CATEGORY_ID, 0));
-                startActivityForResult(new Intent(this, SelectPositionActivity.class), REQUEST_POSITION);
+                startActivityForResult(new Intent(this, FullscreenSelectPositionActivity.class), REQUEST_POSITION);
             }
         }
     }
@@ -449,7 +449,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 startActivityForResult(new Intent(this, SelectCategoryActivity.class), REQUEST_CATEGORY);
                 break;
             case R.id.LinearLayout_where:
-                Intent editIntent = new Intent(this, SelectPositionActivity.class);
+                Intent editIntent = new Intent(this, FullscreenSelectPositionActivity.class);
                 editIntent.putExtra(IntentData.EXTRA_ADDRESS, currentIncident.address);
                 startActivityForResult(editIntent, REQUEST_POSITION);
                 break;

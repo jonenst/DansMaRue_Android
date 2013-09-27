@@ -31,6 +31,7 @@ import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,7 +50,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.utils.Utils;
 
@@ -120,13 +120,22 @@ public class HttpPostRequest {
 
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
 
+            // Log.i("HTTP", "------------- BEGIN ----------------");
+            // Log.i("HTTP", "POST url=" + httpPost.getURI().toString());
             httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            // Log.i("HTTP", "POST params=" + params);
 
             final int currentVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
             httpPost.addHeader(HEADER_APP_VERSION, "" + currentVersionCode);
             httpPost.addHeader(HEADER_APP_PLATFORM, "android_family");
             httpPost.addHeader(HEADER_APP_DEVICE_MODEL, (Build.MANUFACTURER + " " + Build.DEVICE).trim());
             httpPost.addHeader(HEADER_APP_REQUEST_SIGNATURE, sha1(MAGIC_KEY + params.get(0).getValue()));
+
+            Header[] requestHeaders = httpPost.getAllHeaders();
+            for (Header header : requestHeaders) {
+                Log.i("HTTP", header.toString());
+            }
+            // Log.i("HTTP", "------------- END ----------------");
 
             // //Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
 
@@ -138,37 +147,37 @@ public class HttpPostRequest {
             final HttpEntity entity = response.getEntity();
             content = entity.getContent();
             contentString = convertStreamToString(content);
-            //Log.d(Constants.PROJECT_TAG, "answer = " + contentString);
+            // Log.d(Constants.PROJECT_TAG, "answer = " + contentString);
         } catch (final UnsupportedEncodingException uee) {
-            //Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);
+            // Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);
             throw new AVServiceErrorException(999);
         } catch (org.apache.http.conn.ConnectTimeoutException cte) {
             cte.printStackTrace();
             throw new AVServiceErrorException(998);
         } catch (final IOException ioe) {
-            //Log.e(Constants.PROJECT_TAG, "IOException", ioe);
+            // Log.e(Constants.PROJECT_TAG, "IOException", ioe);
             throw new AVServiceErrorException(999);
         } catch (final IllegalStateException ise) {
-            //Log.e(Constants.PROJECT_TAG, "IllegalStateException", ise);
+            // Log.e(Constants.PROJECT_TAG, "IllegalStateException", ise);
             throw new AVServiceErrorException(999);
         } catch (NoSuchAlgorithmException e) {
-            //Log.e(Constants.PROJECT_TAG, "NoSuchAlgorithmException", e);
+            // Log.e(Constants.PROJECT_TAG, "NoSuchAlgorithmException", e);
             throw new AVServiceErrorException(999);
         } catch (Exception e) {
-            //Log.e(Constants.PROJECT_TAG, "error in sendRequest : ", e);
+            // Log.e(Constants.PROJECT_TAG, "error in sendRequest : ", e);
             throw new AVServiceErrorException(999);
         }
 
         try {
 
-            //Log.d(Constants.PROJECT_TAG, "contenString: " + contentString);
+            // Log.d(Constants.PROJECT_TAG, "contenString: " + contentString);
             JSONObject jo = new JSONObject(contentString);
             int resultnum = jo.getJSONObject(JsonData.PARAM_ANSWER).getInt(JsonData.PARAM_STATUS);
-            //Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
+            // Log.i(Constants.PROJECT_TAG, "AV Status:" + resultnum);
             if (resultnum != 0) throw new AVServiceErrorException(resultnum);
 
         } catch (JSONException e) {
-            //Log.w(Constants.PROJECT_TAG, "JSONException in onPostExecute");
+            // Log.w(Constants.PROJECT_TAG, "JSONException in onPostExecute");
             // throw new AVServiceErrorException(999);
         }
 
