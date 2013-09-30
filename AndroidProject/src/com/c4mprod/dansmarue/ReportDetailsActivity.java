@@ -159,8 +159,13 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
         if (savedInstanceState != null) {
             this.pathOfPicFromCamera = savedInstanceState.getString("pathOfPicFromCamera");
+            this.canvalidate = savedInstanceState.getBoolean("canvalidate");
             setPictureToImageView(CAPTURE_ARROW, (ImageView) findViewById(R.id.ImageView_far));
             setPictureToImageView(CAPTURE_CLOSE, (ImageView) findViewById(R.id.ImageView_close));
+
+            if (allowUserValidate()) {
+                ((Button) findViewById(R.id.Button_validate)).setEnabled(true);
+            }
         }
 
         // init title
@@ -264,6 +269,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
 
         // //Log.d("DEBUG", "ReportDetailsActivity onSaveInstanceState");
         state.putString("pathOfPicFromCamera", this.pathOfPicFromCamera);
+        state.putBoolean("canvalidate", canvalidate);
 
         String jsonStr = Incident.toJSONObject(currentIncident).toString();
         // //Log.d("DEBUG", "-->>>jsonStr=" + jsonStr);
@@ -849,7 +855,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 if (resultCode == RESULT_OK) {
                     currentIncident.description = data.getStringExtra(IntentData.EXTRA_COMMENT);
                     ((TextView) findViewById(R.id.TextView_comment)).setText(currentIncident.description);
-                    if (currentIncident.description != null) findViewById(R.id.TextView_nocomment).setVisibility(View.GONE);
+                    // if (currentIncident.description != null) findViewById(R.id.TextView_nocomment).setVisibility(View.GONE);
                     // findViewById(R.id.Button_validate).setVisibility(View.VISIBLE);
                 }
                 break;

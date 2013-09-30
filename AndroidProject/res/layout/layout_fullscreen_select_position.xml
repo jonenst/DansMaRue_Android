@@ -34,7 +34,7 @@
             android:paddingRight="8dp"
             android:paddingTop="8dp" >
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_search"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/card_background"
-            android:drawableLeft="@drawable/ic_location"
+            android:drawableLeft="@drawable/ic_location_place"
             android:drawablePadding="8dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"

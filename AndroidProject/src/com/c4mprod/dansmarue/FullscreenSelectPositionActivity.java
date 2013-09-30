@@ -48,6 +48,8 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,6 +58,8 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -87,12 +91,14 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
     private com.c4mprod.dansmarue.utils.LongPressMapView mMapView;
     private LinearLayout                                 mBottomBar;
-    private EditText                                     mSearchBar;
+    private AutoCompleteTextView                         mSearchBar;
     private Button                                       mClearSearch;
     private TextView                                     mStreetView;
     private TextView                                     mCityView;
     private ImageButton                                  mMyposition;
     private TextView                                     mHintView;
+    List<String>                                         mAddresses = new ArrayList<String>();
+    ArrayAdapter<String>                                 mAdressAdapter;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -108,7 +114,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         mHintView = (TextView) findViewById(R.id.tv_hint);
         mBottomBar = (LinearLayout) findViewById(R.id.layout_bottom_bar);
         mBottomBar.setVisibility(View.GONE);
-        mSearchBar = (EditText) findViewById(R.id.et_search);
+        mSearchBar = (AutoCompleteTextView) findViewById(R.id.et_search);
 
         mClearSearch = (Button) findViewById(R.id.btn_clear);
         mClearSearch.setOnClickListener(new OnClickListener() {
@@ -147,7 +153,26 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
         });
 
-        ((EditText) findViewById(R.id.et_search)).setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        mAdressAdapter = new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(), android.R.layout.simple_dropdown_item_1line,
+                                                  mAddresses);
+        mSearchBar.setAdapter(mAdressAdapter);
+        mSearchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.toString().length() >= 3) {
+                    new AutoCompleteAddressGetter().execute();
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+        mSearchBar.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 mCurrentAdress = v.getText().toString();
@@ -344,6 +369,45 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     //
     // ADRESS GETTER
     //
+
+    private class AutoCompleteAddressGetter extends AsyncTask<Double, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Double... arg0) {
+
+            String address = mSearchBar.getText().toString() + " , Paris, France";
+            List<Address> addresses = null;
+
+            int i = 0;
+            try {
+                addresses = mGeocoder.getFromLocationName(address, 20);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addresses.size() > 0) {
+                mAddresses.clear();
+                for (Address a : addresses) {
+                    mAddresses.add(a.getAddressLine(0) + " " + (a.getPostalCode() != null ? a.getPostalCode() : "") + " "
+                                   + (a.getLocality() != null ? a.getLocality() : ""));
+                }
+            }
+            return i;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            mAdressAdapter.clear();
+            mAdressAdapter.addAll(mAddresses);
+            mAdressAdapter.notifyDataSetChanged();
+        }
+    }
 
     private class AddressGetter extends AsyncTask<Double, Void, String[]> {
 
