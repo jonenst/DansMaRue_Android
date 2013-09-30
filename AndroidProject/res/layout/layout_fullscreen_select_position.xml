@@ -4,29 +4,35 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        style="@style/CategoryHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/select_position_header1" />
-
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <com.google.android.maps.MapView
+        <com.c4mprod.dansmarue.utils.LongPressMapView
             android:id="@+id/MapView_map"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:apiKey="@string/map_api_key"
             android:clickable="true" />
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/CategoryHeader"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="@string/select_position_header1" />
+
+        <FrameLayout
+            android:id="@+id/layout_search"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
             android:layout_margin="8dp"
             android:background="@drawable/card_background"
-            android:padding="8dp" >
+            android:paddingBottom="11dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp" >
 
             <EditText
                 android:id="@+id/et_search"
@@ -34,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:background="@null"
-                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:drawableLeft="@drawable/ic_search"
                 android:fontFamily="sans-serif-light"
                 android:hint="Rechercher"
                 android:imeOptions="actionSearch"
@@ -46,8 +52,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:background="@android:drawable/ic_menu_close_clear_cancel" />
+                android:background="@drawable/ic_cancel" />
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_search"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/card_background"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="8dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:paddingBottom="11dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:text="Faites un appui long pour placer une anomalie" />
 
         <LinearLayout
             android:id="@+id/layout_bottom_bar"
@@ -55,46 +79,81 @@
             android:layout_height="64dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/map_bar_bg"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="visible" >
 
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="8dp"
+                android:background="@drawable/border_shadow" >
+            </FrameLayout>
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="16dp" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/tv_street"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:singleLine="true"
-                    android:textColor="#000"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp" >
 
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="fill_parent"
+                    <TextView
+                        android:id="@+id/tv_street"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:singleLine="true"
+                        android:textColor="#000"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_city"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:singleLine="true"
+                        android:textColor="#808080"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_margin="8dp"
+                    android:background="#aaaaaa" >
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_next"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:singleLine="true"
-                    android:textColor="#808080"
-                    android:textSize="16sp" />
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/bg_btn_accept"
+                    android:src="@drawable/ic_accept" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/btn_next" >
-            </Button>
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_my_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/layout_bottom_bar"
+            android:layout_alignParentRight="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_margin="4dp"
+            android:background="@drawable/card_background"
+            android:paddingBottom="7dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="4dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_location" />
     </RelativeLayout>
 
 </LinearLayout>

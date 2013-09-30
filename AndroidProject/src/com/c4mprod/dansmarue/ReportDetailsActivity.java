@@ -167,7 +167,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, existingIncident ? R.drawable.icon_mes_rapports : R.drawable.icon_nouveau_rapport);
         getWindow().setTitle(getString(R.string.report_detail_new_report_title));
 
-        findViewById(R.id.LinearLayout_comment).setVisibility(View.GONE);
+        // findViewById(R.id.LinearLayout_comment).setVisibility(View.GONE);
         Button validate = (Button) findViewById(R.id.Button_validate);
 
         File img_close = new File(getFilesDir() + "/" + CAPTURE_CLOSE);
@@ -193,7 +193,7 @@ public class ReportDetailsActivity extends Activity implements OnClickListener, 
                 ((TextView) findViewById(R.id.TextView_title)).setText(currentIncident.description);
                 ((TextView) findViewById(R.id.TextView_date)).setText(getFormatedDate(currentIncident.date));
                 // hide comment edit buttons
-                findViewById(R.id.LinearLayout_comment).setVisibility(View.GONE);
+                // findViewById(R.id.LinearLayout_comment).setVisibility(View.GONE);
 
                 ((TextView) findViewById(R.id.TextView_address)).setText(currentIncident.address);
                 // imgd.setDefault_img(((ImageView) findViewById(R.id.ImageView_far)).getBackground());

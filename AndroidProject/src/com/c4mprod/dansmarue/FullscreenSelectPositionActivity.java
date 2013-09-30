@@ -52,12 +52,19 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.c4mprod.dansmarue.entities.IntentData;
+import com.c4mprod.dansmarue.utils.LongPressMapView;
+import com.c4mprod.dansmarue.utils.LongPressMapView.OnLongpressListener;
 import com.c4mprod.dansmarue.utils.Utils;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -70,27 +77,35 @@ import fr.paris.android.signalement.R;
 
 public class FullscreenSelectPositionActivity extends MapActivity {
 
-    private Geocoder      mGeocoder;
-    private CursorOverlay mCursorOverlay;
-    private GeoPoint      mCurrentPoint;
-    private String        mCurrentAdress;
-    private boolean       isLocalized;
+    private Geocoder                                     mGeocoder;
+    private CursorOverlay                                mCursorOverlay;
+    private GeoPoint                                     mCurrentPoint;
+    private String                                       mCurrentAdress;
+    private boolean                                      isIncidentLocalized;
+    private boolean                                      isUserLocalized;
+    private Location                                     mUserLocation;
 
-    private MapView       mMapView;
-    private LinearLayout  mBottomBar;
-    private EditText      mSearchBar;
-    private Button        mClearSearch;
-    private TextView      mStreetView;
-    private TextView      mCityView;
+    private com.c4mprod.dansmarue.utils.LongPressMapView mMapView;
+    private LinearLayout                                 mBottomBar;
+    private EditText                                     mSearchBar;
+    private Button                                       mClearSearch;
+    private TextView                                     mStreetView;
+    private TextView                                     mCityView;
+    private ImageButton                                  mMyposition;
+    private TextView                                     mHintView;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.layout_fullscreen_select_position);
 
         // init views
+        mMyposition = (ImageButton) findViewById(R.id.btn_my_position);
         mStreetView = (TextView) findViewById(R.id.tv_street);
         mCityView = (TextView) findViewById(R.id.tv_city);
+        mHintView = (TextView) findViewById(R.id.tv_hint);
         mBottomBar = (LinearLayout) findViewById(R.id.layout_bottom_bar);
         mBottomBar.setVisibility(View.GONE);
         mSearchBar = (EditText) findViewById(R.id.et_search);
@@ -103,13 +118,22 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             }
         });
 
+        mMyposition.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUserLocation != null) {
+                    mMapView.getController().animateTo(new GeoPoint((int) (mUserLocation.getLatitude() * 1E6), (int) (mUserLocation.getLongitude() * 1E6)));
+                }
+            }
+        });
+
         // init next button
-        Button nextBtn = (Button) findViewById(R.id.btn_next);
+        ImageButton nextBtn = (ImageButton) findViewById(R.id.btn_next);
         nextBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (isLocalized) {
+                if (isIncidentLocalized) {
                     Intent result = new Intent();
                     result.putExtra(IntentData.EXTRA_ADDRESS, mCurrentAdress);
                     if (mCurrentPoint != null) {
@@ -137,7 +161,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         });
 
         // Maps
-        mMapView = (MapView) findViewById(R.id.MapView_map);
+        mMapView = (LongPressMapView) findViewById(R.id.MapView_map);
         mMapView.setBuiltInZoomControls(false);
         mMapView.getController().setZoom(18);
         mMapView.setSatellite(true);
@@ -145,6 +169,13 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         CustomMyLocationOverlay myLocationOverlay = new CustomMyLocationOverlay(this, mMapView);
         myLocationOverlay.enableMyLocation();
         mMapView.getOverlays().add(myLocationOverlay);
+
+        mMapView.setOnLongpressListener(new OnLongpressListener() {
+            @Override
+            public void onLongpress(MapView view, GeoPoint p) {
+                setMarker(p);
+            }
+        });
 
         mGeocoder = new Geocoder(this);
     }
@@ -241,14 +272,20 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         public boolean onTap(GeoPoint p, MapView mapView) {
 
             // Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
-            setMarker(p);
+            // setMarker(p);
+
             return true;
         }
 
         @Override
         public void onLocationChanged(Location location) {
             super.onLocationChanged(location);
-            mMapView.getController().animateTo(new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6)));
+
+            if (!isUserLocalized) {
+                mUserLocation = location;
+                mMapView.getController().animateTo(new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6)));
+                isUserLocalized = true;
+            }
         }
     }
 
@@ -278,8 +315,28 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         @Override
         public boolean onTap(GeoPoint p, MapView mapView) {
 
-            Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
-            setMarker(p);
+            // Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
+            // setMarker(p);
+
+            if (mBottomBar.getVisibility() == View.VISIBLE) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+                animation.setAnimationListener(new AnimationListener() {
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mBottomBar.setVisibility(View.GONE);
+                    }
+                });
+                mBottomBar.startAnimation(animation);
+            }
             return true;
         }
     }
@@ -396,10 +453,31 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                 mCityView.setText(postcode + " " + town);
 
                 mCurrentAdress = (number != null ? number : "") + " " + (street != null ? street : "") + " " + postcode + " " + town;
-                mBottomBar.setVisibility(View.VISIBLE);
+
+                mHintView.setVisibility(View.GONE);
+                if (mBottomBar.getVisibility() == View.GONE) {
+                    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                    animation.setAnimationListener(new AnimationListener() {
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            mBottomBar.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                        }
+                    });
+                    mBottomBar.startAnimation(animation);
+                }
+
             }
 
-            isLocalized = true;
+            isIncidentLocalized = true;
         }
     }
 
