@@ -71,7 +71,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:text="Faites un appui long pour placer une anomalie" />
+            android:text="@string/appui_long_pour_placer_une_anomalie" />
 
         <LinearLayout
             android:id="@+id/layout_bottom_bar"

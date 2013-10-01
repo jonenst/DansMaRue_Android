@@ -11,5 +11,6 @@
     <string name="new_version_dialog_title">"Nouvelle version disponible"</string>
     <string name="new_version_dialog_ok">"Télécharger"</string>
     <string name="new_version_dialog_cancel">"Annuler"</string>
+    <string name="appui_long_pour_placer_une_anomalie">Appui long pour placer l\'anomalie</string>
 
 </resources>
