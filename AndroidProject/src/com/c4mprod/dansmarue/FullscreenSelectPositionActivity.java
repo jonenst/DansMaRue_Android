@@ -47,6 +47,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -97,8 +98,14 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     private TextView                                     mCityView;
     private ImageButton                                  mMyposition;
     private TextView                                     mHintView;
-    List<String>                                         mAddresses = new ArrayList<String>();
-    ArrayAdapter<String>                                 mAdressAdapter;
+
+    Handler                                              mAutoCompleteHandler  = new Handler();
+    Runnable                                             mAutoCompleteRunnable = new Runnable() {
+                                                                                   @Override
+                                                                                   public void run() {
+                                                                                       new AutoCompleteAddressGetter().execute();
+                                                                                   }
+                                                                               };
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -152,15 +159,14 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             }
 
         });
-
-        mAdressAdapter = new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(), android.R.layout.simple_dropdown_item_1line,
-                                                  mAddresses);
-        mSearchBar.setAdapter(mAdressAdapter);
+        mSearchBar.setAdapter(new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(),
+                                                       android.R.layout.simple_dropdown_item_1line, new ArrayList<String>()));
         mSearchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString().length() >= 3) {
-                    new AutoCompleteAddressGetter().execute();
+                if (s != null && s.toString().length() >= 2) {
+                    mAutoCompleteHandler.removeCallbacks(mAutoCompleteRunnable);
+                    mAutoCompleteHandler.postDelayed(mAutoCompleteRunnable, 2000);
                 }
             }
 
@@ -372,25 +378,33 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
     private class AutoCompleteAddressGetter extends AsyncTask<Double, Void, Integer> {
 
+        private final List<String> mAddresses = new ArrayList<String>();
+
         @Override
         protected Integer doInBackground(Double... arg0) {
 
             String address = mSearchBar.getText().toString() + " , Paris, France";
-            List<Address> addresses = null;
+
+            // Log.d("DEBUG", "AutoCompleteAddressGetter ->>>address: " + address);
+            List<Address> addresses = new ArrayList<Address>();
 
             int i = 0;
             try {
                 addresses = mGeocoder.getFromLocationName(address, 20);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if (addresses.size() > 0) {
+            if (addresses != null && addresses.size() > 0) {
+                // Log.d("DEBUG", "AutoCompleteAddressGetter <<<-addresses: " + addresses);
+
                 mAddresses.clear();
                 for (Address a : addresses) {
                     mAddresses.add(a.getAddressLine(0) + " " + (a.getPostalCode() != null ? a.getPostalCode() : "") + " "
                                    + (a.getLocality() != null ? a.getLocality() : ""));
                 }
+            } else {
+                mAddresses.clear();
             }
             return i;
         }
@@ -403,9 +417,17 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
         @Override
         protected void onPostExecute(Integer result) {
-            mAdressAdapter.clear();
-            mAdressAdapter.addAll(mAddresses);
-            mAdressAdapter.notifyDataSetChanged();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ArrayAdapter<String> newAdaptor = new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(),
+                                                                               android.R.layout.simple_dropdown_item_1line, mAddresses);
+                    mSearchBar.setAdapter(null);
+                    mSearchBar.setAdapter(newAdaptor);
+                    mSearchBar.showDropDown();
+                }
+            });
         }
     }
 
@@ -420,37 +442,39 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             try {
                 List<Address> addr = new ArrayList<Address>();
 
-                if (params.length == 2) {
+                if (mGeocoder != null) {
+                    if (params.length == 2) {
 
-                    Log.d("DEBUG", "GET LOCATION FROM LAT LON : " + params[0] + " " + params[1]);
+                        // Log.d("DEBUG", "GET LOCATION FROM LAT LON : " + params[0] + " " + params[1]);
 
-                    // http://stackoverflow.com/questions/7109240/service-not-available-geocoder-android
-                    // Google issue : https://code.google.com/p/android/issues/detail?id=38009
-                    addr = mGeocoder.getFromLocation(params[0], params[1], 1);
+                        // http://stackoverflow.com/questions/7109240/service-not-available-geocoder-android
+                        // Google issue : https://code.google.com/p/android/issues/detail?id=38009
+                        addr = mGeocoder.getFromLocation(params[0], params[1], 1);
 
-                    // workaround:
-                    // try {
-                    // addr = getStringFromLocation(params[0], params[1]);
-                    // } catch (JSONException e) {
-                    // e.printStackTrace();
-                    // }
-                    Log.d("DEBUG", "addr size : " + addr.size());
+                        // workaround:
+                        // try {
+                        // addr = getStringFromLocation(params[0], params[1]);
+                        // } catch (JSONException e) {
+                        // e.printStackTrace();
+                        // }
+                        // Log.d("DEBUG", "addr size : " + addr.size());
 
-                } else {
+                    } else {
 
-                    String address = mSearchBar.getText().toString() + " , " + "France";
+                        String address = mSearchBar.getText().toString() + " , " + "France";
 
-                    Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
-                    addr = mGeocoder.getFromLocationName(address, 1);
+                        // Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
+                        addr = mGeocoder.getFromLocationName(address, 1);
 
-                    Log.d("DEBUG", "addr size : " + addr.size());
-                    if (addr.size() > 0) {
-                        geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
+                        // Log.d("DEBUG", "addr size : " + addr.size());
+                        if (addr.size() > 0) {
+                            geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
 
+                        }
                     }
                 }
 
-                if (addr.size() > 0) {
+                if (addr != null && addr.size() > 0) {
 
                     result[0] = addr.get(0).getAddressLine(0);
                     result[2] = addr.get(0).getPostalCode();
@@ -492,7 +516,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         @Override
         protected void onPostExecute(String[] result) {
 
-            if (geopoint != null) {
+            if (mMapView != null && geopoint != null) {
                 setMarker(geopoint);
                 mMapView.getController().animateTo(geopoint);
                 geopoint = null;
@@ -504,7 +528,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             postcode = result[2];
             town = result[3];
 
-            Log.d("DEBUG", "RECEIVED LOCATION number:'" + number + "' street:'" + street + "' postcode:'" + postcode + "' town:'" + town + "'");
+            // Log.d("DEBUG", "RECEIVED LOCATION number:'" + number + "' street:'" + street + "' postcode:'" + postcode + "' town:'" + town + "'");
 
             if (("".equals(number) || number == null) && ("".equals(street) || "France".equals(street) || street == null)
                 && ("".equals(postcode) || postcode == null) && ("".equals(town) || town == null)) {
@@ -513,13 +537,15 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                 // findViewById(R.id.btn_next).setEnabled(false);
             } else {
 
-                mStreetView.setText((number != null ? number : "") + " " + (street != null ? street : ""));
-                mCityView.setText(postcode + " " + town);
+                if (mStreetView != null && mCityView != null && mHintView != null) {
+                    mStreetView.setText((number != null ? number : "") + " " + (street != null ? street : ""));
+                    mCityView.setText(postcode + " " + town);
+                    mHintView.setVisibility(View.GONE);
+                }
 
                 mCurrentAdress = (number != null ? number : "") + " " + (street != null ? street : "") + " " + postcode + " " + town;
 
-                mHintView.setVisibility(View.GONE);
-                if (mBottomBar.getVisibility() == View.GONE) {
+                if (mBottomBar != null && mBottomBar.getVisibility() == View.GONE) {
                     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
                     animation.setAnimationListener(new AnimationListener() {
 
