@@ -101,6 +101,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     private TextView                                     mCityView;
     private ImageButton                                  mMyposition;
     private TextView                                     mHintView;
+    private boolean                                      isRunning;
 
     Handler                                              mAutoCompleteHandler  = new Handler();
     Runnable                                             mAutoCompleteRunnable = new Runnable() {
@@ -197,7 +198,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 mCurrentAdress = v.getText().toString();
                 if (Utils.isOnline(getApplicationContext())) {
-                    new AddressGetter().execute();
+                    new AddressGetter().putMarkerWhenFinished(true).execute();
                 } else {
                     displayErrorPopup(R.string.server_error);
                 }
@@ -212,7 +213,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String addr = (String) mSearchBar.getAdapter().getItem(position);
                 mSearchBar.setText(addr);
-                new AddressGetter().execute();
+                new AddressGetter().putMarkerWhenFinished(true).execute();
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mSearchBar.getWindowToken(), 0);
@@ -300,7 +301,14 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     }
 
     @Override
+    protected void onStart() {
+        isRunning = true;
+        super.onStart();
+    }
+
+    @Override
     protected void onStop() {
+        isRunning = false;
         super.onStop();
     }
 
@@ -403,8 +411,6 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         @Override
         protected boolean onTap(int index) {
 
-            Log.d("DEBUG", "onTap index:" + index);
-
             if (mBottomBar != null && mBottomBar.getVisibility() == View.GONE) {
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
                 animation.setAnimationListener(new AnimationListener() {
@@ -475,13 +481,17 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         protected void onPostExecute(Integer result) {
 
             runOnUiThread(new Runnable() {
+
                 @Override
                 public void run() {
-                    ArrayAdapter<String> newAdaptor = new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(),
-                                                                               android.R.layout.simple_dropdown_item_1line, mAddresses);
-                    mSearchBar.setAdapter(null);
-                    mSearchBar.setAdapter(newAdaptor);
-                    mSearchBar.showDropDown();
+
+                    if (mSearchBar != null && isRunning) {
+                        ArrayAdapter<String> newAdaptor = new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(),
+                                                                                   android.R.layout.simple_dropdown_item_1line, mAddresses);
+                        mSearchBar.setAdapter(null);
+                        mSearchBar.setAdapter(newAdaptor);
+                        mSearchBar.showDropDown();
+                    }
                 }
             });
         }
@@ -490,6 +500,12 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     private class AddressGetter extends AsyncTask<Double, Void, String[]> {
 
         protected GeoPoint geopoint;
+        boolean            mPutMarker = false;
+
+        public AddressGetter putMarkerWhenFinished(boolean active) {
+            mPutMarker = active;
+            return this;
+        }
 
         @Override
         protected String[] doInBackground(Double... params) {
@@ -572,7 +588,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         @Override
         protected void onPostExecute(String[] result) {
 
-            if (mMapView != null && geopoint != null) {
+            if (mPutMarker && mMapView != null && geopoint != null) {
                 setMarkerOnMap(geopoint);
                 mMapView.getController().animateTo(geopoint);
                 geopoint = null;
