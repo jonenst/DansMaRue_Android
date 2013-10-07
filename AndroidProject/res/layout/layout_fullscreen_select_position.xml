@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/select_position_header1" />
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/layout_search"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -38,6 +38,7 @@
                 android:id="@+id/et_search"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/btn_clear"
                 android:background="@null"
                 android:completionThreshold="2"
                 android:drawableLeft="@drawable/ic_search"
@@ -51,9 +52,9 @@
                 android:id="@+id/btn_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
+                android:layout_alignParentRight="true"
                 android:background="@drawable/ic_cancel" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_hint"
@@ -147,7 +148,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignWithParentIfMissing="true"
             android:layout_margin="4dp"
-            android:background="@drawable/card_background"
+            android:background="@drawable/bg_card_background"
             android:paddingBottom="7dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"

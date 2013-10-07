@@ -59,6 +59,9 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -107,6 +110,32 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                                                                                    }
                                                                                };
 
+    TextWatcher                                          mTextWatcher          = new TextWatcher() {
+                                                                                   String last;
+
+                                                                                   @Override
+                                                                                   public void afterTextChanged(Editable s) {
+
+                                                                                       if (s != null && s.toString().length() >= 2
+                                                                                           && !s.toString().equals(last)) {
+                                                                                           Log.d("DEBUG", "afterTextChanged text: " + s.toString());
+                                                                                           mAutoCompleteHandler.removeCallbacks(mAutoCompleteRunnable);
+                                                                                           mAutoCompleteHandler.postDelayed(mAutoCompleteRunnable, 2000);
+                                                                                           last = s.toString();
+                                                                                       } else {
+                                                                                           mAutoCompleteHandler.removeCallbacks(mAutoCompleteRunnable);
+                                                                                       }
+                                                                                   }
+
+                                                                                   @Override
+                                                                                   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                                                   }
+
+                                                                                   @Override
+                                                                                   public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                                                   }
+                                                                               };
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -143,7 +172,6 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         // init next button
         ImageButton nextBtn = (ImageButton) findViewById(R.id.btn_next);
         nextBtn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (isIncidentLocalized) {
@@ -157,27 +185,13 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                     finish();
                 }
             }
-
         });
+
         mSearchBar.setAdapter(new ArrayAdapter<String>(FullscreenSelectPositionActivity.this.getApplicationContext(),
                                                        android.R.layout.simple_dropdown_item_1line, new ArrayList<String>()));
-        mSearchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.toString().length() >= 2) {
-                    mAutoCompleteHandler.removeCallbacks(mAutoCompleteRunnable);
-                    mAutoCompleteHandler.postDelayed(mAutoCompleteRunnable, 2000);
-                }
-            }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+        mSearchBar.removeTextChangedListener(mTextWatcher);
+        mSearchBar.addTextChangedListener(mTextWatcher);
         mSearchBar.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -187,20 +201,42 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                 } else {
                     displayErrorPopup(R.string.server_error);
                 }
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mSearchBar.getWindowToken(), 0);
                 return false;
             }
         });
+        mSearchBar.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String addr = (String) mSearchBar.getAdapter().getItem(position);
+                mSearchBar.setText(addr);
+                new AddressGetter().execute();
 
-        // Maps
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mSearchBar.getWindowToken(), 0);
+            }
+        });
+
+        mBottomBar.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (mCurrentPoint != null) {
+                    mMapView.getController().animateTo(new GeoPoint((mCurrentPoint.getLatitudeE6()), (mCurrentPoint.getLongitudeE6())));
+                }
+            }
+        });
+
+        // Configure Maps
         mMapView = (LongPressMapView) findViewById(R.id.MapView_map);
         mMapView.setBuiltInZoomControls(false);
         mMapView.getController().setZoom(18);
         mMapView.setSatellite(true);
-
         CustomMyLocationOverlay myLocationOverlay = new CustomMyLocationOverlay(this, mMapView);
         myLocationOverlay.enableMyLocation();
         mMapView.getOverlays().add(myLocationOverlay);
-
         mMapView.setOnLongpressListener(new OnLongpressListener() {
             @Override
             public void onLongpress(MapView view, GeoPoint p) {
@@ -224,7 +260,6 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
                                                                                   @Override
                                                                                   public void onClick(DialogInterface dialog, int which) {
-                                                                                      // TODO Auto-generated method stub
                                                                                       Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                                                                       startActivityForResult(intent, 5);
                                                                                   }
@@ -271,6 +306,15 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
     private void setMarker(GeoPoint p) {
 
+        setMarkerOnMap(p);
+
+        if (p != null && Utils.isOnline(getApplicationContext())) {
+            new AddressGetter().execute(p.getLatitudeE6() / 1E6, p.getLongitudeE6() / 1E6);
+        }
+    }
+
+    public void setMarkerOnMap(GeoPoint p) {
+
         if (p != null) {
             if (mCursorOverlay != null) {
                 mCursorOverlay.setGeopoint(p);
@@ -278,13 +322,10 @@ public class FullscreenSelectPositionActivity extends MapActivity {
                 mCursorOverlay = new CursorOverlay(getResources().getDrawable(R.drawable.map_cursor));
                 mCursorOverlay.setGeopoint(p);
                 mMapView.getOverlays().add(mCursorOverlay);
-                mMapView.getController().animateTo(p);
             }
-            mCurrentPoint = p;
 
-            if (Utils.isOnline(getApplicationContext())) {
-                new AddressGetter().execute(p.getLatitudeE6() / 1E6, p.getLongitudeE6() / 1E6);
-            }
+            // mMapView.getController().animateTo(p);
+            mCurrentPoint = p;
         }
     }
 
@@ -302,9 +343,25 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         @Override
         public boolean onTap(GeoPoint p, MapView mapView) {
 
-            // Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
-            // setMarker(p);
+            if (mBottomBar.getVisibility() == View.VISIBLE) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+                animation.setAnimationListener(new AnimationListener() {
 
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mBottomBar.setVisibility(View.GONE);
+                    }
+                });
+                mBottomBar.startAnimation(animation);
+            }
             return true;
         }
 
@@ -344,17 +401,17 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         }
 
         @Override
-        public boolean onTap(GeoPoint p, MapView mapView) {
+        protected boolean onTap(int index) {
 
-            // Log.d("DEBUG", "onTap p: lat=" + p.getLatitudeE6() + " lon=" + p.getLongitudeE6());
-            // setMarker(p);
+            Log.d("DEBUG", "onTap index:" + index);
 
-            if (mBottomBar.getVisibility() == View.VISIBLE) {
-                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+            if (mBottomBar != null && mBottomBar.getVisibility() == View.GONE) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
                 animation.setAnimationListener(new AnimationListener() {
 
                     @Override
                     public void onAnimationStart(Animation animation) {
+                        mBottomBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -363,7 +420,6 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        mBottomBar.setVisibility(View.GONE);
                     }
                 });
                 mBottomBar.startAnimation(animation);
@@ -465,16 +521,16 @@ public class FullscreenSelectPositionActivity extends MapActivity {
 
                         // Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
                         addr = mGeocoder.getFromLocationName(address, 1);
-
                         // Log.d("DEBUG", "addr size : " + addr.size());
-                        if (addr.size() > 0) {
-                            geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
-
-                        }
                     }
                 }
 
                 if (addr != null && addr.size() > 0) {
+
+                    if (addr.size() > 0) {
+                        geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
+
+                    }
 
                     result[0] = addr.get(0).getAddressLine(0);
                     result[2] = addr.get(0).getPostalCode();
@@ -517,7 +573,7 @@ public class FullscreenSelectPositionActivity extends MapActivity {
         protected void onPostExecute(String[] result) {
 
             if (mMapView != null && geopoint != null) {
-                setMarker(geopoint);
+                setMarkerOnMap(geopoint);
                 mMapView.getController().animateTo(geopoint);
                 geopoint = null;
             }
