@@ -54,7 +54,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -422,7 +421,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
 
                 if (params.length == 2) {
 
-                    Log.d("DEBUG", "GET LOCATION FROM LAT LON : " + params[0] + " " + params[1]);
+                    // Log.d("DEBUG", "GET LOCATION FROM LAT LON : " + params[0] + " " + params[1]);
 
                     addr = geo.getFromLocation(params[0], params[1], 1);
                     // try {
@@ -431,7 +430,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                     // e.printStackTrace();
                     // }
 
-                    Log.d("DEBUG", "addr size : " + addr.size());
+                    // Log.d("DEBUG", "addr size : " + addr.size());
 
                 } else {
 
@@ -440,10 +439,10 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                                      + ((TextView) findViewById(R.id.EditText_address_postcode)).getText().toString() + " "
                                      + ((TextView) findViewById(R.id.EditText_address_town)).getText().toString() + " , " + "France";
 
-                    Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
+                    // Log.d("DEBUG", "GET LOCATION FROM ADDR : " + address);
                     addr = geo.getFromLocationName(address, 1);
 
-                    Log.d("DEBUG", "addr size : " + addr.size());
+                    // Log.d("DEBUG", "addr size : " + addr.size());
                     if (addr.size() > 0) {
                         geopoint = new GeoPoint((int) (addr.get(0).getLatitude() * 1E6), (int) (addr.get(0).getLongitude() * 1E6));
 
@@ -481,7 +480,7 @@ public class SelectPositionActivity extends MapActivity implements LocationListe
                     result[3] = result[3] == null ? "" : result[3].trim();
                 }
             } catch (IOException e) {
-                Log.e("DEBUG", "Address Error : ", e);
+                // Log.e("DEBUG", "Address Error : ", e);
             }
             return result;
         }
