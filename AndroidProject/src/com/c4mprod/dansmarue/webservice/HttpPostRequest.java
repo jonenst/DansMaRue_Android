@@ -31,7 +31,6 @@ import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -48,7 +47,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.utils.Utils;
@@ -120,10 +118,8 @@ public class HttpPostRequest {
 
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
 
-            // Log.i("HTTP", "------------- BEGIN ----------------");
-            // Log.i("HTTP", "POST url=" + httpPost.getURI().toString());
+            // Log.i("HTTP", "->>> SEND POST url=" + httpPost.getURI().toString() + " params=" + params);
             httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-            // Log.i("HTTP", "POST params=" + params);
 
             final int currentVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
             httpPost.addHeader(HEADER_APP_VERSION, "" + currentVersionCode);
@@ -131,10 +127,10 @@ public class HttpPostRequest {
             httpPost.addHeader(HEADER_APP_DEVICE_MODEL, (Build.MANUFACTURER + " " + Build.DEVICE).trim());
             httpPost.addHeader(HEADER_APP_REQUEST_SIGNATURE, sha1(MAGIC_KEY + params.get(0).getValue()));
 
-            Header[] requestHeaders = httpPost.getAllHeaders();
-            for (Header header : requestHeaders) {
-                Log.i("HTTP", header.toString());
-            }
+            // Header[] requestHeaders = httpPost.getAllHeaders();
+            // for (Header header : requestHeaders) {
+            // Log.i("HTTP", header.toString());
+            // }
             // Log.i("HTTP", "------------- END ----------------");
 
             // //Log.i(Constants.PROJECT_TAG,MAGIC_KEY + params.get(0).getValue());
@@ -147,6 +143,9 @@ public class HttpPostRequest {
             final HttpEntity entity = response.getEntity();
             content = entity.getContent();
             contentString = convertStreamToString(content);
+
+            // Log.i("HTTP", "<<<- RECEIVED POST response=" + contentString);
+
             // Log.d(Constants.PROJECT_TAG, "answer = " + contentString);
         } catch (final UnsupportedEncodingException uee) {
             // Log.e(Constants.PROJECT_TAG, "UnsupportedEncodingException", uee);

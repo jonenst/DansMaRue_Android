@@ -40,7 +40,8 @@ public class Utils {
         // TelephonyManager tel = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
         // return tel.getDeviceId();
 
-        return Settings.Secure.ANDROID_ID;
+        String deviceIdentifier = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID);
+        return deviceIdentifier;
     }
 
     public static void fromInputToOutput(InputStream in, OutputStream out) throws IOException {

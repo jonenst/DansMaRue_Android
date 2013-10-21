@@ -95,7 +95,6 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
 
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
-                                                                  // TODO Auto-generated method stub
                                                                   Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                                                   startActivityForResult(intent, 5);
                                                               }
