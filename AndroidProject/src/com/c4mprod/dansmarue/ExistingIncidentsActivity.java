@@ -36,7 +36,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -52,7 +51,6 @@ import com.c4mprod.dansmarue.entities.IntentData;
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.entities.Last_Location;
 import com.c4mprod.dansmarue.utils.JSONAdapter;
-import com.c4mprod.dansmarue.utils.Utils;
 import com.c4mprod.dansmarue.webservice.AVService;
 import com.c4mprod.dansmarue.webservice.RequestListener;
 import com.c4mprod.utils.ImageDownloader;
@@ -86,7 +84,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
 
             showDialog(DIALOG_PROGRESS);
             JSONObject request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_BY_POSITION)
-                                                 .put(JsonData.PARAM_UDID, Utils.getUdid(this))
+                                                 /* .put(JsonData.PARAM_UDID, Utils.getUdid(this)) */
                                                  .put(JsonData.PARAM_RADIUS, JsonData.VALUE_RADIUS_CLOSE)
                                                  .put(JsonData.PARAM_POSITION,
                                                       new JSONObject().put(JsonData.PARAM_POSITION_LONGITUDE, Last_Location.longitude)
@@ -95,7 +93,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
             AVService.getInstance(this).postJSON(new JSONArray().put(request), this);
 
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "Error loading existing incidents", e);
+            // Log.e(Constants.PROJECT_TAG, "Error loading existing incidents", e);
         }
         super.onResume();
     }
@@ -152,10 +150,10 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 }
             }
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "JSONException", e);
+            // Log.e(Constants.PROJECT_TAG, "JSONException", e);
 
         } catch (ClassCastException e) {
-            //Log.e(Constants.PROJECT_TAG, "Can't read response. trying to cast " + result.getClass() + " into String", e);
+            // Log.e(Constants.PROJECT_TAG, "Can't read response. trying to cast " + result.getClass() + " into String", e);
 
         }
 
@@ -173,7 +171,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 i.putExtra(IntentData.EXTRA_CATEGORY_ID, data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
                 startActivity(i);
             }
-            //Log.d(Constants.PROJECT_TAG, "Result: " + data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
+            // Log.d(Constants.PROJECT_TAG, "Result: " + data.getLongExtra(IntentData.EXTRA_CATEGORY_ID, -1));
             finish();
         }
     }
@@ -198,7 +196,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
 
                 Incident incident = Incident.fromJSONObject(getApplicationContext(), ((JSONObject) getItem(position)));
 
-                //Log.i(Constants.PROJECT_TAG, "getView : incident" + incident);
+                // Log.i(Constants.PROJECT_TAG, "getView : incident" + incident);
 
                 JSONArray imgarr = incident.pictures_far;
 
@@ -214,7 +212,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                     }
                 }
 
-                //Log.d(Constants.PROJECT_TAG, "" + imgName);
+                // Log.d(Constants.PROJECT_TAG, "" + imgName);
                 if (imageDownloader.getDefault_img() == null) {
                     imageDownloader.setDefault_img(icone.getDrawable());
                 }
@@ -246,7 +244,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 long catId = incident.categoryId;
 
                 String category = null;
-                //Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
+                // Log.d(Constants.PROJECT_TAG, "Cat id = " + catId);
 
                 Cursor c = getContentResolver().query(ContentUris.withAppendedId(Category.CONTENT_URI, catId), new String[] { Category.PARENT, Category.NAME },
                                                       null, null, null);
@@ -266,9 +264,9 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
                 }
 
             } catch (JSONException e) {
-                //Log.e(Constants.PROJECT_TAG, ((JSONObject) getItem(position)).toString(), e);
+                // Log.e(Constants.PROJECT_TAG, ((JSONObject) getItem(position)).toString(), e);
             } catch (ClassCastException e) {
-                //Log.e(Constants.PROJECT_TAG, getItem(position).getClass().toString(), e);
+                // Log.e(Constants.PROJECT_TAG, getItem(position).getClass().toString(), e);
             }
 
             if (getItemViewType(position) == TYPE_ITEM) {
@@ -314,7 +312,7 @@ public class ExistingIncidentsActivity extends ListActivity implements RequestLi
             if (incident.state == 'R' || incident.invalidations > 0) return;
             if (incident.categoryId < 0) return; // HACK MDP
         } catch (JSONException e) {
-            //Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
+            // Log.e(Constants.PROJECT_TAG, "JSONException in onListItemClick", e);
         }
         startActivity(i);
         // super.onListItemClick(l, v, position, id);

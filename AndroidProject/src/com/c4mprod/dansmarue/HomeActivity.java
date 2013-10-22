@@ -50,7 +50,6 @@ import com.c4mprod.dansmarue.entities.Constants;
 import com.c4mprod.dansmarue.entities.JsonData;
 import com.c4mprod.dansmarue.entities.Last_Location;
 import com.c4mprod.dansmarue.utils.LocationHelper;
-import com.c4mprod.dansmarue.utils.Utils;
 import com.c4mprod.dansmarue.webservice.AVService;
 import com.c4mprod.dansmarue.webservice.RequestListener;
 
@@ -228,7 +227,7 @@ public class HomeActivity extends Activity implements OnClickListener, LocationL
         JSONObject request;
         try {
             request = new JSONObject().put(JsonData.PARAM_REQUEST, JsonData.VALUE_REQUEST_GET_INCIDENTS_STATS)
-                                      .put(JsonData.PARAM_UDID, Utils.getUdid(this))
+                                      /* .put(JsonData.PARAM_UDID, Utils.getUdid(this)) */
                                       .put(JsonData.PARAM_POSITION,
                                            new JSONObject().put(JsonData.PARAM_POSITION_LONGITUDE, Last_Location.longitude)
                                                            .put(JsonData.PARAM_POSITION_LATITUDE, Last_Location.latitude));
