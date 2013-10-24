@@ -644,14 +644,18 @@ public class FullscreenSelectPositionActivity extends MapActivity {
     }
 
     public void displayErrorPopup(int idMessage) {
-        new AlertDialog.Builder(FullscreenSelectPositionActivity.this).setTitle(R.string.error_popup_title)
-                                                                      .setMessage(idMessage)
-                                                                      .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                                          @Override
-                                                                          public void onClick(DialogInterface dialog, int which) {
-                                                                          }
-                                                                      })
-                                                                      .show();
+
+        if (!isFinishing()) {
+            new AlertDialog.Builder(FullscreenSelectPositionActivity.this).setTitle(R.string.error_popup_title)
+                                                                          .setMessage(idMessage)
+                                                                          .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                              @Override
+                                                                              public void onClick(DialogInterface dialog, int which) {
+                                                                              }
+                                                                          })
+                                                                          .show();
+        }
+
     }
 
     // CUSTOM REVERSE GEOCODER
